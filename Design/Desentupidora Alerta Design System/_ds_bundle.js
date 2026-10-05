@@ -840,10 +840,8 @@ function Tabs({
   items = [],
   value,
   onChange,
-  onchange,
   tone = 'light'
 }) {
-  const handler = onChange || onchange;
   const dark = tone === 'dark';
   return /*#__PURE__*/React.createElement("div", {
     style: {
@@ -855,7 +853,7 @@ function Tabs({
     const a = it === value;
     return /*#__PURE__*/React.createElement("button", {
       key: it,
-      onClick: () => handler && handler(it),
+      onClick: () => onChange && onChange(it),
       style: {
         padding: '12px 16px',
         marginBottom: -1,

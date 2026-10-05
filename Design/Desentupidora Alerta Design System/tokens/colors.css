@@ -1,0 +1,19 @@
+/* Official: Verde Abeto #08736C, Verde Claro #A3CF5B, Laranja Dourada #EB9C18. Other steps derived. */
+:root{
+--forest-950:#0E2E25;--forest-900:#133D31;--forest-800:#19483A;--forest-700:#1F5A48;
+--teal-800:#065A55;--teal-700:#08736C;--teal-600:#0D857D;--teal-500:#15978D;--teal-300:#5FC2B4;
+--lime-600:#8BB843;--lime-500:#A3CF5B;--lime-400:#BADD82;--lime-200:#DDF5B3;--lime-100:#E8FDBE;--cream-50:#F5FBEA;
+--leaf-600:#0C9A45;--leaf-500:#13B552;--whatsapp:#25C25A;
+--amber-100:#FCEFD6;--amber-500:#EB9C18;--amber-600:#C98310;--amber-800:#7A4E06;--lime-800:#3F5E14;
+--offwhite:#F6F7F3;
+--white:#FFFFFF;--ink-900:#0F1F1A;--gray-700:#3D4A45;--gray-500:#6B7873;--gray-300:#B7C2BD;--gray-200:#DCE3E0;--gray-100:#EEF2F0;--gray-50:#F7F9F8;
+--red-500:#D93A2B;
+/* semantic */
+--brand-primary:var(--teal-700);--brand-primary-hover:var(--teal-800);
+--brand-deep:var(--forest-800);--brand-accent:var(--lime-500);--brand-accent-hover:var(--lime-600);
+--cta-whatsapp:var(--whatsapp);--cta-whatsapp-hover:var(--leaf-600);
+--surface-page:var(--offwhite);--surface-muted:var(--cream-50);--surface-card:var(--white);--surface-inverse:var(--forest-800);--surface-teal:var(--teal-700);--surface-highlight:var(--lime-100);
+--text-strong:var(--ink-900);--text-body:var(--gray-700);--text-muted:var(--gray-500);--text-heading:var(--teal-700);--text-on-dark:var(--white);--text-on-dark-muted:#CFE3DB;--text-accent-on-dark:var(--lime-500);
+--border-default:var(--gray-200);--border-strong:var(--ink-900);--border-on-dark:rgba(255,255,255,.85);--border-focus:var(--lime-500);
+--success:var(--lime-500);--success-soft:var(--lime-100);--success-ink:var(--lime-800);--warning:var(--amber-500);--warning-soft:var(--amber-100);--warning-ink:var(--amber-800);--danger:var(--red-500);--info:var(--teal-600);
+}

@@ -1,0 +1,18 @@
+<!-- @dsCard group="Website" viewport="1440x860" name="Home" subtitle="desentupidoraalerta.com.br — topo, nav, hero 20 anos, serviços" -->
+<!DOCTYPE html><html><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Alerta Gestão de Resíduos</title><link rel="stylesheet" href="../../styles.css">
+<script src="https://unpkg.com/react@18.3.1/umd/react.development.js" integrity="sha384-hD6/rw4ppMLGNu3tX5cjIb+uRZ7UkRJ6BPkLpg4hAu/6onKUg4lLsHAs9EBPT82L" crossorigin="anonymous"></script>
+<script src="https://unpkg.com/react-dom@18.3.1/umd/react-dom.development.js" integrity="sha384-u6aeetuaXnQ38mYT8rp6sbXaQe3NL9t+IBXmnYxwkUI2Hw4bsp2Wvmx4yRQF1uAm" crossorigin="anonymous"></script>
+<script src="https://unpkg.com/@babel/standalone@7.29.0/babel.min.js" integrity="sha384-m08KidiNqLdpJqLq95G/LEi8Qvjl/xUYll3QILypMoQ65QorJ9Lvtp2RXYGBFj1y" crossorigin="anonymous"></script>
+<script src="https://unpkg.com/lucide@0.469.0/dist/umd/lucide.min.js"></script>
+<script>window.ALERTA_ASSET_BASE='../../assets/';window.Ic=function(p){const r=React.useRef();React.useEffect(()=>{r.current.innerHTML='<i data-lucide="'+p.n+'"></i>';lucide.createIcons({attrs:{width:p.s||20,height:p.s||20,'stroke-width':p.w||2}})},[p.n]);return React.createElement('span',{ref:r,style:{display:'inline-flex',color:p.c}})};</script>
+<script src="../../_ds_bundle.js"></script>
+<style>body{margin:0;font-family:var(--font-sans);color:var(--text-body)}*{box-sizing:border-box}a{color:var(--teal-700)}a:hover{color:var(--teal-800)}</style></head><body><div id="root"></div>
+<script type="text/babel" src="site-hero.jsx"></script><script type="text/babel" src="site-services.jsx"></script><script type="text/babel" src="site-footer.jsx"></script>
+<script type="text/babel">
+const {TopBar,NavBar,IconButton,WhatsAppIcon,Dialog,Button,Input,Select}=window.DesentupidoraAlertaDesignSystem_e6b749;
+function App(){const [nav,setNav]=React.useState('HOME'),[open,setOpen]=React.useState(false);
+return <><TopBar onAction={()=>setOpen(true)}/><div style={{position:'sticky',top:0,zIndex:10}}><NavBar active={nav} onSelect={setNav}/></div><SiteHero/><SiteServices onWhats={()=>setOpen(true)}/><SiteFooter/>
+<div style={{position:'fixed',right:24,bottom:24,zIndex:20,borderRadius:'50%',boxShadow:'var(--shadow-cta)'}}><IconButton size={60} variant="whatsapp" label="WhatsApp" icon={<WhatsAppIcon size={30}/>} onClick={()=>setOpen(true)}/></div>
+<Dialog open={open} title="Falar com especialista" onClose={()=>setOpen(false)} actions={<Button variant="whatsapp" icon={<WhatsAppIcon size={18}/>} onClick={()=>setOpen(false)}>Continuar no WhatsApp</Button>}><div style={{display:'flex',flexDirection:'column',gap:12}}><Input label="Nome" placeholder="Seu nome"/><Select label="Serviço" options={['Desentupimento','Hidrojateamento','Limpa fossa','Transporte de efluentes']}/></div></Dialog></>}
+ReactDOM.createRoot(document.getElementById('root')).render(<App/>);
+</script></body></html>

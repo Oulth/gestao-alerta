@@ -323,26 +323,50 @@
               <div style="display:flex;align-items:flex-start;justify-content:space-between;gap:12px">
                 <div style="display:flex;flex-direction:column;gap:2px">
                   <h2 style="margin:0;font-size:24px;font-weight:700;letter-spacing:-.01em;color:var(--teal-700)">Calcular preço</h2>
-                  <span style="font-size:14px;color:var(--text-muted)">Orçamento rápido por m³, horas e km até a ETE.</span>
+                  <span style="font-size:14px;color:var(--text-muted)">Orçamento multi-serviços com cálculo por viagem, km e tabela fixa.</span>
                 </div>
-                <button onClick="{{ calc.close }}" aria-label="Fechar" style="width:44px;height:44px;flex-shrink:0;border:none;border-radius:50%;background:var(--gray-100);color:var(--text-strong);display:flex;align-items:center;justify-content:center;cursor:pointer" style-hover="background:var(--gray-200)">
-                  <img src="https://unpkg.com/lucide-static@0.460.0/icons/x.svg" alt="" style="width:20px;height:20px;opacity:.85">
-                </button>
+                <div style="display:flex;align-items:center;gap:8px">
+                  <button onClick="{{ calc.openEditPrecos }}" title="Editar tabela de preços" style="height:38px;padding:0 12px;border:1.5px solid var(--teal-700);border-radius:10px;background:var(--teal-50);color:var(--teal-800);font-family:inherit;font-size:13px;font-weight:600;display:inline-flex;align-items:center;gap:6px;cursor:pointer" style-hover="background:var(--teal-100)">
+                    <img src="https://unpkg.com/lucide-static@0.460.0/icons/pencil.svg" alt="" style="width:14px;height:14px;opacity:.9">
+                    <span>Editar valores</span>
+                  </button>
+                  <button onClick="{{ calc.close }}" aria-label="Fechar" style="width:40px;height:40px;flex-shrink:0;border:none;border-radius:50%;background:var(--gray-100);color:var(--text-strong);display:flex;align-items:center;justify-content:center;cursor:pointer" style-hover="background:var(--gray-200)">
+                    <img src="https://unpkg.com/lucide-static@0.460.0/icons/x.svg" alt="" style="width:18px;height:18px;opacity:.85">
+                  </button>
+                </div>
               </div>
 
               <div style="display:flex;flex-direction:column;gap:8px">
-                <span style="font-size:14px;font-weight:600;color:var(--text-strong)">Serviço</span>
+                <div style="display:flex;align-items:center;justify-content:space-between">
+                  <span style="font-size:14px;font-weight:600;color:var(--text-strong)">Serviços (selecione um ou mais)</span>
+                  <span style="font-size:12px;color:var(--teal-700);font-weight:600">Multi-seleção ativa</span>
+                </div>
                 <div style="display:flex;flex-wrap:wrap;gap:8px">
                   <sc-for list="{{ calc.servicos }}" as="s" hint-placeholder-count="6">
-                    <button onClick="{{ s.pick }}" style="min-height:40px;padding:0 14px;border-radius:999px;border:1.5px solid {{ s.bd }};background:{{ s.bg }};color:{{ s.fg }};font-family:inherit;font-size:14px;font-weight:600;cursor:pointer">{{ s.nome }}</button>
+                    <button onClick="{{ s.pick }}" style="min-height:38px;padding:0 14px;border-radius:999px;border:1.5px solid {{ s.bd }};background:{{ s.bg }};color:{{ s.fg }};font-family:inherit;font-size:13px;font-weight:600;cursor:pointer;display:inline-flex;align-items:center;gap:6px">{{ s.label }}</button>
                   </sc-for>
                 </div>
               </div>
 
-              <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:14px">
-                <x-import component-from-global-scope="DesentupidoraAlertaDesignSystem_e6b749.Input" label="Volume (m³)" type="number" value="{{ calc.f.m3 }}" onChange="{{ calc.on.m3 }}" hint-size="100%,76px"></x-import>
-                <x-import component-from-global-scope="DesentupidoraAlertaDesignSystem_e6b749.Input" label="Horas de serviço" type="number" value="{{ calc.f.horas }}" onChange="{{ calc.on.horas }}" hint-size="100%,76px"></x-import>
-                <x-import component-from-global-scope="DesentupidoraAlertaDesignSystem_e6b749.Input" label="Km até a ETE (ida e volta)" type="number" value="{{ calc.f.km }}" onChange="{{ calc.on.km }}" hint-size="100%,76px"></x-import>
+              <sc-if value="{{ calc.temTransporte }}" hint-placeholder-val="{{ true }}">
+                <div style="display:flex;flex-direction:column;gap:6px">
+                  <div style="display:flex;align-items:center;justify-content:space-between">
+                    <span style="font-size:13px;font-weight:600;color:var(--text-strong)">Destino da ETE (escala e descarte CAGECE)</span>
+                    <span style="font-size:12px;color:var(--teal-700);font-weight:600">{{ calc.eteSelecionada }}</span>
+                  </div>
+                  <div style="display:flex;flex-wrap:wrap;gap:6px">
+                    <sc-for list="{{ calc.etes }}" as="ete">
+                      <button onClick="{{ ete.pick }}" style="min-height:34px;padding:0 14px;border-radius:8px;border:1.5px solid {{ ete.bd }};background:{{ ete.bg }};color:{{ ete.fg }};font-family:inherit;font-size:13px;font-weight:600;cursor:pointer;display:inline-flex;align-items:center;gap:4px">{{ ete.label }}</button>
+                    </sc-for>
+                  </div>
+                </div>
+              </sc-if>
+
+              <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:12px">
+                <sc-if value="{{ calc.temTransporte }}" hint-placeholder-val="{{ true }}">
+                  <x-import component-from-global-scope="DesentupidoraAlertaDesignSystem_e6b749.Input" label="Volume efluente (m³)" type="number" value="{{ calc.f.m3 }}" onChange="{{ calc.on.m3 }}" hint-size="100%,76px"></x-import>
+                </sc-if>
+                <x-import component-from-global-scope="DesentupidoraAlertaDesignSystem_e6b749.Input" label="Ajuste / Desconto (R$)" type="number" value="{{ calc.f.ajuste }}" onChange="{{ calc.on.ajuste }}" hint-size="100%,76px"></x-import>
               </div>
 
               <button onClick="{{ calc.toggleUrg }}" aria-pressed="{{ calc.f.urgente }}" style="display:flex;align-items:center;gap:12px;min-height:48px;padding:10px 14px;border:1.5px solid var(--border-default);border-radius:12px;background:var(--white);font-family:inherit;text-align:left;cursor:pointer" style-hover="background:var(--gray-50)">
@@ -355,7 +379,13 @@
                 </span>
               </button>
 
-              <span style="font-size:13px;color:var(--text-muted)">Valores de referência por serviço: {{ calc.refTxt }}.</span>
+              <sc-if value="{{ calc.temTransporte }}" hint-placeholder-val="{{ true }}">
+                <div style="background:var(--gray-50);border:1px solid var(--border-default);border-radius:10px;padding:10px 12px;font-size:12px;color:var(--text-body);display:flex;flex-direction:column;gap:2px">
+                  <span style="font-weight:600;color:var(--teal-800)">Transporte de Efluentes:</span>
+                  <span>R$ 600,00 fixo por carga de até 20 m³. Destino informado para a OS: {{ calc.eteSelecionada }}.</span>
+                </div>
+              </sc-if>
+              <span style="font-size:13px;color:var(--text-muted)">{{ calc.refTxt }}</span>
             </div>
 
             <div style="flex:1 1 300px;min-width:0;background:var(--teal-700);color:var(--white);padding:clamp(18px,2.5vw,28px);display:flex;flex-direction:column;gap:16px">
@@ -371,9 +401,6 @@
                   </div>
                 </sc-for>
               </div>
-              <sc-if value="{{ calc.minimo }}" hint-placeholder-val="{{ false }}">
-                <span style="font-size:13px;color:var(--lime-300)">Valor mínimo do serviço aplicado ({{ calc.minTxt }}).</span>
-              </sc-if>
               <div style="display:flex;flex-direction:column;gap:2px;margin-top:auto">
                 <span style="font-size:14px;color:var(--text-on-dark-muted)">Total sugerido</span>
                 <span style="font-size:clamp(34px,4vw,42px);font-weight:800;letter-spacing:-.03em;line-height:1;color:var(--lime-500)">{{ calc.totalTxt }}</span>
@@ -381,9 +408,68 @@
               </div>
               <div style="display:flex;flex-direction:column;gap:8px">
                 <x-import component-from-global-scope="DesentupidoraAlertaDesignSystem_e6b749.Button" variant="lime" onClick="{{ calc.usar }}" style="width:100%" hint-size="100%,46px">{{ calc.usarLabel }}</x-import>
-                <button onClick="{{ calc.copiar }}" style="height:44px;border:1.5px solid rgba(255,255,255,.6);border-radius:999px;background:transparent;color:var(--white);font-family:inherit;font-size:15px;font-weight:600;cursor:pointer" style-hover="background:rgba(255,255,255,.1)">Copiar texto para WhatsApp</button>
+                <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px">
+                  <button onClick="{{ calc.copiar }}" style="height:44px;border:1.5px solid rgba(255,255,255,.6);border-radius:999px;background:transparent;color:var(--white);font-family:inherit;font-size:13px;font-weight:600;cursor:pointer;display:inline-flex;align-items:center;justify-content:center;gap:6px" style-hover="background:rgba(255,255,255,.1)">
+                    <img src="https://unpkg.com/lucide-static@0.460.0/icons/copy.svg" alt="" style="width:16px;height:16px;filter:brightness(0) invert(1)">
+                    <span>Copiar texto</span>
+                  </button>
+                  <a href="{{ calc.zapUrl }}" target="_blank" rel="noopener noreferrer" style="height:44px;border:none;border-radius:999px;background:#25D366;color:var(--white);font-family:inherit;font-size:13px;font-weight:700;cursor:pointer;display:inline-flex;align-items:center;justify-content:center;gap:6px;text-decoration:none" style-hover="background:#20ba5a">
+                    <img src="https://unpkg.com/lucide-static@0.460.0/icons/message-circle.svg" alt="" style="width:16px;height:16px;filter:brightness(0) invert(1)">
+                    <span>WhatsApp</span>
+                  </a>
+                </div>
               </div>
             </div>
+          </div>
+        </div>
+      </sc-if>
+
+      <sc-if value="{{ editPrecosOpen }}" hint-placeholder-val="{{ false }}">
+        <div onClick="{{ closeEditPrecos }}" data-screen-label="Editar Valores de Preços" role="dialog" aria-modal="true" style="position:fixed;inset:0;z-index:90;background:rgba(14,46,37,.65);backdrop-filter:blur(4px);display:flex;align-items:center;justify-content:center;padding:16px">
+          <div onClick="{{ stop }}" style="background:var(--white);border-radius:20px;width:100%;max-width:620px;max-height:90vh;display:flex;flex-direction:column;overflow:hidden;box-shadow:var(--shadow-lg)">
+
+            <div style="padding:20px 24px;border-bottom:1px solid var(--border-default);display:flex;align-items:flex-start;justify-content:space-between;gap:12px">
+              <div style="display:flex;flex-direction:column;gap:2px">
+                <h3 style="margin:0;font-size:20px;font-weight:700;color:var(--teal-700)">Editar tabela de valores</h3>
+                <span style="font-size:13px;color:var(--text-muted)">Valores de referência salvos localmente para cálculos automáticos.</span>
+              </div>
+              <button onClick="{{ closeEditPrecos }}" aria-label="Fechar" style="width:36px;height:36px;border:none;border-radius:50%;background:var(--gray-100);color:var(--text-strong);display:flex;align-items:center;justify-content:center;cursor:pointer" style-hover="background:var(--gray-200)">
+                <img src="https://unpkg.com/lucide-static@0.460.0/icons/x.svg" alt="" style="width:18px;height:18px;opacity:.85">
+              </button>
+            </div>
+
+            <div style="padding:20px 24px;overflow-y:auto;display:flex;flex-direction:column;gap:18px">
+
+              <div style="border:1.5px solid var(--teal-200);background:var(--teal-50);border-radius:14px;padding:16px;display:flex;flex-direction:column;gap:12px">
+                <div style="display:flex;align-items:center;gap:8px">
+                  <span style="font-size:14px;font-weight:700;color:var(--teal-900)">Transporte de efluentes</span>
+                  <span style="font-size:11px;background:var(--teal-700);color:var(--white);padding:2px 8px;border-radius:999px;font-weight:600">Valor fixo</span>
+                </div>
+                <x-import component-from-global-scope="DesentupidoraAlertaDesignSystem_e6b749.Input" label="Valor fixo por viagem (até 20 m³)" type="number" value="{{ epForm.transpViagem }}" onChange="{{ onEP.transpViagem }}" hint-size="100%,76px"></x-import>
+                <span style="font-size:12px;color:var(--teal-800)">Valor fixo por viagem de até 20 m³. Cargas acima de 20 m³ contam como viagens adicionais.</span>
+              </div>
+
+              <div style="display:flex;flex-direction:column;gap:12px">
+                <span style="font-size:14px;font-weight:700;color:var(--text-strong)">Serviços com valores fixos de tabela</span>
+                <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px">
+                  <x-import component-from-global-scope="DesentupidoraAlertaDesignSystem_e6b749.Input" label="Limpa fossa (R$)" type="number" value="{{ epForm.fossa }}" onChange="{{ onEP.fossa }}" hint-size="100%,76px"></x-import>
+                  <x-import component-from-global-scope="DesentupidoraAlertaDesignSystem_e6b749.Input" label="Caixa de gordura (R$)" type="number" value="{{ epForm.gordura }}" onChange="{{ onEP.gordura }}" hint-size="100%,76px"></x-import>
+                  <x-import component-from-global-scope="DesentupidoraAlertaDesignSystem_e6b749.Input" label="Desentupimento (R$)" type="number" value="{{ epForm.desentupimento }}" onChange="{{ onEP.desentupimento }}" hint-size="100%,76px"></x-import>
+                  <x-import component-from-global-scope="DesentupidoraAlertaDesignSystem_e6b749.Input" label="Hidrojateamento (R$)" type="number" value="{{ epForm.hidro }}" onChange="{{ onEP.hidro }}" hint-size="100%,76px"></x-import>
+                  <x-import component-from-global-scope="DesentupidoraAlertaDesignSystem_e6b749.Input" label="Coleta de óleo lubrificante (R$)" type="number" value="{{ epForm.oleo }}" onChange="{{ onEP.oleo }}" hint-size="100%,76px"></x-import>
+                </div>
+              </div>
+
+            </div>
+
+            <div style="padding:16px 24px;border-top:1px solid var(--border-default);background:var(--gray-50);display:flex;align-items:center;justify-content:space-between;gap:12px">
+              <button onClick="{{ resetEditPrecos }}" style="height:40px;padding:0 14px;border:1px solid var(--border-default);border-radius:10px;background:var(--white);color:var(--text-muted);font-family:inherit;font-size:13px;font-weight:600;cursor:pointer" style-hover="color:var(--danger);border-color:var(--danger)">Restaurar padrões</button>
+              <div style="display:flex;align-items:center;gap:10px">
+                <button onClick="{{ closeEditPrecos }}" style="height:40px;padding:0 16px;border:1px solid var(--border-default);border-radius:10px;background:var(--white);color:var(--text-strong);font-family:inherit;font-size:14px;font-weight:600;cursor:pointer">Cancelar</button>
+                <x-import component-from-global-scope="DesentupidoraAlertaDesignSystem_e6b749.Button" variant="primary" onClick="{{ saveEditPrecos }}" hint-size="130px,40px">Salvar valores</x-import>
+              </div>
+            </div>
+
           </div>
         </div>
       </sc-if>
@@ -439,7 +525,7 @@
           </div>
 
           <div style="overflow-x:auto;scrollbar-width:none">
-            <x-import component-from-global-scope="DesentupidoraAlertaDesignSystem_e6b749.Tabs" items="{{ lg.tabs }}" value="{{ lg.tab }}" onChange="{{ lg.setTab }}" hint-size="100%,48px"></x-import>
+            <x-import component-from-global-scope="DesentupidoraAlertaDesignSystem_e6b749.Tabs" items="{{ lg.tabs }}" value="{{ lg.tab }}" on-change="{{ lg.setTab }}" onChange="{{ lg.setTab }}" hint-size="100%,48px"></x-import>
           </div>
 
           <sc-if value="{{ lg.isEscala }}" hint-placeholder-val="{{ true }}">
@@ -773,7 +859,7 @@
           </div>
 
           <div style="overflow-x:auto;scrollbar-width:none">
-            <x-import component-from-global-scope="DesentupidoraAlertaDesignSystem_e6b749.Tabs" items="{{ fin.tabs }}" value="{{ fin.tab }}" onChange="{{ fin.setTab }}" hint-size="100%,48px"></x-import>
+            <x-import component-from-global-scope="DesentupidoraAlertaDesignSystem_e6b749.Tabs" items="{{ fin.tabs }}" value="{{ fin.tab }}" on-change="{{ fin.setTab }}" onChange="{{ fin.setTab }}" hint-size="100%,48px"></x-import>
           </div>
 
           <sc-if value="{{ fin.showMes }}" hint-placeholder-val="{{ true }}">
@@ -1010,10 +1096,31 @@
           <sc-if value="{{ fin.isLista }}" hint-placeholder-val="{{ false }}">
             <div style="display:flex;flex-direction:column;gap:14px">
               <div style="display:flex;flex-wrap:wrap;gap:12px;align-items:center;justify-content:space-between">
-                <div style="display:flex;flex-wrap:wrap;gap:8px">
-                  <sc-for list="{{ fin.chips }}" as="c" hint-placeholder-count="6">
-                    <button onClick="{{ c.pick }}" style="display:flex;align-items:center;gap:8px;height:36px;padding:0 14px;border-radius:999px;border:1px solid {{ c.bd }};background:{{ c.bg }};color:{{ c.fg }};font-family:inherit;font-size:14px;font-weight:600;cursor:pointer">{{ c.nome }}<span style="font-size:12px;font-weight:600;opacity:.75">{{ c.n }}</span></button>
-                  </sc-for>
+                <div style="display:flex;flex-wrap:wrap;gap:10px;align-items:center">
+                  <sc-if value="{{ fin.isContas }}" hint-placeholder-val="{{ true }}">
+                    <div style="display:flex;background:var(--gray-100);border-radius:999px;padding:3px;gap:2px">
+                      <sc-for list="{{ fin.tiposConta }}" as="tc" hint-placeholder-count="3">
+                        <button onClick="{{ tc.pick }}" style="height:34px;padding:0 14px;border:none;border-radius:999px;background:{{ tc.bg }};color:{{ tc.fg }};font-family:inherit;font-size:13px;font-weight:600;cursor:pointer">{{ tc.nome }}</button>
+                      </sc-for>
+                    </div>
+                  </sc-if>
+
+                  <div style="display:flex;align-items:center;gap:6px;height:40px;padding:0 12px;border:1.5px solid var(--border-default);border-radius:999px;background:var(--white)">
+                    <img src="https://unpkg.com/lucide-static@0.460.0/icons/filter.svg" alt="" style="width:16px;height:16px;opacity:.7">
+                    <span style="font-size:13px;font-weight:600;color:var(--text-muted)">Status:</span>
+                    <select value="{{ fin.status }}" onChange="{{ fin.onStatus }}" aria-label="Filtrar status" style="border:none;outline:none;background:transparent;font-family:inherit;font-size:14px;font-weight:600;color:var(--teal-700);cursor:pointer">
+                      <sc-for list="{{ fin.statusOpts }}" as="s" hint-placeholder-count="7">
+                        <option value="{{ s.id }}">{{ s.label }} ({{ s.count }})</option>
+                      </sc-for>
+                    </select>
+                  </div>
+
+                  <sc-if value="{{ fin.isStatusFiltrado }}" hint-placeholder-val="{{ false }}">
+                    <button onClick="{{ fin.clearStatus }}" style="display:flex;align-items:center;gap:6px;height:34px;padding:0 10px;border-radius:999px;border:1px solid var(--border-default);background:var(--gray-100);color:var(--text-strong);font-family:inherit;font-size:12px;font-weight:600;cursor:pointer" title="Remover filtro">
+                      <span>{{ fin.statusLabel }}</span>
+                      <img src="https://unpkg.com/lucide-static@0.460.0/icons/x.svg" alt="" style="width:13px;height:13px;opacity:.7">
+                    </button>
+                  </sc-if>
                 </div>
                 <div style="display:flex;flex-wrap:wrap;gap:10px;align-items:center">
                   <label style="display:flex;align-items:center;gap:8px;height:40px;padding:0 14px;border:1.5px solid var(--border-default);border-radius:999px;background:var(--white);min-width:220px">
@@ -1028,11 +1135,14 @@
                 </div>
               </div>
 
-              <div style="display:flex;flex-wrap:wrap;gap:8px 24px;font-size:14px;color:var(--text-body);padding:0 4px">
+              <div style="display:flex;flex-wrap:wrap;gap:8px 20px;align-items:center;font-size:14px;color:var(--text-body);padding:2px 4px">
                 <span><strong style="color:var(--text-strong)">{{ fin.tot.n }}</strong> títulos</span>
                 <span>Total <strong style="color:var(--text-strong)">{{ fin.tot.valor }}</strong></span>
                 <span>{{ fin.tot.pagoLabel }} <strong style="color:var(--lime-800)">{{ fin.tot.pago }}</strong></span>
                 <span>{{ fin.tot.abertoLabel }} <strong style="color:var(--amber-800)">{{ fin.tot.aberto }}</strong></span>
+                <sc-if value="{{ fin.tot.hasSummary }}" hint-placeholder-val="{{ false }}">
+                  <span style="color:var(--text-muted);font-size:13px;background:var(--gray-100);padding:3px 10px;border-radius:999px">{{ fin.tot.summary }}</span>
+                </sc-if>
               </div>
 
               <sc-if value="{{ showSidebar }}" hint-placeholder-val="{{ true }}">
@@ -1040,6 +1150,9 @@
                   <table style="width:100%;min-width:1040px;border-collapse:collapse;font-size:14px">
                     <thead>
                       <tr style="background:var(--gray-50);text-align:left;color:var(--text-muted);font-size:12px;letter-spacing:.02em;text-transform:uppercase">
+                        <sc-if value="{{ fin.showTipoCol }}" hint-placeholder-val="{{ true }}">
+                          <th style="padding:12px 14px;font-weight:600;width:95px">Tipo</th>
+                        </sc-if>
                         <th style="padding:12px 16px;font-weight:600">{{ fin.colData }}</th>
                         <th style="padding:12px;font-weight:600">{{ fin.colNome }}</th>
                         <th style="padding:12px;font-weight:600">{{ fin.colRef }}</th>
@@ -1054,6 +1167,11 @@
                     <tbody>
                       <sc-for list="{{ fin.rows }}" as="r" hint-placeholder-count="8">
                         <tr style="border-top:1px solid var(--gray-100)" style-hover="background:var(--gray-50)">
+                          <sc-if value="{{ fin.showTipoCol }}" hint-placeholder-val="{{ true }}">
+                            <td style="padding:12px 14px;white-space:nowrap">
+                              <span style="display:inline-block;padding:3px 8px;border-radius:6px;font-size:11px;font-weight:700;text-transform:uppercase;background:{{ r.tipoBadgeBg }};color:{{ r.tipoBadgeFg }}">{{ r.tipoLabel }}</span>
+                            </td>
+                          </sc-if>
                           <td style="padding:12px 16px;white-space:nowrap">
                             <div style="font-weight:600;color:var(--text-strong)">{{ r.dataTxt }}</div>
                             <div style="font-size:12px;color:{{ r.subCor }}">{{ r.dataSub }}</div>
@@ -1103,7 +1221,12 @@
                           <span style="font-size:16px;font-weight:600;color:var(--text-strong)">{{ r.nome }}</span>
                           <span style="font-size:13px;color:var(--text-muted)">{{ r.desc }}</span>
                         </div>
-                        <x-import component-from-global-scope="DesentupidoraAlertaDesignSystem_e6b749.Badge" tone="{{ r.tone }}" hint-size="96px,28px">{{ r.status }}</x-import>
+                        <div style="display:flex;align-items:center;gap:6px">
+                          <sc-if value="{{ fin.showTipoCol }}" hint-placeholder-val="{{ true }}">
+                            <span style="padding:2px 8px;border-radius:6px;font-size:11px;font-weight:700;text-transform:uppercase;background:{{ r.tipoBadgeBg }};color:{{ r.tipoBadgeFg }}">{{ r.tipoLabel }}</span>
+                          </sc-if>
+                          <x-import component-from-global-scope="DesentupidoraAlertaDesignSystem_e6b749.Badge" tone="{{ r.tone }}" hint-size="96px,28px">{{ r.status }}</x-import>
+                        </div>
                       </div>
                       <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;font-size:13px">
                         <div style="display:flex;flex-direction:column"><span style="color:var(--text-muted)">{{ fin.colData }}</span><strong style="color:var(--text-strong)">{{ r.dataTxt }}</strong><span style="color:{{ r.subCor }}">{{ r.dataSub }}</span></div>
@@ -1362,15 +1485,17 @@ const genDay = off => {
   });
   return SEED.slice(0, 5).map((v, i) => ({ ...v, os: v.os + off * 9 + 20, status: 'Programado', chegada: '', kmFim: null, m3: null, mtr: '', diesel: 0 }));
 };
-const PRECOS = {
-  'Limpa fossa': { m3: 150, hora: 160, km: 6, min: 650 },
-  'Caixa de gordura': { m3: 185, hora: 160, km: 6, min: 590 },
-  'Desentupimento': { m3: 0, hora: 220, km: 5, min: 350 },
-  'Hidrojateamento': { m3: 0, hora: 280, km: 6, min: 600 },
-  'Transporte de efluentes': { m3: 165, hora: 140, km: 7, min: 900 },
-  'Coleta de óleo lubrificante usado': { m3: 120, hora: 120, km: 6, min: 400 }
+const DEFAULT_PRECOS = {
+  'Transporte de efluentes': { baseViagem20m3: 600, min: 600 },
+  'Limpa fossa': { fixo: 650 },
+  'Caixa de gordura': { fixo: 590 },
+  'Desentupimento': { fixo: 350 },
+  'Hidrojateamento': { fixo: 600 },
+  'Coleta de óleo lubrificante usado': { fixo: 400 }
 };
-const CALC_VAZIO = { servico: 'Limpa fossa', m3: '12', horas: '2', km: '36', urgente: false };
+const PRECOS = DEFAULT_PRECOS;
+const ETES_OPTS = ['ETE Jangurussu', 'ETE Fortaleza Leste', 'ETE Pecém'];
+const CALC_VAZIO = { servicos: ['Transporte de efluentes'], ete: 'ETE Jangurussu', m3: '20', ajuste: '0', urgente: false };
 const HOJE = '2026-10-05';
 const FIN_RNG = (() => { let s = 20261005; return () => { s = s + 0x6D2B79F5 | 0; let t = Math.imul(s ^ s >>> 15, 1 | s); t = t + Math.imul(t ^ t >>> 7, 61 | t) ^ t; return ((t ^ t >>> 14) >>> 0) / 4294967296; }; })();
 const rpick = a => a[Math.floor(FIN_RNG() * a.length)];
@@ -1394,7 +1519,7 @@ const CONTRATOS = [['Shopping RioMar', '(85) 3264-0001', 18500, 'Caixa de gordur
 const OFICINAS = ['Oficina Diesel Mondubim', 'Mecânica Vácuo Nordeste', 'Borracharia Ceará', 'Auto Elétrica Maraponga'];
 const SERV_OF = ['Revisão da bomba de vácuo', 'Troca de pneus', 'Mangote e conexões', 'Revisão de freios', 'Troca de óleo do motor', 'Reparo no tanque'];
 const BLANK_IT = { tel: '', desc: '', servico: '', cat: '', placa: '', forma: 'PIX', pago: 0, pagoEm: '', cancel: false, nf: '', anexo: '', origem: 'Manual', os: null, km: 0, horas: 0, cobrado: '' };
-const FIN_TABS = ['Visão geral', 'A receber', 'A pagar', 'Despesas'];
+const FIN_TABS = ['Visão geral', 'A receber e a pagar', 'Despesas'];
 const ABERTO = ['A vencer', 'Vence hoje', 'Vencido', 'Pago parcial'];
 const ST_FIN_TONE = { 'A vencer': 'light', 'Vence hoje': 'warning-soft', 'Vencido': 'warning', 'Pago': 'success', 'Pago parcial': 'success-soft', 'Cancelado': 'white' };
 const MES_NOME = { 8: 'agosto', 9: 'setembro', 10: 'outubro' };
@@ -1477,16 +1602,32 @@ const genFin = () => {
 const LG_EMPTY = { os: '', caminhao: '', motorista: '', ajudante: '', saida: '', chegada: '', kmIni: '', kmFim: '', m3: '', diesel: '', destino: '', mtr: '', valor: '', obs: '', placa: '', modelo: '', cap: '', nome: '', tel: '', funcao: 'Motorista', cnh: '' };
 
 class Component extends DCLogic {
-  state = { lgTab: 'Escala', lgOff: 0, dias: { 0: genDay(0) }, cams: CAMS, pessoas: PESSOAS, pend: PEND, manut: MANUT, lgModal: null, calcOpen: false, cf: { ...CALC_VAZIO }, mf: { ...LG_EMPTY }, mIdx: null, mErro: '', page: 'dashboard', w: typeof window !== 'undefined' ? window.innerWidth : 1280, menu: false, osAtivas: 24, osCampo: 18, proxima: 1046, form: { ...VAZIO }, tentou: false, toast: '' };
+  state = {
+    lgTab: 'Escala', lgOff: 0, dias: { 0: genDay(0) }, cams: CAMS, pessoas: PESSOAS, pend: PEND, manut: MANUT, lgModal: null, calcOpen: false, cf: { ...CALC_VAZIO }, mf: { ...LG_EMPTY }, mIdx: null, mErro: '', page: 'dashboard', w: typeof window !== 'undefined' ? window.innerWidth : 1280, menu: false, osAtivas: 24, osCampo: 18, proxima: 1046, form: { ...VAZIO }, tentou: false, toast: '',
+    finTab: 'Visão geral', finTipoFiltro: 'Todos', finMes: 10, finFluxoDias: 30, finMargemModo: 'melhores', finMeta: 450000, finQ: '', finPer: 'Todos', finStatus: 'Todos', finCatFiltro: '', finPageSize: 15, finModal: null, finItem: null, finMenu: null, finErro: '',
+    finMF: { tipo: 'receber', nome: '', desc: '', servico: 'Limpa fossa', cat: 'Combustível', placa: '', valor: '', venc: HOJE, forma: 'PIX', data: HOJE, msg: '', n: '3', intervalo: '30' },
+    finData: null, custoDieselPorKm: 2.80, custoEquipeHora: 80.00,
+    precos: (typeof window !== 'undefined' && window.localStorage && window.localStorage.getItem('alerta_precos')) ? JSON.parse(window.localStorage.getItem('alerta_precos')) : DEFAULT_PRECOS,
+    editPrecosOpen: false,
+    epForm: { transpViagem: 600, transpKm: 6, fossa: 650, gordura: 590, desentupimento: 350, hidro: 600, oleo: 400 }
+  };
   componentDidMount() {
     this._r = () => this.setState({ w: window.innerWidth });
     window.addEventListener('resize', this._r);
-    this._k = e => { if (e.key === 'Escape') { if (this.state.calcOpen) return this.setState({ calcOpen: false }); this.setState({ osOpen: false, tentou: false, lgModal: null }); } };
+    this._k = e => {
+      if (e.key === 'Escape') {
+        if (this.state.editPrecosOpen) return this.setState({ editPrecosOpen: false });
+        if (this.state.calcOpen) return this.setState({ calcOpen: false });
+        if (this.state.finModal) return this.setState({ finModal: null, finItem: null, finErro: '' });
+        if (this.state.finMenu) return this.setState({ finMenu: null });
+        this.setState({ osOpen: false, tentou: false, lgModal: null });
+      }
+    };
     window.addEventListener('keydown', this._k);
   }
-  componentDidUpdate() { document.body.style.overflow = (this.state.osOpen || this.state.lgModal || this.state.calcOpen) ? 'hidden' : ''; }
+  componentDidUpdate() { document.body.style.overflow = (this.state.osOpen || this.state.lgModal || this.state.calcOpen || this.state.finModal || this.state.editPrecosOpen) ? 'hidden' : ''; }
   componentWillUnmount() { window.removeEventListener('resize', this._r); window.removeEventListener('keydown', this._k); clearTimeout(this._t); document.body.style.overflow = ''; }
-  go = (page) => (e) => { if (e && e.preventDefault) e.preventDefault(); if (page === 'novaOS') { this.setState({ osOpen: true, menu: false }); return; } if (page === 'calc') { const f = this.state.form; this.setState(s => ({ calcOpen: true, menu: false, cf: s.osOpen ? { ...s.cf, servico: PRECOS[f.servico] ? f.servico : s.cf.servico, m3: f.volume || s.cf.m3 } : s.cf })); return; } this.setState({ page, menu: false, tentou: false, osOpen: false }); if (typeof window !== 'undefined') window.scrollTo(0, 0); };
+  go = (page) => (e) => { if (e && e.preventDefault) e.preventDefault(); if (page === 'novaOS') { this.setState({ osOpen: true, menu: false }); return; } if (page === 'calc') { this.setState({ calcOpen: true, menu: false }); return; } this.setState({ page, menu: false, tentou: false, osOpen: false }); if (typeof window !== 'undefined') window.scrollTo(0, 0); };
   salvar = () => {
     const f = this.state.form;
     if (!f.cliente.trim() || !f.servico) { this.setState({ tentou: true }); return; }
@@ -1499,6 +1640,39 @@ class Component extends DCLogic {
   setDay(off, fn) { this.setState(s => ({ dias: { ...s.dias, [off]: fn(s.dias[off] || genDay(off)) } })); }
   toast(msg) { this.setState({ toast: msg }); clearTimeout(this._t); this._t = setTimeout(() => this.setState({ toast: '' }), 3000); }
   openModal(type, mf = {}, idx = null) { this.setState({ lgModal: type, mf: { ...LG_EMPTY, ...mf }, mIdx: idx, mErro: '' }); }
+  sincronizarOSFinanceiro(osItem) {
+    if (!osItem) return;
+    const data = this.state.finData || genFin();
+    if (data.some(x => x.tipo === 'receber' && x.os === osItem.os)) return;
+    const km = (osItem.kmFim && osItem.kmIni) ? Number(osItem.kmFim) - Number(osItem.kmIni) : 25;
+    const horas = (osItem.chegada && osItem.saida) ? Math.max(1, hh(osItem.chegada) - hh(osItem.saida)) : 2.5;
+    const novoRec = {
+      ...BLANK_IT,
+      id: 'R' + (data.length + 1),
+      tipo: 'receber',
+      nome: osItem.cliente,
+      tel: '(85) 98905-1654',
+      desc: osItem.servico,
+      servico: osItem.servico,
+      placa: osItem.placa,
+      emissao: HOJE,
+      venc: addD(HOJE, 10),
+      forma: 'Boleto',
+      valor: Number(osItem.valor) || 1200,
+      km,
+      horas,
+      origem: 'OS',
+      os: osItem.os,
+      pago: 0,
+      pagoEm: '',
+      cancel: false,
+      nf: '',
+      anexo: '',
+      cobrado: ''
+    };
+    this.setState({ finData: [novoRec, ...data] });
+    this.toast(`OS #${osItem.os} concluída e lançada a receber: ${brl(osItem.valor)}`);
+  }
   saveModal = () => {
     const { lgModal: t, mf, mIdx, lgOff } = this.state;
     const n = v => (v === '' || v == null ? null : Number(v));
@@ -1515,9 +1689,17 @@ class Component extends DCLogic {
     }
     if (t === 'fechar') {
       if (mf.kmFim && mf.kmIni && Number(mf.kmFim) < Number(mf.kmIni)) return this.setState({ mErro: 'Km final menor que o inicial.' });
-      this.setDay(lgOff, d => d.map((v, i) => i !== mIdx ? v : { ...v, saida: mf.saida, chegada: mf.chegada, prev: mf.chegada || v.prev, kmIni: n(mf.kmIni), kmFim: n(mf.kmFim), m3: n(mf.m3), diesel: n(mf.diesel) || 0, destino: mf.destino, mtr: mf.mtr, valor: n(mf.valor) || 0, obs: mf.obs, status: mf.chegada && mf.kmFim ? 'Concluído' : v.status }));
+      const tripDone = !!(mf.chegada && mf.kmFim);
+      let closedOS = null;
+      this.setDay(lgOff, d => d.map((v, i) => {
+        if (i !== mIdx) return v;
+        const updated = { ...v, saida: mf.saida, chegada: mf.chegada, prev: mf.chegada || v.prev, kmIni: n(mf.kmIni), kmFim: n(mf.kmFim), m3: n(mf.m3), diesel: n(mf.diesel) || 0, destino: mf.destino, mtr: mf.mtr, valor: n(mf.valor) || 0, obs: mf.obs, status: tripDone ? 'Concluído' : v.status };
+        if (tripDone) closedOS = updated;
+        return updated;
+      }));
       this.setState({ lgModal: null });
-      return this.toast(mf.chegada && mf.kmFim ? 'Viagem fechada' : 'Viagem atualizada');
+      if (closedOS) this.sincronizarOSFinanceiro(closedOS);
+      return this.toast(tripDone ? 'Viagem fechada e lançada no Financeiro' : 'Viagem atualizada');
     }
     if (t === 'caminhao') {
       if (!mf.placa.trim()) return this.setState({ mErro: 'Informe a placa.' });
@@ -1530,32 +1712,230 @@ class Component extends DCLogic {
       return this.toast('Pessoa cadastrada');
     }
   };
-  calcVals() {
-    const st = this.state, f = st.cf, p = PRECOS[f.servico];
+  openEditPrecosModal() {
+    const p = this.state.precos || DEFAULT_PRECOS;
+    const te = p['Transporte de efluentes'] || {};
+    this.setState({
+      editPrecosOpen: true,
+      epForm: {
+        transpViagem: te.baseViagem20m3 || 600,
+        fossa: p['Limpa fossa']?.fixo || 650,
+        gordura: p['Caixa de gordura']?.fixo || 590,
+        desentupimento: p['Desentupimento']?.fixo || 350,
+        hidro: p['Hidrojateamento']?.fixo || 600,
+        oleo: p['Coleta de óleo lubrificante usado']?.fixo || 400
+      }
+    });
+  }
+  closeEditPrecos = () => { this.setState({ editPrecosOpen: false }); };
+  saveEditPrecos = () => {
+    const f = this.state.epForm;
     const num = v => Math.max(0, Number(String(v).replace(',', '.')) || 0);
-    const m3 = num(f.m3), horas = num(f.horas), km = num(f.km);
+    const updated = {
+      'Transporte de efluentes': { baseViagem20m3: num(f.transpViagem) || 600, min: num(f.transpViagem) || 600 },
+      'Limpa fossa': { fixo: num(f.fossa) || 650 },
+      'Caixa de gordura': { fixo: num(f.gordura) || 590 },
+      'Desentupimento': { fixo: num(f.desentupimento) || 350 },
+      'Hidrojateamento': { fixo: num(f.hidro) || 600 },
+      'Coleta de óleo lubrificante usado': { fixo: num(f.oleo) || 400 }
+    };
+    if (typeof window !== 'undefined' && window.localStorage) {
+      window.localStorage.setItem('alerta_precos', JSON.stringify(updated));
+    }
+    this.setState({ precos: updated, editPrecosOpen: false });
+    this.toast('Tabela de preços atualizada com sucesso!');
+  };
+  resetEditPrecos = () => {
+    if (typeof window !== 'undefined' && window.localStorage) {
+      window.localStorage.removeItem('alerta_precos');
+    }
+    this.setState({
+      precos: DEFAULT_PRECOS,
+      epForm: { transpViagem: 600, transpKm: 6, fossa: 650, gordura: 590, desentupimento: 350, hidro: 600, oleo: 400 },
+      editPrecosOpen: false
+    });
+    this.toast('Tabela restaurada para os padrões originais!');
+  };
+  copiarTextoWhatsApp(txt) {
+    try {
+      if (navigator.clipboard && navigator.clipboard.writeText) {
+        navigator.clipboard.writeText(txt).catch(() => {});
+      }
+    } catch (e) {}
+    try {
+      const ta = document.createElement('textarea');
+      ta.value = txt;
+      ta.style.position = 'fixed';
+      ta.style.left = '-9999px';
+      ta.style.top = '-9999px';
+      document.body.appendChild(ta);
+      ta.focus();
+      ta.select();
+      document.execCommand('copy');
+      document.body.removeChild(ta);
+    } catch (e) {}
+    this.toast('Orçamento copiado para a área de transferência!');
+  }
+  calcVals() {
+    const st = this.state, f = st.cf || {};
+    const precos = st.precos || DEFAULT_PRECOS;
+    const servs = Array.isArray(f.servicos) && f.servicos.length ? f.servicos : ['Transporte de efluentes'];
+    const curEte = f.ete || 'ETE Jangurussu';
+    const num = v => Number(String(v).replace(',', '.')) || 0;
+    const m3 = Math.max(0, num(f.m3 != null ? f.m3 : '20'));
+    const ajuste = num(f.ajuste);
+
     const linhas = [];
-    if (p.m3) linhas.push({ nome: 'Volume', conta: `${nf(m3)} m³ × ${brl(p.m3)}`, v: m3 * p.m3 });
-    linhas.push({ nome: 'Mão de obra', conta: `${nf(horas)} h × ${brl(p.hora)}`, v: horas * p.hora });
-    linhas.push({ nome: 'Deslocamento', conta: `${nf(km)} km × ${brl(p.km)}`, v: km * p.km });
-    let sub = linhas.reduce((a, l) => a + l.v, 0);
-    const minimo = sub < p.min; if (minimo) sub = p.min;
-    if (f.urgente) linhas.push({ nome: 'Urgência', conta: '+30%', v: sub * 0.3 });
-    const total = Math.round(f.urgente ? sub * 1.3 : sub);
-    const cam = p.m3 ? st.cams.filter(c => c.status === 'Ativo' && c.cap >= m3).sort((a, b) => a.cap - b.cap)[0] : null;
-    const caminhaoTxt = !p.m3 ? 'Serviço sem coleta por volume.' : cam ? `Caminhão sugerido: ${cam.placa} · ${cam.cap} m³` : `Volume acima de um caminhão — dividir em ${Math.ceil(m3 / 20)} viagens.`;
+    let subtotal = 0;
+    let temTransporte = servs.includes('Transporte de efluentes');
+
+    servs.forEach(nome => {
+      const p = precos[nome] || DEFAULT_PRECOS[nome] || { fixo: 500 };
+      if (nome === 'Transporte de efluentes') {
+        const vol = m3 > 0 ? m3 : 20;
+        const viagens = Math.max(1, Math.ceil(vol / 20));
+        const baseViagem = p.baseViagem20m3 || 600;
+        const vViagens = viagens * baseViagem;
+        linhas.push({
+          nome: 'Transporte de efluentes',
+          conta: `${viagens} viagem(ns) · até 20 m³ cada · Destino: ${curEte}`,
+          v: vViagens
+        });
+        subtotal += vViagens;
+      } else {
+        const vFixo = p.fixo || 500;
+        linhas.push({
+          nome,
+          conta: 'Tabela de referência',
+          v: vFixo
+        });
+        subtotal += vFixo;
+      }
+    });
+
+    if (ajuste !== 0) {
+      linhas.push({
+        nome: ajuste < 0 ? 'Desconto comercial' : 'Ajuste adicional',
+        conta: ajuste < 0 ? 'Desconto aplicado' : 'Ajuste manual',
+        v: ajuste
+      });
+      subtotal += ajuste;
+    }
+
+    if (f.urgente) {
+      const urg = subtotal * 0.3;
+      linhas.push({
+        nome: 'Plantão / Urgência',
+        conta: '+30% sobre o subtotal',
+        v: urg
+      });
+      subtotal += urg;
+    }
+
+    const total = Math.max(0, Math.round(subtotal));
+
+    const sugeridoCam = temTransporte || m3 > 15
+      ? 'PNB-4310 · Constellation 20m³'
+      : (m3 <= 8 ? 'ORS-3098 · Cargo 8m³' : 'NQZ-7814 · Atego 15m³');
+    const caminhaoTxt = temTransporte
+      ? 'Caminhão sugerido: PNB-4310 · Constellation 24.280 (20 m³)'
+      : `Caminhão sugerido: ${sugeridoCam}`;
+
     const set = patch => this.setState(s => ({ cf: { ...s.cf, ...patch } }));
-    const on = {}; ['m3', 'horas', 'km'].forEach(k => { on[k] = e => set({ [k]: e.target.value }); });
-    const txt = `Orçamento Alerta Gestão de Resíduos\n${f.servico}${p.m3 ? ` · ${nf(m3)} m³` : ''}\nValor: ${brl(total)}\nWhatsApp: (85) 98905-1654`;
+    const on = {};
+    ['m3', 'ajuste'].forEach(k => {
+      on[k] = e => {
+        const v = e && e.target ? e.target.value : (e && e.detail ? e.detail.value : e);
+        set({ [k]: v });
+      };
+    });
+
+    const servsText = linhas.map(l => `• *${l.nome}*: ${brl(l.v)} _(${l.conta})_`).join('\n');
+    const txtWhatsApp = `*ALERTA GESTÃO DE RESÍDUOS — ORÇAMENTO*\n` +
+      `-----------------------------------------\n` +
+      `Olá! Segue a proposta de orçamento para o seu atendimento:\n\n` +
+      `📋 *Serviços Selecionados:*\n${servsText}\n\n` +
+      `━━━━━━━━━━━━━━━━━━━━━━━━━\n` +
+      `💰 *TOTAL: ${brl(total)}*\n` +
+      `━━━━━━━━━━━━━━━━━━━━━━━━━\n` +
+      `🚛 *Frota escalada:* ${caminhaoTxt}\n` +
+      (temTransporte ? `📍 *Destino do efluente:* ${curEte}\n` : '') +
+      `💳 *Formas de pagamento:* PIX, Boleto, Cartão ou Faturado 30 dias\n` +
+      `🛡️ *Garantia:* Destinação ambiental certificada na CAGECE com MTR\n\n` +
+      `Para aprovar ou agendar, basta responder a esta mensagem!\n` +
+      `*WhatsApp Oficial:* (85) 98905-1654 · Fortaleza/CE`;
+
+    const zapUrl = `https://wa.me/?text=${encodeURIComponent(txtWhatsApp)}`;
+
+    const toggleServico = (nome) => {
+      const jaTem = servs.includes(nome);
+      let novos = jaTem ? servs.filter(x => x !== nome) : [...servs, nome];
+      if (!novos.length) novos = [nome];
+      set({ servicos: novos });
+    };
+
     return {
-      f, on, servicos: Object.keys(PRECOS).map(n => { const a = n === f.servico; return { nome: n, pick: () => set({ servico: n }), bg: a ? 'var(--teal-700)' : 'var(--white)', fg: a ? 'var(--white)' : 'var(--text-strong)', bd: a ? 'var(--teal-700)' : 'var(--border-default)' }; }),
-      linhas: linhas.map(l => ({ ...l, valor: brl(l.v) })), minimo, minTxt: brl(p.min), totalTxt: brl(total), caminhaoTxt,
-      refTxt: `${p.m3 ? brl(p.m3) + '/m³ · ' : ''}${brl(p.hora)}/h · ${brl(p.km)}/km · mínimo ${brl(p.min)}`,
-      urgTrack: f.urgente ? 'var(--amber-500)' : 'var(--gray-300)', urgKnob: f.urgente ? '19px' : '3px', toggleUrg: () => set({ urgente: !f.urgente }),
+      f: {
+        m3: f.m3 != null ? f.m3 : '20',
+        ajuste: f.ajuste != null ? f.ajuste : '0',
+        urgente: !!f.urgente
+      },
+      on,
+      temTransporte,
+      etes: ETES_OPTS.map(nome => {
+        const a = curEte === nome;
+        return {
+          nome,
+          label: nome,
+          pick: () => set({ ete: nome }),
+          bg: a ? 'var(--teal-700)' : 'var(--white)',
+          fg: a ? 'var(--white)' : 'var(--text-strong)',
+          bd: a ? 'var(--teal-700)' : 'var(--border-default)'
+        };
+      }),
+      eteSelecionada: curEte,
+      refTxt: 'Transporte de efluentes: R$ 600,00 fixo por carga de 20 m³ · Demais serviços com valor fixo',
+      servicos: Object.keys(DEFAULT_PRECOS).map(n => {
+        const ativo = servs.includes(n);
+        return {
+          nome: n,
+          label: (ativo ? '✓ ' : '+ ') + n,
+          ativo,
+          pick: () => toggleServico(n),
+          bg: ativo ? 'var(--teal-700)' : 'var(--white)',
+          fg: ativo ? 'var(--white)' : 'var(--text-strong)',
+          bd: ativo ? 'var(--teal-700)' : 'var(--border-default)'
+        };
+      }),
+      linhas: linhas.map(l => ({ ...l, valor: brl(l.v) })),
+      totalTxt: brl(total),
+      caminhaoTxt,
+      urgTrack: f.urgente ? 'var(--amber-500)' : 'var(--gray-300)',
+      urgKnob: f.urgente ? '19px' : '3px',
+      toggleUrg: () => set({ urgente: !f.urgente }),
       close: () => this.setState({ calcOpen: false }),
+      openEditPrecos: () => this.openEditPrecosModal(),
       usarLabel: st.osOpen ? 'Usar valor na OS' : 'Criar OS com este valor',
-      usar: () => { const valor = total.toLocaleString('pt-BR', { minimumFractionDigits: 2 }); this.setState(s => ({ calcOpen: false, osOpen: true, form: { ...s.form, servico: f.servico, volume: p.m3 ? f.m3 : s.form.volume, valor } })); if (!st.osOpen) this.toast('Valor levado para a nova OS'); },
-      copiar: () => { try { navigator.clipboard.writeText(txt); } catch (e) {} this.toast('Orçamento copiado'); }
+      usar: () => {
+        const valor = total.toLocaleString('pt-BR', { minimumFractionDigits: 2 });
+        const servLabel = servs.join(' + ');
+        const sugeridoDestino = temTransporte ? curEte : (st.form.destino || 'ETE Jangurussu');
+        this.setState(s => ({
+          calcOpen: false,
+          osOpen: true,
+          form: {
+            ...s.form,
+            servico: servLabel,
+            volume: m3 ? String(m3) : '20',
+            caminhao: sugeridoCam,
+            destino: sugeridoDestino,
+            valor
+          }
+        }));
+        this.toast(`OS criada com caminhão 20m³ e destino ${sugeridoDestino}`);
+      },
+      zapUrl,
+      copiar: () => this.copiarTextoWhatsApp(txtWhatsApp)
     };
   }
   lgVals(desktop) {
@@ -1576,10 +1956,23 @@ class Component extends DCLogic {
         m3Txt: v.m3 ? `${nf(v.m3)} m³` : '—', destinoTxt: v.destino || '—', mtrTxt: v.mtr ? `MTR ${v.mtr}` : 'sem manifesto',
         dieselTxt: v.diesel ? `${v.diesel} L` : '—', valorTxt: brl(v.valor),
         tone: ST_TONE[v.status], bg: ST_BG[v.status], fg: ST_FG[v.status],
-        onStatus: e => { const val = e.target.value; this.setDay(off, dd => dd.map((x, j) => j === i ? { ...x, status: val } : x)); },
+        onStatus: e => {
+          const val = e.target.value;
+          this.setDay(off, dd => dd.map((x, j) => {
+            if (j !== i) return x;
+            const updated = { ...x, status: val };
+            if (val === 'Concluído') this.sincronizarOSFinanceiro(updated);
+            return updated;
+          }));
+        },
         fechar, acao: v.status === 'Concluído' ? 'Editar' : 'Fechar',
         hasNext: !!next && next !== 'Concluído', nextLabel: next,
-        avancar: () => this.setDay(off, dd => dd.map((x, j) => j === i ? { ...x, status: next } : x)),
+        avancar: () => this.setDay(off, dd => dd.map((x, j) => {
+          if (j !== i) return x;
+          const updated = { ...x, status: next };
+          if (next === 'Concluído') this.sincronizarOSFinanceiro(updated);
+          return updated;
+        })),
         left: `${Math.max(0, (ini - 6) / 13 * 100)}%`, width: `${Math.max(4, (fim - ini) / 13 * 100)}%`,
         titulo: `#${v.os} ${v.cliente} · ${v.status}`
       };
@@ -1617,11 +2010,775 @@ class Component extends DCLogic {
       rodadoPrev: mf.kmFim && mf.kmIni && Number(mf.kmFim) >= Number(mf.kmIni) ? `${Number(mf.kmFim) - Number(mf.kmIni)} km` : ''
     };
   }
+  openFinMenu(e, item) {
+    if (e && e.stopPropagation) e.stopPropagation();
+    const rect = e && e.currentTarget && e.currentTarget.getBoundingClientRect ? e.currentTarget.getBoundingClientRect() : { left: 400, bottom: 200 };
+    const x = `${Math.max(12, Math.min(window.innerWidth - 240, rect.left - 180))}px`;
+    const y = `${rect.bottom + 6}px`;
+    this.setState({ finMenu: { x, y, item }, finItem: item });
+  }
+  closeFinMenu = () => { this.setState({ finMenu: null }); };
+  openFinModal(type, item = null) {
+    const it = item || {};
+    const defaultTipo = this.state.finTab === 'Despesas' ? 'despesa' : (this.state.finTipoFiltro === 'pagar' ? 'pagar' : 'receber');
+    const defaultMF = {
+      tipo: defaultTipo,
+      nome: it.nome || '',
+      desc: it.desc || '',
+      servico: it.servico || 'Limpa fossa',
+      cat: it.cat || 'Combustível',
+      placa: it.placa || '',
+      valor: it.valor ? String(Math.max(0, it.valor - (it.pago || 0))) : '',
+      venc: it.venc || HOJE,
+      forma: it.forma || (defaultTipo === 'despesa' ? 'Cartão' : 'PIX'),
+      data: HOJE,
+      msg: it.nome ? `Olá, ${it.nome}! Lembramos do vencimento do título referente a ${it.desc || it.servico || 'serviços ambientais'} no valor de ${brl(it.valor)} com vencimento em ${ddmmyy(it.venc)}. Chave PIX: financeiro@desentupidoraalerta.com.br. Qualquer dúvida estamos à disposição! Equipe Alerta.` : '',
+      n: '3',
+      intervalo: '30'
+    };
+    this.setState({ finModal: type, finItem: item, finMF: defaultMF, finErro: '', finMenu: null });
+  }
+  closeFinModal = () => { this.setState({ finModal: null, finItem: null, finErro: '' }); };
+  saveFinModal = () => {
+    const { finModal: m, finMF: mf, finItem: it } = this.state;
+    const num = v => Math.max(0, Number(String(v).replace(/\./g, '').replace(',', '.')) || 0);
+
+    if (m === 'novo') {
+      if (!mf.nome || !mf.nome.trim()) return this.setState({ finErro: 'Informe o nome.' });
+      const val = num(mf.valor);
+      if (!val) return this.setState({ finErro: 'Informe um valor válido maior que zero.' });
+      const data = this.state.finData || genFin();
+      const isReceber = mf.tipo === 'receber';
+      const prefix = isReceber ? 'R' : 'P';
+      const novoItem = {
+        ...BLANK_IT,
+        id: `${prefix}${data.length + 1}`,
+        tipo: isReceber ? 'receber' : 'pagar',
+        nome: mf.nome.trim(),
+        desc: mf.desc.trim() || (isReceber ? mf.servico : mf.cat),
+        servico: isReceber ? mf.servico : '',
+        cat: !isReceber ? (mf.cat || 'Combustível') : '',
+        placa: mf.placa || '',
+        emissao: HOJE,
+        venc: mf.venc || HOJE,
+        forma: mf.forma || 'PIX',
+        valor: val,
+        pago: 0,
+        origem: mf.tipo === 'despesa' ? 'Despesa' : 'Manual'
+      };
+      this.setState({ finData: [novoItem, ...data], finModal: null, finErro: '' });
+      const labelMsg = mf.tipo === 'despesa' ? 'Despesa registrada' : (isReceber ? 'Conta a receber' : 'Conta a pagar');
+      return this.toast(`${labelMsg} cadastrada: ${brl(val)}`);
+    }
+
+    if (m === 'baixa') {
+      const valBaixa = num(mf.valor);
+      if (!valBaixa) return this.setState({ finErro: 'Informe o valor pago.' });
+      this.setState(s => {
+        const data = (s.finData || genFin()).map(x => {
+          if (x.id !== it.id) return x;
+          const novoPago = (x.pago || 0) + valBaixa;
+          return {
+            ...x,
+            pago: Math.min(x.valor, novoPago),
+            pagoEm: mf.data || HOJE,
+            forma: mf.forma || x.forma
+          };
+        });
+        return { finData: data, finModal: null, finItem: null, finErro: '' };
+      });
+      return this.toast(`Baixa realizada: ${brl(valBaixa)}`);
+    }
+
+    if (m === 'cobrar') {
+      if (typeof window !== 'undefined') {
+        const tel = (it && it.tel ? it.tel : '').replace(/\D/g, '');
+        const url = `https://wa.me/${tel ? (tel.startsWith('55') ? tel : '55' + tel) : '5585989051654'}?text=${encodeURIComponent(mf.msg)}`;
+        window.open(url, '_blank');
+      }
+      if (it && it.id) {
+        this.setState(s => ({
+          finData: (s.finData || genFin()).map(x => x.id === it.id ? { ...x, cobrado: HOJE } : x),
+          finModal: null,
+          finItem: null
+        }));
+      } else {
+        this.setState({ finModal: null, finItem: null });
+      }
+      return this.toast('Cobrança registrada e WhatsApp aberto');
+    }
+
+    if (m === 'recibo') {
+      this.setState({ finModal: null, finItem: null });
+      return;
+    }
+
+    if (m === 'parcelar') {
+      if (!it) return this.setState({ finModal: null });
+      const n = Math.max(2, Math.min(12, Number(mf.n) || 3));
+      const intervalo = Number(mf.intervalo) || 30;
+      const saldo = Math.max(0, it.valor - (it.pago || 0));
+      const valorParc = Math.round(saldo / n * 100) / 100;
+      const data = (this.state.finData || genFin()).filter(x => x.id !== it.id);
+      const novas = [];
+      for (let i = 1; i <= n; i++) {
+        novas.push({
+          ...it,
+          id: `${it.id}-${i}`,
+          desc: `${it.desc || it.servico || 'Título'} (${i}/${n})`,
+          venc: addD(mf.venc || HOJE, (i - 1) * intervalo),
+          valor: i === n ? Math.round((saldo - valorParc * (n - 1)) * 100) / 100 : valorParc,
+          pago: 0,
+          pagoEm: ''
+        });
+      }
+      this.setState({ finData: [...novas, ...data], finModal: null, finItem: null });
+      return this.toast(`Título parcelado em ${n}x de ${brl(valorParc)}`);
+    }
+
+    if (m === 'nf') {
+      const numNF = `NFS-e ${Math.floor(4120 + Math.random() * 800)}`;
+      this.setState(s => ({
+        finData: (s.finData || genFin()).map(x => (it && x.id === it.id) ? { ...x, nf: numNF } : x),
+        finModal: null,
+        finItem: null
+      }));
+      return this.toast(`NFS-e emitida com sucesso: ${numNF}`);
+    }
+  };
+  onFinFile = e => {
+    const file = e.target.files && e.target.files[0];
+    if (!file) return;
+    const it = this.state.finItem;
+    if (it) {
+      this.setState(s => ({
+        finData: (s.finData || genFin()).map(x => x.id === it.id ? { ...x, anexo: file.name } : x),
+        finItem: null
+      }));
+      this.toast(`Comprovante "${file.name}" anexado`);
+    } else {
+      this.toast(`Arquivo "${file.name}" selecionado`);
+    }
+    e.target.value = '';
+  };
+  exportarFinCSV = () => {
+    const st = this.state;
+    const data = st.finData || genFin();
+    const tabRaw = st.finTab || 'A receber e a pagar';
+    const tab = (tabRaw === 'A receber' || tabRaw === 'A pagar') ? 'A receber e a pagar' : tabRaw;
+    let list = data;
+    if (tab === 'A receber e a pagar') {
+      const tipo = st.finTipoFiltro || 'Todos';
+      if (tipo === 'receber') list = data.filter(x => x.tipo === 'receber');
+      else if (tipo === 'pagar') list = data.filter(x => x.tipo === 'pagar');
+    } else if (tab === 'Despesas') {
+      list = data.filter(x => x.tipo === 'pagar');
+    }
+    let csv = 'ID;Tipo;Nome;Descricao;Servico/Categoria;Placa;Emissao;Vencimento;Forma;Valor;Pago;Data_Pago;Status;NF;Origem\n';
+    list.forEach(x => {
+      csv += `"${x.id}";"${x.tipo}";"${x.nome}";"${x.desc || ''}";"${x.servico || x.cat || ''}";"${x.placa || ''}";"${x.emissao}";"${x.venc}";"${x.forma}";"${Number(x.valor).toFixed(2)}";"${Number(x.pago || 0).toFixed(2)}";"${x.pagoEm || ''}";"${stOf(x)}";"${x.nf || ''}";"${x.origem || ''}"\n`;
+    });
+    if (typeof window !== 'undefined') {
+      const blob = new Blob(["\ufeff" + csv], { type: 'text/csv;charset=utf-8;' });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = `financeiro-${tab.toLowerCase().replace(/\s+/g, '-')}-${HOJE}.csv`;
+      a.click();
+      URL.revokeObjectURL(url);
+    }
+    this.toast(`Planilha ${tab} exportada em CSV`);
+  };
+  finVals(desktop) {
+    const st = this.state;
+    if (!st.finData) {
+      setTimeout(() => this.setState({ finData: genFin() }), 0);
+    }
+    const data = st.finData || genFin();
+    const mes = st.finMes || 10;
+    const tabRaw = st.finTab || 'Visão geral';
+    const tab = (tabRaw === 'A receber' || tabRaw === 'A pagar') ? 'A receber e a pagar' : tabRaw;
+    const isGeral = tab === 'Visão geral';
+    const isDesp = tab === 'Despesas';
+    const isContas = tab === 'A receber e a pagar';
+    const isLista = isContas || isDesp;
+    const tipoFiltro = st.finTipoFiltro || (tabRaw === 'A pagar' ? 'pagar' : (tabRaw === 'A receber' ? 'receber' : 'Todos'));
+    const tiposConta = [
+      { id: 'Todos', nome: 'Todos', a: tipoFiltro === 'Todos' },
+      { id: 'receber', nome: 'A receber', a: tipoFiltro === 'receber' },
+      { id: 'pagar', nome: 'A pagar', a: tipoFiltro === 'pagar' }
+    ].map(t => ({
+      ...t,
+      bg: t.a ? 'var(--teal-700)' : 'transparent',
+      fg: t.a ? 'var(--white)' : 'var(--text-strong)',
+      pick: () => this.setState({ finTipoFiltro: t.id, finStatus: 'Todos', finPageSize: 15 })
+    }));
+
+    const meses = [
+      { id: 8, nome: 'Agosto' },
+      { id: 9, nome: 'Setembro' },
+      { id: 10, nome: 'Outubro' }
+    ].map(m => {
+      const a = m.id === mes;
+      return {
+        nome: m.nome,
+        pick: () => this.setState({ finMes: m.id }),
+        bg: a ? 'var(--teal-700)' : 'var(--white)',
+        fg: a ? 'var(--white)' : 'var(--text-strong)',
+        bd: a ? 'var(--teal-700)' : 'var(--border-default)'
+      };
+    });
+
+    const mesStr = String(mes).padStart(2, '0');
+    const recsMes = data.filter(x => x.tipo === 'receber' && !x.cancel && x.emissao.startsWith(`2026-${mesStr}`));
+    const pagsMes = data.filter(x => x.tipo === 'pagar' && !x.cancel && x.emissao.startsWith(`2026-${mesStr}`));
+    const fatMes = recsMes.reduce((a, x) => a + x.valor, 0);
+    const meta = st.finMeta || 450000;
+    const metaPct = pctTxt(fatMes / meta);
+    const metaW = Math.min(100, Math.round(fatMes / meta * 100)) + '%';
+    const fatVar = mes === 10 ? '+14% vs. setembro' : mes === 9 ? '+14,3% vs. agosto' : 'Mês base';
+
+    const saldoHoje = 68400;
+    const d30 = addD(HOJE, 30);
+    const rec30 = data.filter(x => x.tipo === 'receber' && !x.cancel && x.pago < x.valor && x.venc <= d30).reduce((a, x) => a + (x.valor - x.pago), 0);
+    const pag30 = data.filter(x => x.tipo === 'pagar' && !x.cancel && x.pago < x.valor && x.venc <= d30).reduce((a, x) => a + (x.valor - x.pago), 0);
+    const saldo30 = saldoHoje + rec30 - pag30;
+
+    const abertos = data.filter(x => x.tipo === 'receber' && !x.cancel && x.pago < x.valor);
+    const abertoTot = abertos.reduce((a, x) => a + (x.valor - x.pago), 0);
+    const abertoSub = `${abertos.length} títulos em aberto`;
+
+    const vencidos = data.filter(x => x.tipo === 'receber' && !x.cancel && x.pago < x.valor && x.venc < HOJE);
+    const vencTot = vencidos.reduce((a, x) => a + (x.valor - x.pago), 0);
+    const vencSub = `${vencidos.length} títulos em atraso`;
+
+    const fluxoDias = st.finFluxoDias || 30;
+    const nSemanas = fluxoDias === 30 ? 5 : fluxoDias === 60 ? 9 : 13;
+    const fluxoOpts = [30, 60, 90].map(d => ({
+      nome: `${d} dias`,
+      pick: () => this.setState({ finFluxoDias: d }),
+      bg: fluxoDias === d ? 'var(--white)' : 'transparent',
+      fg: fluxoDias === d ? 'var(--text-strong)' : 'var(--text-muted)'
+    }));
+
+    let acum = saldoHoje;
+    const fluxoCols = [];
+    let maxK = 1000;
+    for (let w = 0; w < nSemanas; w++) {
+      const wIni = addD(HOJE, w * 7);
+      const wFim = addD(HOJE, (w + 1) * 7 - 1);
+      const ent = data.filter(x => x.tipo === 'receber' && !x.cancel && x.pago < x.valor && x.venc >= wIni && x.venc <= wFim).reduce((a, x) => a + (x.valor - x.pago), 0);
+      const sai = data.filter(x => x.tipo === 'pagar' && !x.cancel && x.pago < x.valor && x.venc >= wIni && x.venc <= wFim).reduce((a, x) => a + (x.valor - x.pago), 0);
+      acum = acum + ent - sai;
+      if (ent > maxK) maxK = ent;
+      if (sai > maxK) maxK = sai;
+      fluxoCols.push({ w, ent, sai, acum, wIni, wFim });
+    }
+    const fluxo = fluxoCols.map(b => ({
+      titulo: `Semana ${b.w + 1} (${ddmm(b.wIni)} a ${ddmm(b.wFim)}): Entradas ${brl(b.ent)} · Saídas ${brl(b.sai)} · Saldo ${brl(b.acum)}`,
+      entK: b.ent > 0 ? '+' + mil(b.ent) : '0',
+      entH: Math.max(4, Math.min(92, Math.round(b.ent / maxK * 88))) + 'px',
+      saiK: b.sai > 0 ? '-' + mil(b.sai) : '0',
+      saiH: Math.max(4, Math.min(92, Math.round(b.sai / maxK * 88))) + 'px',
+      label: `Sem ${b.w + 1}`,
+      saldoCor: b.acum >= 0 ? 'var(--lime-800)' : 'var(--danger)',
+      saldoK: brl0(b.acum)
+    }));
+    const ultimoSaldo = fluxoCols.length ? fluxoCols[fluxoCols.length - 1].acum : saldoHoje;
+
+    const servMap = {};
+    recsMes.forEach(x => { servMap[x.servico] = (servMap[x.servico] || 0) + x.valor; });
+    const maxServ = Math.max(...Object.values(servMap), 1);
+    const porServico = Object.entries(servMap).sort((a, b) => b[1] - a[1]).map(([nome, val], i) => ({
+      nome,
+      valorTxt: brl(val),
+      pctTxt: pctTxt(val / (fatMes || 1), 1),
+      w: Math.round(val / maxServ * 100) + '%',
+      cor: SERV_COR[i % SERV_COR.length]
+    }));
+
+    const camMap = {};
+    recsMes.filter(x => x.placa).forEach(x => { camMap[x.placa] = (camMap[x.placa] || 0) + x.valor; });
+    const maxCam = Math.max(...Object.values(camMap), 1);
+    const porCaminhao = Object.entries(camMap).sort((a, b) => b[1] - a[1]).map(([nome, val]) => ({
+      nome,
+      valorTxt: brl(val),
+      w: Math.round(val / maxCam * 100) + '%'
+    }));
+
+    const catMap = {};
+    pagsMes.forEach(x => { catMap[x.cat] = (catMap[x.cat] || 0) + x.valor; });
+    const totDespMes = pagsMes.reduce((a, x) => a + x.valor, 0);
+    const maxCat = Math.max(...Object.values(catMap), 1);
+    const porCat = Object.entries(catMap).sort((a, b) => b[1] - a[1]).map(([nome, val]) => ({
+      nome,
+      valorTxt: brl(val),
+      pctTxt: pctTxt(val / (totDespMes || 1), 1),
+      w: Math.round(val / maxCat * 100) + '%',
+      cor: CAT_COR[nome] || 'var(--teal-500)',
+      pick: () => this.setState({ finTab: 'Despesas', finCatFiltro: nome, finStatus: 'Todos' })
+    }));
+
+    const margemModo = st.finMargemModo || 'melhores';
+    const margemOpts = [
+      { nome: 'Melhores margens', pick: () => this.setState({ finMargemModo: 'melhores' }), bg: margemModo === 'melhores' ? 'var(--white)' : 'transparent', fg: margemModo === 'melhores' ? 'var(--text-strong)' : 'var(--text-muted)' },
+      { nome: 'Menores margens', pick: () => this.setState({ finMargemModo: 'menores' }), bg: margemModo === 'menores' ? 'var(--white)' : 'transparent', fg: margemModo === 'menores' ? 'var(--text-strong)' : 'var(--text-muted)' }
+    ];
+    const ossComMargem = data.filter(x => x.tipo === 'receber' && x.origem === 'OS' && x.os && x.km > 0).map(x => {
+      const comb = Math.round(x.km * (st.custoDieselPorKm || 2.80));
+      const equipe = Math.round((x.horas || 2) * (st.custoEquipeHora || 80.00));
+      const lucro = x.valor - comb - equipe;
+      const pctVal = Math.round(lucro / x.valor * 100);
+      return {
+        os: x.os,
+        nome: x.nome,
+        servico: x.servico,
+        placa: x.placa,
+        km: x.km,
+        horas: x.horas,
+        receita: brl(x.valor),
+        comb: brl(comb),
+        equipe: brl(equipe),
+        lucro,
+        pctNum: pctVal,
+        pct: pctVal + '%',
+        w: Math.max(0, Math.min(100, pctVal)) + '%',
+        cor: pctVal >= 60 ? 'var(--lime-500)' : pctVal >= 40 ? 'var(--teal-500)' : 'var(--amber-500)'
+      };
+    });
+    ossComMargem.sort((a, b) => margemModo === 'melhores' ? b.pctNum - a.pctNum : a.pctNum - b.pctNum);
+    const margens = ossComMargem.slice(0, 6);
+    const totRecMarg = ossComMargem.reduce((a, x) => a + (x.valor || 1), 0);
+    const totLucMarg = ossComMargem.reduce((a, x) => a + x.lucro, 0);
+    const margemMedia = ossComMargem.length ? Math.round(totLucMarg / totRecMarg * 100) + '%' : '62%';
+
+    const cliMap = {};
+    recsMes.forEach(x => {
+      if (!cliMap[x.nome]) cliMap[x.nome] = { nome: x.nome, val: 0, count: 0, serv: x.servico };
+      cliMap[x.nome].val += x.valor;
+      cliMap[x.nome].count++;
+    });
+    const topClientes = Object.values(cliMap).sort((a, b) => b.val - a.val).slice(0, 6).map((c, i) => ({
+      rank: i + 1,
+      nome: c.nome,
+      sub: `${c.count} serviço(s) · ${c.serv}`,
+      valorTxt: brl(c.val)
+    }));
+
+    const despFrotaTot = pagsMes.filter(x => x.cat === 'Combustível' || x.cat === 'Manutenção de frota').reduce((a, x) => a + x.valor, 0);
+    const despCageceTot = pagsMes.filter(x => x.cat === 'Taxa CAGECE/descarte').reduce((a, x) => a + x.valor, 0);
+    const despFolhaTot = pagsMes.filter(x => x.cat === 'Salários/diárias').reduce((a, x) => a + x.valor, 0);
+    const despKpis = [
+      { label: `Total de despesas · ${MES_NOME[mes]}`, valor: brl(totDespMes), sub: `${pagsMes.length} lançamentos` },
+      { label: 'Frota & Combustível', valor: brl(despFrotaTot), sub: `${pctTxt(despFrotaTot / (totDespMes || 1))} do total` },
+      { label: 'Taxa CAGECE / Descarte', valor: brl(despCageceTot), sub: `${pctTxt(despCageceTot / (totDespMes || 1))} do total` },
+      { label: 'Folha & Diárias', valor: brl(despFolhaTot), sub: `${pctTxt(despFolhaTot / (totDespMes || 1))} do total` }
+    ];
+    const despCamMap = {};
+    pagsMes.filter(x => x.placa).forEach(x => { despCamMap[x.placa] = (despCamMap[x.placa] || 0) + x.valor; });
+    const maxDespCam = Math.max(...Object.values(despCamMap), 1);
+    const despCam = Object.entries(despCamMap).sort((a, b) => b[1] - a[1]).map(([nome, val]) => ({
+      nome,
+      valorTxt: brl(val),
+      w: Math.round(val / maxDespCam * 100) + '%'
+    }));
+
+    let baseList = [];
+    let colData = 'Vencimento', colNome = 'Cliente / Fornecedor', colRef = 'Serviço / Categoria';
+    if (isContas) {
+      if (tipoFiltro === 'receber') {
+        baseList = data.filter(x => x.tipo === 'receber');
+        colData = 'Vencimento'; colNome = 'Cliente'; colRef = 'Serviço / OS';
+      } else if (tipoFiltro === 'pagar') {
+        baseList = data.filter(x => x.tipo === 'pagar');
+        colData = 'Vencimento'; colNome = 'Fornecedor / Favorecido'; colRef = 'Categoria';
+      } else {
+        baseList = data;
+        colData = 'Vencimento'; colNome = 'Cliente / Fornecedor'; colRef = 'Serviço / Categoria';
+      }
+    } else if (isDesp) {
+      baseList = data.filter(x => x.tipo === 'pagar' && (!st.finCatFiltro || x.cat === st.finCatFiltro));
+      colData = 'Data'; colNome = 'Favorecido / Fornecedor'; colRef = 'Categoria';
+    }
+
+    const statusOptions = ['Todos', 'A vencer', 'Vence hoje', 'Vencido', 'Pago', 'Pago parcial', 'Cancelado'];
+    const curStatus = st.finStatus || 'Todos';
+    const statusOpts = statusOptions.map(s => {
+      const count = s === 'Todos' ? baseList.length : baseList.filter(x => stOf(x) === s).length;
+      return {
+        id: s,
+        label: s,
+        count,
+        text: `${s} (${count})`,
+        selected: curStatus === s
+      };
+    });
+    const curStatusObj = statusOpts.find(s => s.id === curStatus) || statusOpts[0];
+    const isStatusFiltrado = curStatus !== 'Todos';
+    const clearStatus = () => this.setState({ finStatus: 'Todos', finPageSize: 15 });
+    const showTipoCol = isContas && tipoFiltro === 'Todos';
+
+    const chips = statusOptions.map(s => {
+      const count = s === 'Todos' ? baseList.length : baseList.filter(x => stOf(x) === s).length;
+      const a = curStatus === s;
+      return {
+        nome: s,
+        n: count,
+        pick: () => this.setState({ finStatus: s, finPageSize: 15 }),
+        bg: a ? 'var(--teal-700)' : 'var(--white)',
+        fg: a ? 'var(--white)' : 'var(--text-strong)',
+        bd: a ? 'var(--teal-700)' : 'var(--border-default)'
+      };
+    });
+
+    let filtered = baseList;
+    if (st.finStatus && st.finStatus !== 'Todos') {
+      filtered = filtered.filter(x => stOf(x) === st.finStatus);
+    }
+    if (st.finQ && st.finQ.trim()) {
+      const q = st.finQ.trim().toLowerCase();
+      filtered = filtered.filter(x => (x.nome && x.nome.toLowerCase().includes(q)) || (x.os && String(x.os).includes(q)) || (x.placa && x.placa.toLowerCase().includes(q)) || (x.nf && x.nf.toLowerCase().includes(q)) || (x.desc && x.desc.toLowerCase().includes(q)) || (x.cat && x.cat.toLowerCase().includes(q)));
+    }
+    if (st.finPer && st.finPer !== 'Todos') {
+      if (st.finPer === 'Vencidos') filtered = filtered.filter(x => x.venc < HOJE && x.pago < x.valor && !x.cancel);
+      else if (st.finPer === 'Esta semana') {
+        const fimSem = addD(HOJE, 7);
+        filtered = filtered.filter(x => x.venc >= HOJE && x.venc <= fimSem);
+      } else if (st.finPer === 'Este mês') {
+        filtered = filtered.filter(x => (x.venc || x.emissao).startsWith(`2026-${mesStr}`));
+      } else if (st.finPer === 'Próximo mês') {
+        const proxM = String(mes === 12 ? 1 : mes + 1).padStart(2, '0');
+        filtered = filtered.filter(x => (x.venc || x.emissao).startsWith(`2026-${proxM}`));
+      }
+    }
+
+    const pageSize = st.finPageSize || 15;
+    const visibleRows = filtered.slice(0, pageSize);
+    const temMais = filtered.length > pageSize;
+
+    const rows = visibleRows.map(r => {
+      const stRow = stOf(r);
+      const isPago = stRow === 'Pago';
+      const isParcial = stRow === 'Pago parcial';
+      const isAberto = stRow === 'A vencer' || stRow === 'Vence hoje' || stRow === 'Vencido' || isParcial;
+      const hasPrim = isAberto || isPago;
+      const primLabel = isPago ? 'Recibo' : (r.tipo === 'receber' ? (stRow === 'Vencido' ? 'Cobrar' : 'Dar baixa') : 'Dar baixa');
+      const prim = () => {
+        if (isPago) this.openFinModal('recibo', r);
+        else if (r.tipo === 'receber' && stRow === 'Vencido') this.openFinModal('cobrar', r);
+        else this.openFinModal('baixa', r);
+      };
+      const subCor = stRow === 'Vencido' ? 'var(--amber-800)' : stRow === 'Pago' ? 'var(--lime-800)' : 'var(--text-muted)';
+      const dataSub = stRow === 'Pago' ? (r.pagoEm ? `pago em ${ddmm(r.pagoEm)}` : 'liquidado') : stRow === 'Vencido' ? `vencido há ${difD(HOJE, r.venc)} dias` : stRow === 'Vence hoje' ? 'vence hoje' : `vence em ${difD(r.venc, HOJE)} dias`;
+      const hasDoc = !!r.nf || !!r.anexo;
+      const isRec = r.tipo === 'receber';
+      const tipoBadgeBg = isRec ? 'var(--lime-100)' : 'var(--gray-100)';
+      const tipoBadgeFg = isRec ? 'var(--teal-800)' : 'var(--gray-700)';
+      const tipoLabel = isRec ? 'Receber' : 'Pagar';
+      const valorSinal = (isContas && tipoFiltro === 'Todos') ? (isRec ? '+ ' : '- ') : '';
+      const valorCor = (isContas && tipoFiltro === 'Todos') ? (isRec ? 'var(--teal-800)' : 'var(--text-strong)') : 'var(--text-strong)';
+
+      return {
+        ...r,
+        isRec,
+        tipoBadgeBg,
+        tipoBadgeFg,
+        tipoLabel,
+        valorCor,
+        dataTxt: ddmm(r.venc || r.emissao),
+        dataSub,
+        subCor,
+        desc: r.desc || r.servico || r.cat || '—',
+        ref1: r.tipo === 'receber' ? (r.os ? `#${r.os} · ${r.servico}` : r.servico) : r.cat,
+        ref2: r.placa ? `${r.placa} · ${r.origem || ''}` : (r.origem || '—'),
+        forma: r.forma || 'PIX',
+        hasDoc,
+        noDoc: !hasDoc,
+        doc: r.nf || r.anexo || '',
+        docIcon: r.nf ? IC('receipt') : IC('paperclip'),
+        docMob: r.nf ? 'NF-e' : r.anexo ? 'Comprovante' : '—',
+        valorTxt: `${valorSinal}${brl(r.valor)}`,
+        pagoTxt: r.pago > 0 ? (r.pago >= r.valor ? 'Total pago' : `Pago ${brl(r.pago)}`) : '—',
+        status: stRow,
+        tone: ST_FIN_TONE[stRow] || 'light',
+        hasPrim,
+        primLabel,
+        prim,
+        openMenu: (e) => this.openFinMenu(e, r)
+      };
+    });
+
+    const totVal = filtered.reduce((a, x) => a + x.valor, 0);
+    const totPago = filtered.reduce((a, x) => a + (x.pago || 0), 0);
+    const totAberto = filtered.reduce((a, x) => a + (!x.cancel ? Math.max(0, x.valor - (x.pago || 0)) : 0), 0);
+
+    let totSummary = '';
+    if (isContas && tipoFiltro === 'Todos') {
+      const recTot = filtered.filter(x => x.tipo === 'receber').reduce((a, x) => a + x.valor, 0);
+      const pagTot = filtered.filter(x => x.tipo === 'pagar').reduce((a, x) => a + x.valor, 0);
+      const saldoPrev = recTot - pagTot;
+      totSummary = `A receber: ${brl(recTot)} · A pagar: ${brl(pagTot)} · Saldo: ${saldoPrev >= 0 ? '+' : ''}${brl(saldoPrev)}`;
+    }
+
+    const tot = {
+      n: filtered.length,
+      valor: brl(totVal),
+      pagoLabel: isContas && tipoFiltro === 'receber' ? 'Recebido' : (isContas && tipoFiltro === 'Todos' ? 'Liquidado' : 'Pago'),
+      pago: brl(totPago),
+      abertoLabel: 'Em aberto',
+      aberto: brl(totAberto),
+      summary: totSummary,
+      hasSummary: !!totSummary
+    };
+
+    const mItem = st.finItem || {};
+    const mf = st.finMF || {};
+    const onMF = {};
+    ['nome', 'desc', 'servico', 'cat', 'placa', 'valor', 'venc', 'forma', 'data', 'msg', 'n', 'intervalo'].forEach(k => {
+      onMF[k] = e => {
+        const v = e && e.target ? e.target.value : e;
+        this.setState(s => ({ finMF: { ...s.finMF, [k]: v } }));
+      };
+    });
+
+    const nParc = Math.max(2, Math.min(12, Number(mf.n) || 3));
+    const intParc = Number(mf.intervalo) || 30;
+    const valRestante = mItem.valor ? Math.max(0, mItem.valor - (mItem.pago || 0)) : Number(mf.valor) || 0;
+    const parcVal = Math.round(valRestante / nParc * 100) / 100;
+    const parcelas = [];
+    for (let p = 1; p <= nParc; p++) {
+      parcelas.push({
+        i: p,
+        venc: ddmmyy(addD(mf.venc || HOJE, (p - 1) * intParc)),
+        valor: brl(parcVal)
+      });
+    }
+
+    const nfLinhas = [
+      { k: 'Tomador do Serviço', v: mItem.nome || 'Cliente' },
+      { k: 'Serviço Prestado', v: mItem.desc || mItem.servico || 'Limpa fossa e desobstrução' },
+      { k: 'Valor Total', v: brl(mItem.valor) },
+      { k: 'Alíquota ISS (Fortaleza)', v: `3,00% (${brl((mItem.valor || 0) * 0.03)})` },
+      { k: 'Data de Competência', v: ddmmyy(mItem.emissao || HOJE) },
+      { k: 'Código de Tributação', v: '7.02 · Limpeza e descolmatação' }
+    ];
+
+    const rc = {
+      num: mItem.os ? `#${mItem.os}` : `#${mItem.id || 'RC-1044'}`,
+      valor: brl(mItem.valor || mItem.pago),
+      nome: mItem.nome || 'Cliente',
+      ref: mItem.desc || mItem.servico || 'serviços ambientais',
+      forma: mItem.forma || 'PIX',
+      data: ddmmyy(mItem.pagoEm || mItem.venc || HOJE),
+      hoje: `${new Date().getDate()} de ${MS[new Date().getMonth()]} de ${new Date().getFullYear()}`
+    };
+
+    const menuIt = (st.finMenu && st.finMenu.item) || {};
+    const menuSt = menuIt.id ? stOf(menuIt) : '';
+    const menuItems = [];
+    if (menuIt.id) {
+      if (menuSt !== 'Pago') {
+        menuItems.push({ label: 'Dar baixa', icon: IC('check-circle'), fg: 'var(--teal-700)', go: () => this.openFinModal('baixa', menuIt) });
+      }
+      if (menuIt.tipo === 'receber') {
+        menuItems.push({ label: 'Cobrar via WhatsApp', icon: IC('message-circle'), fg: 'var(--leaf-600)', go: () => this.openFinModal('cobrar', menuIt) });
+        if (!menuIt.nf) {
+          menuItems.push({ label: 'Emitir NFS-e', icon: IC('receipt'), fg: 'var(--text-strong)', go: () => this.openFinModal('nf', menuIt) });
+        }
+      }
+      if (menuSt === 'Pago' || menuSt === 'Pago parcial') {
+        menuItems.push({ label: 'Gerar recibo', icon: IC('file-text'), fg: 'var(--text-strong)', go: () => this.openFinModal('recibo', menuIt) });
+      }
+      if (menuSt !== 'Pago' && !menuIt.cancel) {
+        menuItems.push({ label: 'Parcelar título', icon: IC('layers'), fg: 'var(--text-strong)', go: () => this.openFinModal('parcelar', menuIt) });
+      }
+      menuItems.push({
+        label: menuIt.anexo ? 'Alterar comprovante' : 'Anexar comprovante',
+        icon: IC('paperclip'),
+        fg: 'var(--text-strong)',
+        go: () => {
+          this.setState({ finItem: menuIt, finMenu: null });
+          if (this._finFileEl) this._finFileEl.click();
+        }
+      });
+      menuItems.push({
+        label: menuIt.cancel ? 'Reativar título' : 'Cancelar título',
+        icon: IC('x-circle'),
+        fg: menuIt.cancel ? 'var(--teal-700)' : 'var(--danger)',
+        go: () => {
+          this.setState(s => ({
+            finData: (s.finData || genFin()).map(x => x.id === menuIt.id ? { ...x, cancel: !x.cancel } : x),
+            finMenu: null
+          }));
+          this.toast(menuIt.cancel ? 'Título reativado' : 'Título cancelado');
+        }
+      });
+    }
+
+    const modalTitles = {
+      novo: [
+        mf.tipo === 'despesa' ? 'Nova despesa operacional' : (mf.tipo === 'pagar' ? 'Nova conta a pagar' : 'Novo recebimento'),
+        mf.tipo === 'despesa' ? 'Registre gastos com combustível, manutenção, diárias ou taxas.' : (mf.tipo === 'pagar' ? 'Cadastre faturas de fornecedores, serviços e encargos.' : 'Cadastre um recebimento de cliente ou ordem de serviço.'),
+        mf.tipo === 'despesa' ? 'Salvar despesa' : (mf.tipo === 'pagar' ? 'Salvar conta a pagar' : 'Salvar recebimento')
+      ],
+      baixa: ['Dar baixa no título', `Liquidação de ${mItem.nome || ''}`, 'Confirmar baixa'],
+      cobrar: ['Cobrança via WhatsApp', `Enviar lembrete para ${mItem.nome || ''}`, 'Abrir WhatsApp'],
+      recibo: ['Recibo comercial', 'Comprovante de pagamento quitado', 'Concluído'],
+      parcelar: ['Parcelar título', `Dividir o saldo de ${brl(mItem.valor)}`, 'Confirmar parcelamento'],
+      nf: ['Emissão de NFS-e (Simulada)', 'Nota Fiscal de Serviços Eletrônica — Fortaleza/CE', 'Emitir NFS-e']
+    }[st.finModal] || ['', '', ''];
+
+    return {
+      fileRef: el => { this._finFileEl = el; },
+      onFile: this.onFinFile,
+      tabs: FIN_TABS,
+      tab,
+      setTab: t => this.setState({ finTab: t, finStatus: 'Todos', finCatFiltro: '', finQ: '', finPageSize: 15 }),
+      isGeral,
+      isDesp,
+      isLista,
+      showMes: isGeral || isDesp,
+      meses,
+      mesNome: MES_NOME[mes],
+      mesCap: `${MES_NOME[mes].charAt(0).toUpperCase() + MES_NOME[mes].slice(1)} / 2026`,
+      fatTxt: brl(fatMes),
+      metaW,
+      metaPct,
+      metaTxt: brl(meta),
+      fatVar,
+      saldoCor: saldo30 >= 0 ? 'var(--teal-700)' : 'var(--danger)',
+      saldo30Txt: brl(saldo30),
+      saldoHojeTxt: brl(saldoHoje),
+      rec30Txt: brl(rec30),
+      pag30Txt: brl(pag30),
+      abertoTxt: brl(abertoTot),
+      abertoSub,
+      verVencidos: () => this.setState({ finTab: 'A receber e a pagar', finTipoFiltro: 'receber', finStatus: 'Vencido' }),
+      vencTxt: brl(vencTot),
+      vencSub,
+      fluxoNota: `Saldo bancário inicial: ${brl(saldoHoje)}.`,
+      fluxoOpts,
+      fluxoDias,
+      fluxoFimCor: ultimoSaldo >= 0 ? 'var(--lime-800)' : 'var(--danger)',
+      fluxoFimTxt: brl(ultimoSaldo),
+      nb: nSemanas,
+      fluxo,
+      porServico,
+      porCaminhao,
+      despTotTxt: `Total ${brl(totDespMes)}`,
+      verDespesas: (e) => { if (e && e.preventDefault) e.preventDefault(); this.setState({ finTab: 'Despesas', finCatFiltro: '', finStatus: 'Todos' }); },
+      porCat,
+      margemRegra: `Receita − diesel (${brl(st.custoDieselPorKm || 2.80)}/km) − equipe (${brl(st.custoEquipeHora || 80.00)}/h)`,
+      margemMedia,
+      margemOpts,
+      margens,
+      topClientes,
+      despKpis,
+      despCam,
+      chips,
+      isContas,
+      tiposConta,
+      statusOpts,
+      status: curStatus,
+      statusLabel: curStatusObj.label,
+      statusCount: curStatusObj.count,
+      isStatusFiltrado,
+      clearStatus,
+      onStatus: e => this.setState({ finStatus: e.target.value, finPageSize: 15 }),
+      showTipoCol,
+      q: st.finQ || '',
+      onQ: e => this.setState({ finQ: e.target.value }),
+      showPer: tab !== 'Visão geral',
+      per: st.finPer || 'Todos',
+      onPer: e => this.setState({ finPer: e.target.value }),
+      perOpts: ['Todos', 'Vencidos', 'Esta semana', 'Este mês', 'Próximo mês'],
+      tot,
+      colData,
+      colNome,
+      colRef,
+      rows,
+      vazio: rows.length === 0,
+      temMais,
+      mais: () => this.setState(s => ({ finPageSize: (s.finPageSize || 15) + 15 })),
+      maisLabel: `Ver mais títulos (${filtered.length - rows.length} restantes)`,
+      exportar: this.exportarFinCSV,
+      novoLabel: isDesp ? '+ Nova despesa' : (isContas && tipoFiltro === 'pagar' ? '+ Nova conta a pagar' : (isContas && tipoFiltro === 'receber' ? '+ Novo recebimento' : '+ Novo lançamento')),
+      novo: () => this.openFinModal('novo'),
+      menuOpen: !!st.finMenu,
+      closeMenu: this.closeFinMenu,
+      menuX: st.finMenu ? st.finMenu.x : '0px',
+      menuY: st.finMenu ? st.finMenu.y : '0px',
+      menuItems,
+      modalOpen: !!st.finModal,
+      closeModal: this.closeFinModal,
+      mTitle: modalTitles[0],
+      mSub: modalTitles[1],
+      mCta: modalTitles[2],
+      ctaVar: 'primary',
+      mNovo: st.finModal === 'novo',
+      mBaixa: st.finModal === 'baixa',
+      mCobrar: st.finModal === 'cobrar',
+      mRecibo: st.finModal === 'recibo',
+      mParcelar: st.finModal === 'parcelar',
+      mNf: st.finModal === 'nf',
+      mErro: st.finErro,
+      tipos: [
+        { nome: 'A receber', bd: mf.tipo === 'receber' ? 'var(--teal-700)' : 'var(--border-default)', bg: mf.tipo === 'receber' ? 'var(--teal-700)' : 'var(--white)', fg: mf.tipo === 'receber' ? 'var(--white)' : 'var(--text-strong)', pick: () => this.setState(s => ({ finMF: { ...s.finMF, tipo: 'receber' } })) },
+        { nome: 'A pagar', bd: mf.tipo === 'pagar' ? 'var(--teal-700)' : 'var(--border-default)', bg: mf.tipo === 'pagar' ? 'var(--teal-700)' : 'var(--white)', fg: mf.tipo === 'pagar' ? 'var(--white)' : 'var(--text-strong)', pick: () => this.setState(s => ({ finMF: { ...s.finMF, tipo: 'pagar' } })) },
+        { nome: 'Despesa', bd: mf.tipo === 'despesa' ? 'var(--danger)' : 'var(--border-default)', bg: mf.tipo === 'despesa' ? 'var(--danger)' : 'var(--white)', fg: mf.tipo === 'despesa' ? 'var(--white)' : 'var(--text-strong)', pick: () => this.setState(s => ({ finMF: { ...s.finMF, tipo: 'despesa' } })) }
+      ],
+      nomeLabel: mf.tipo === 'receber' ? 'Cliente *' : 'Favorecido / Fornecedor *',
+      vencLabel: mf.tipo === 'receber' ? 'Vencimento *' : (mf.tipo === 'despesa' ? 'Data da despesa *' : 'Data do vencimento *'),
+      isRec: mf.tipo === 'receber',
+      isPag: mf.tipo === 'pagar' || mf.tipo === 'despesa',
+      servOpts: Object.keys(PRECOS),
+      cats: CATS,
+      camOpts: CAMS.filter(c => c.status === 'Ativo').map(c => c.placa),
+      formas: FORMAS,
+      mf,
+      onMF,
+      mx: {
+        valorTxt: brl(mItem.valor),
+        pagoVerbo: mItem.tipo === 'receber' ? 'recebido' : 'pago',
+        pagoTxt: brl(mItem.pago || 0),
+        restTxt: brl(Math.max(0, (mItem.valor || 0) - (mItem.pago || 0)))
+      },
+      rc,
+      parcelas,
+      nfLinhas,
+      hasSec: st.finModal === 'recibo' || st.finModal === 'cobrar',
+      secLabel: st.finModal === 'recibo' ? 'Imprimir recibo' : 'Copiar texto',
+      sec: () => {
+        if (st.finModal === 'recibo') {
+          if (typeof window !== 'undefined') window.print();
+        } else if (st.finModal === 'cobrar') {
+          try { navigator.clipboard.writeText(mf.msg); } catch (e) {}
+          this.toast('Mensagem copiada para a área de transferência');
+        }
+      },
+      save: this.saveFinModal
+    };
+  }
   renderVals() {
     const { page, w, form, tentou } = this.state;
     const desktop = w >= 900;
     const on = {};
     Object.keys(VAZIO).forEach(k => { on[k] = e => { const v = e.target.value; this.setState(s => ({ form: { ...s.form, [k]: v } })); }; });
+    const epForm = this.state.epForm || {
+      transpViagem: 600,
+      fossa: 650,
+      gordura: 590,
+      desentupimento: 350,
+      hidro: 600,
+      oleo: 400
+    };
+    const onEP = {};
+    ['transpViagem', 'fossa', 'gordura', 'desentupimento', 'hidro', 'oleo'].forEach(k => {
+      onEP[k] = e => {
+        const v = e && e.target ? e.target.value : e;
+        this.setState(s => ({ epForm: { ...s.epForm, [k]: v } }));
+      };
+    });
     const active = page;
     const nav = MODULOS.map(m => ({
       label: m.label, icon: IC(m.icon), go: this.go(m.id),
@@ -1633,10 +2790,17 @@ class Component extends DCLogic {
       showSidebar: desktop, showMobileBar: !desktop, menuOpen: !desktop && this.state.menu,
       openMenu: () => this.setState({ menu: true }), closeMenu: () => this.setState({ menu: false }),
       nav,
-      isDashboard: page === 'dashboard', isNovaOS: !!this.state.osOpen, isModulo: page !== 'dashboard' && page !== 'logistica', calcOpen: !!this.state.calcOpen, calc: this.calcVals(), isLogistica: page === 'logistica', lg: this.lgVals(desktop),
+      isDashboard: page === 'dashboard', isNovaOS: !!this.state.osOpen, isModulo: page !== 'dashboard' && page !== 'logistica' && page !== 'financeiro', calcOpen: !!this.state.calcOpen, calc: this.calcVals(),
+      editPrecosOpen: !!this.state.editPrecosOpen,
+      closeEditPrecos: this.closeEditPrecos,
+      saveEditPrecos: this.saveEditPrecos,
+      resetEditPrecos: this.resetEditPrecos,
+      epForm,
+      onEP,
+      isLogistica: page === 'logistica', lg: this.lgVals(desktop), isFinanceiro: page === 'financeiro', fin: this.finVals(desktop),
       closeOS: () => this.setState({ osOpen: false, tentou: false }), stop: e => e.stopPropagation(),
       modulo: MODULOS.find(m => m.id === page) || MODULOS[0],
-      goNovaOS: this.go('novaOS'), goCalc: this.go('calc'), goDashboard: this.go('dashboard'), goLogistica: this.go('logistica'),
+      goNovaOS: this.go('novaOS'), goCalc: this.go('calc'), goDashboard: this.go('dashboard'), goLogistica: this.go('logistica'), goFinanceiro: this.go('financeiro'),
       osAtivas: this.state.osAtivas, osCampo: this.state.osCampo, proximaOS: this.state.proxima,
       frota: [
         { placa: 'NQZ-7814', modelo: 'Atego 15m³', motorista: 'Carlos Eduardo', rota: 'Aldeota → ETE Jangurussu', status: 'Em rota', tone: 'light' },

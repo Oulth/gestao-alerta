@@ -1,0 +1,8 @@
+const {Button,Card,WhatsAppIcon}=window.DesentupidoraAlertaDesignSystem_e6b749;
+const SVC=[['droplets','Desentupimento','Redes de esgoto, caixas de gordura, ralos e colunas.'],['waves','Hidrojateamento','Alta pressão. Limpeza técnica que resolve de vez.'],['truck','Limpa fossa','Caminhão vácuo de até 20m³, rastreável.'],['container','Transporte de efluentes','Cargas perigosas com segurança e licença.'],['recycle','Óleo lubrificante usado','Coleta e transporte para rerrefino.'],['building-2','Contratos','Manutenção preventiva para indústrias e condomínios.']];
+function SiteServices({onWhats}){return <section style={{background:'#fff',padding:'120px 24px 96px'}}>
+<div style={{display:'flex',justifyContent:'center'}}><Button variant="whatsapp" size="lg" icon={<WhatsAppIcon size={22}/>} onClick={onWhats}>Falar com Especialista</Button></div>
+<h2 style={{margin:'96px 0 40px',textAlign:'center',font:'700 44px var(--font-sans)',textTransform:'uppercase',color:'var(--teal-700)',letterSpacing:'.01em'}}>Nossos serviços</h2>
+<div style={{maxWidth:1200,margin:'0 auto',display:'grid',gridTemplateColumns:'repeat(auto-fit,minmax(300px,1fr))',gap:20}}>{SVC.map(([i,t,d])=><Card key={t} icon={<Ic n={i} s={24}/>} title={t}>{d}</Card>)}</div>
+<p style={{textAlign:'center',color:'var(--text-muted)',fontSize:13,marginTop:24}}>Grade de serviços abaixo da dobra não foi vista nos prints — layout proposto.</p></section>}
+window.SiteServices=SiteServices;

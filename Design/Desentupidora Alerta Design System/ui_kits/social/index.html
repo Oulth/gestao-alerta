@@ -1,0 +1,19 @@
+<!-- @dsCard group="Social" viewport="1200x720" name="Instagram feed posts" subtitle="Templates 1080×1080 recriados do feed" -->
+<!DOCTYPE html><html><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Alerta — Posts</title><link rel="stylesheet" href="../../styles.css">
+<script src="https://unpkg.com/react@18.3.1/umd/react.development.js" integrity="sha384-hD6/rw4ppMLGNu3tX5cjIb+uRZ7UkRJ6BPkLpg4hAu/6onKUg4lLsHAs9EBPT82L" crossorigin="anonymous"></script>
+<script src="https://unpkg.com/react-dom@18.3.1/umd/react-dom.development.js" integrity="sha384-u6aeetuaXnQ38mYT8rp6sbXaQe3NL9t+IBXmnYxwkUI2Hw4bsp2Wvmx4yRQF1uAm" crossorigin="anonymous"></script>
+<script src="https://unpkg.com/@babel/standalone@7.29.0/babel.min.js" integrity="sha384-m08KidiNqLdpJqLq95G/LEi8Qvjl/xUYll3QILypMoQ65QorJ9Lvtp2RXYGBFj1y" crossorigin="anonymous"></script>
+<script src="https://unpkg.com/lucide@0.469.0/dist/umd/lucide.min.js"></script>
+<script>window.ALERTA_ASSET_BASE='../../assets/';window.Ic=function(p){const r=React.useRef();React.useEffect(()=>{r.current.innerHTML='<i data-lucide="'+p.n+'"></i>';lucide.createIcons({attrs:{width:p.s||20,height:p.s||20,'stroke-width':p.w||2}})},[p.n]);return React.createElement('span',{ref:r,style:{display:'inline-flex',color:p.c}})};</script>
+<script src="../../_ds_bundle.js"></script>
+<style>body{margin:0;font-family:var(--font-sans);color:var(--text-body)}*{box-sizing:border-box}a{color:var(--teal-700)}a:hover{color:var(--teal-800)}</style></head><body style="background:#0E1512"><div id="root"></div>
+<script type="text/babel" src="post-templates.jsx"></script>
+<script type="text/babel">
+const {Input,Tabs}=window.DesentupidoraAlertaDesignSystem_e6b749;const P=window.PostTemplates;
+const L=[['Fossa',P.PostFossa],['Entupimento',P.PostEntupimento],['Ralo',P.PostRalo],['20 anos',P.Post20Anos],['Aviso',P.PostAviso],['Meme',P.PostMeme]];
+function App(){const [a,setA]=React.useState('Fossa'),[h,setH]=React.useState('');
+return <div style={{padding:24,display:'flex',flexDirection:'column',gap:18}}>
+<div style={{display:'flex',gap:24,alignItems:'flex-end',flexWrap:'wrap',background:'#fff',padding:'8px 16px 12px',borderRadius:14}}><Tabs items={L.map(x=>x[0])} value={a} onChange={v=>{setA(v);setH('')}}/><div style={{width:300}}><Input label="Título do post selecionado" placeholder="Digite para substituir" value={h} onChange={e=>setH(e.target.value)}/></div></div>
+<div style={{display:'grid',gridTemplateColumns:'repeat(auto-fill,360px)',gap:6}}>{L.map(([n,C])=><div key={n} onClick={()=>setA(n)} style={{width:360,height:360,overflow:'hidden',cursor:'pointer',outline:a===n?'4px solid var(--lime-500)':'none',outlineOffset:-4,position:'relative'}}><div style={{transform:'scale(.33333)',transformOrigin:'0 0'}}><C h={a===n?h:''}/></div></div>)}</div></div>}
+ReactDOM.createRoot(document.getElementById('root')).render(<App/>);
+</script></body></html>
