@@ -1607,6 +1607,25 @@
                       <div><span style="font-size:12px;color:var(--text-muted)">Valor / Pagamento:</span> <strong style="display:block;font-size:13px;color:var(--text-strong)">{{ os.det.valorTxt }} ({{ os.det.pagamento }})</strong></div>
                       <div><span style="font-size:12px;color:var(--text-muted)">MTR:</span> <strong style="display:block;font-size:13px;color:var(--text-strong)">{{ os.det.mtr }}</strong><sc-if value="{{ os.det.temMtrAnexo }}" hint-placeholder-val="{{ false }}"><span style="font-size:12px;color:var(--text-muted)">Anexo: {{ os.det.mtrAnexo }}</span></sc-if></div>
                     </div>
+                    <div style="background:var(--gray-50);border:1px solid var(--border-default);border-radius:12px;padding:14px;display:flex;flex-direction:column;gap:8px">
+                      <div style="display:flex;justify-content:space-between;align-items:center">
+                        <span style="font-size:13px;font-weight:700;color:var(--text-strong)">Materiais usados: {{ os.det.materiaisTotal }}</span>
+                        <span style="font-size:12px;color:var(--text-muted)">Consumo interno</span>
+                      </div>
+                      <sc-if value="{{ os.det.temMateriais }}" hint-placeholder-val="{{ false }}">
+                        <div style="display:flex;flex-direction:column;gap:6px">
+                          <sc-for list="{{ os.det.materiais }}" as="m" hint-placeholder-count="2">
+                            <div style="display:flex;justify-content:space-between;align-items:center;font-size:13px;color:var(--text-body);border-bottom:1px dashed var(--border-default);padding-bottom:4px">
+                              <span>{{ m.txt }}</span>
+                              <strong style="color:var(--text-strong)">{{ m.totalTxt }}</strong>
+                            </div>
+                          </sc-for>
+                        </div>
+                      </sc-if>
+                      <sc-if value="{{ os.det.semMateriais }}" hint-placeholder-val="{{ true }}">
+                        <span style="font-size:13px;color:var(--text-muted)">Nenhum material lançado</span>
+                      </sc-if>
+                    </div>
                     <sc-if value="{{ os.det.temMotivo }}" hint-placeholder-val="{{ false }}">
                       <div style="background:var(--amber-100);border:1px solid var(--amber-500);border-radius:10px;padding:10px 14px">
                         <span style="font-size:12px;font-weight:600;color:var(--amber-800)">Motivo do cancelamento:</span>
@@ -2322,6 +2341,266 @@
         </div>
       </sc-if>
 
+      <sc-if value="{{ isAlmox }}" hint-placeholder-val="{{ false }}">
+        <div data-screen-label="Almoxarifado" style="display:flex;flex-direction:column;gap:20px">
+          <div style="display:flex;flex-wrap:wrap;justify-content:space-between;align-items:flex-start;gap:16px">
+            <div style="display:flex;flex-direction:column;gap:6px">
+              <div style="display:flex;flex-wrap:wrap;align-items:center;gap:10px">
+                <h1 style="margin:0;font-size:clamp(26px,3.2vw,34px);font-weight:700;letter-spacing:-.02em;line-height:1.1;color:var(--text-strong)">Almoxarifado</h1>
+                <span style="display:inline-flex;align-items:center;gap:5px;font-size:12px;font-weight:600;color:var(--teal-800);background:var(--lime-100);border-radius:999px;padding:3px 10px">
+                  <img src="https://unpkg.com/lucide-static@0.460.0/icons/package.svg" alt="" style="width:12px;height:12px;opacity:.8">
+                  Escritório e almoxarifado
+                </span>
+              </div>
+              <span style="font-size:14px;color:var(--text-muted)">EPIs, materiais de operação e peças da frota — depósito central.</span>
+            </div>
+            <div style="display:flex;align-items:center;gap:10px;flex-wrap:wrap">
+              <x-import component-from-global-scope="DesentupidoraAlertaDesignSystem_e6b749.Button" variant="ghost" size="sm" onClick="{{ almox.exportar }}" hint-size="140px,36px">
+                <img src="https://unpkg.com/lucide-static@0.460.0/icons/download.svg" alt="" style="width:14px;height:14px;margin-right:6px;opacity:.8">
+                Exportar Excel
+              </x-import>
+              <x-import component-from-global-scope="DesentupidoraAlertaDesignSystem_e6b749.Button" variant="primary" size="sm" onClick="{{ almox.novaMov }}" hint-size="150px,36px">
+                + Movimentação
+              </x-import>
+            </div>
+          </div>
+
+          <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(190px,1fr));gap:16px">
+            <div style="background:var(--white);border:1px solid var(--border-default);border-radius:16px;padding:20px;display:flex;flex-direction:column;gap:10px;box-shadow:var(--shadow-sm)">
+              <span style="font-size:14px;font-weight:600;color:var(--text-muted)">Abaixo do mínimo</span>
+              <span style="font-size:30px;font-weight:700;color:var(--amber-800)">{{ almox.kpis.abaixoTxt }}</span>
+              <span style="font-size:13px;color:var(--text-body)">Itens para reposição urgente</span>
+            </div>
+            <div style="background:var(--white);border:1px solid var(--border-default);border-radius:16px;padding:20px;display:flex;flex-direction:column;gap:10px;box-shadow:var(--shadow-sm)">
+              <span style="font-size:14px;font-weight:600;color:var(--text-muted)">Valor em estoque</span>
+              <span style="font-size:30px;font-weight:700;color:var(--text-strong)">{{ almox.kpis.valorEstoqueTxt }}</span>
+              <span style="font-size:13px;color:var(--text-body)">Custo médio total imobilizado</span>
+            </div>
+            <div style="background:var(--white);border:1px solid var(--border-default);border-radius:16px;padding:20px;display:flex;flex-direction:column;gap:10px;box-shadow:var(--shadow-sm)">
+              <span style="font-size:14px;font-weight:600;color:var(--text-muted)">Saídas no mês</span>
+              <span style="font-size:30px;font-weight:700;color:var(--text-strong)">{{ almox.kpis.saidasMesTxt }}</span>
+              <span style="font-size:13px;color:var(--text-body)">Consumo e baixas no período</span>
+            </div>
+            <div style="background:var(--white);border:1px solid var(--border-default);border-radius:16px;padding:20px;display:flex;flex-direction:column;gap:10px;box-shadow:var(--shadow-sm)">
+              <span style="font-size:14px;font-weight:600;color:var(--text-muted)">CAs vencendo em 30 dias</span>
+              <span style="font-size:30px;font-weight:700;color:var(--text-strong)">{{ almox.kpis.caVencendoTxt }}</span>
+              <span style="font-size:13px;color:var(--text-body)">Certificados de EPI a renovar</span>
+            </div>
+          </div>
+
+          <sc-if value="{{ almox.temRepor }}" hint-placeholder-val="{{ false }}">
+            <div style="background:var(--amber-100);border:1px solid var(--amber-500);border-left:5px solid var(--amber-500);border-radius:16px;padding:16px 20px;display:flex;flex-direction:column;gap:12px">
+              <div style="display:flex;align-items:center;gap:8px">
+                <img src="https://unpkg.com/lucide-static@0.460.0/icons/triangle-alert.svg" alt="" style="width:18px;height:18px;color:var(--amber-800)">
+                <strong style="font-size:14px;color:var(--amber-800)">Repor</strong>
+              </div>
+              <div style="display:flex;gap:12px;overflow-x:auto;padding-bottom:6px">
+                <sc-for list="{{ almox.repor }}" as="r" hint-placeholder-count="3">
+                  <div style="background:var(--white);border:1px solid var(--border-default);border-radius:12px;padding:12px 14px;display:flex;flex-direction:column;gap:6px;min-width:220px;max-width:260px;flex-shrink:0;box-shadow:var(--shadow-sm)">
+                    <div style="display:flex;justify-content:space-between;align-items:center">
+                      <span style="font-size:12px;font-weight:700;color:var(--teal-700)">{{ r.codigo }}</span>
+                      <span style="font-size:11px;font-weight:600;color:var(--amber-800)">{{ r.minimoTxt }}</span>
+                    </div>
+                    <strong style="font-size:13px;color:var(--text-strong);white-space:nowrap;overflow:hidden;text-overflow:ellipsis">{{ r.nome }}</strong>
+                    <span style="font-size:12px;color:var(--text-body)">Saldo: <strong>{{ r.saldoTxt }}</strong></span>
+                    <button onClick="{{ r.registrar }}" style="margin-top:4px;height:32px;background:var(--teal-700);color:var(--white);border:none;border-radius:8px;font-size:12px;font-weight:600;cursor:pointer">Registrar entrada</button>
+                  </div>
+                </sc-for>
+              </div>
+            </div>
+          </sc-if>
+
+          <div style="overflow-x:auto;scrollbar-width:none">
+            <x-import component-from-global-scope="DesentupidoraAlertaDesignSystem_e6b749.Tabs" items="{{ almox.tabs }}" value="{{ almox.tab }}" on-change="{{ almox.setTab }}" onChange="{{ almox.setTab }}" hint-size="100%,48px"></x-import>
+          </div>
+
+          <sc-if value="{{ almox.isEstoque }}" hint-placeholder-val="{{ false }}">
+            <div style="display:flex;flex-direction:column;gap:16px">
+              <div style="background:var(--white);border:1px solid var(--border-default);border-radius:16px;padding:16px;display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:12px;box-shadow:var(--shadow-sm)">
+                <div style="display:flex;flex-wrap:wrap;align-items:center;gap:10px;flex:1;min-width:260px">
+                  <div style="position:relative;flex:1;min-width:220px;max-width:360px">
+                    <img src="https://unpkg.com/lucide-static@0.460.0/icons/search.svg" alt="" style="position:absolute;left:14px;top:50%;transform:translateY(-50%);width:16px;height:16px;color:var(--text-muted);pointer-events:none">
+                    <input type="text" placeholder="Buscar item ou código" value="{{ almox.filtros.q }}" onChange="{{ almox.filtros.onQ }}" aria-label="Buscar item ou código" style="width:100%;height:44px;padding:0 14px 0 40px;border:1.5px solid var(--border-default);border-radius:12px;font-size:13px;font-family:inherit;background:var(--white);color:var(--text-strong);box-sizing:border-box">
+                  </div>
+                  <select value="{{ almox.filtros.cat }}" onChange="{{ almox.filtros.onCat }}" aria-label="Filtrar por categoria" style="height:44px;max-width:210px;padding:0 12px;border:1.5px solid var(--border-default);border-radius:12px;font-size:13px;font-family:inherit;background:var(--white);color:var(--text-strong);cursor:pointer">
+                    <sc-for list="{{ almox.filtros.cats }}" as="o" hint-placeholder-count="4">
+                      <option value="{{ o.v }}">{{ o.t }}</option>
+                    </sc-for>
+                  </select>
+                  <select value="{{ almox.filtros.status }}" onChange="{{ almox.filtros.onStatus }}" aria-label="Filtrar por status" style="height:44px;max-width:210px;padding:0 12px;border:1.5px solid var(--border-default);border-radius:12px;font-size:13px;font-family:inherit;background:var(--white);color:var(--text-strong);cursor:pointer">
+                    <sc-for list="{{ almox.filtros.statusOpts }}" as="o" hint-placeholder-count="4">
+                      <option value="{{ o.v }}">{{ o.t }}</option>
+                    </sc-for>
+                  </select>
+                </div>
+                <div>
+                  <x-import component-from-global-scope="DesentupidoraAlertaDesignSystem_e6b749.Button" variant="ghost" size="sm" onClick="{{ almox.novoItem }}" hint-size="130px,36px">
+                    + Novo item
+                  </x-import>
+                </div>
+              </div>
+
+              <sc-if value="{{ almox.desktop }}" hint-placeholder-val="{{ false }}">
+                <div style="overflow-x:auto;background:var(--white);border:1px solid var(--border-default);border-radius:16px;box-shadow:var(--shadow-sm)">
+                  <table style="width:100%;border-collapse:collapse;font-size:13px">
+                    <thead>
+                      <tr style="background:var(--gray-50);border-bottom:1px solid var(--border-default);text-align:left;color:var(--text-muted)">
+                        <th scope="col" style="padding:14px 16px;font-weight:600">Código</th>
+                        <th scope="col" style="padding:14px 16px;font-weight:600">Item</th>
+                        <th scope="col" style="padding:14px 16px;font-weight:600">Categoria</th>
+                        <th scope="col" style="padding:14px 16px;text-align:right;font-weight:600">Saldo</th>
+                        <th scope="col" style="padding:14px 16px;text-align:right;font-weight:600">Mínimo</th>
+                        <th scope="col" style="padding:14px 16px;text-align:right;font-weight:600">Custo médio</th>
+                        <th scope="col" style="padding:14px 16px;text-align:right;font-weight:600">Valor</th>
+                        <th scope="col" style="padding:14px 16px;font-weight:600">Fornecedor</th>
+                        <th scope="col" style="padding:14px 16px;font-weight:600">Status</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      <sc-for list="{{ almox.itens }}" as="i" hint-placeholder-count="5">
+                        <tr tabIndex="0" onClick="{{ i.abrir }}" onKeyDown="{{ i.onKey }}" style="cursor:pointer;border-top:1px solid var(--gray-100)" style-hover="background:var(--gray-50)">
+                          <td style="padding:14px 16px;font-weight:700;color:var(--teal-700)">{{ i.codigo }}</td>
+                          <td style="padding:14px 16px;font-weight:600;color:var(--text-strong)">{{ i.nome }}</td>
+                          <td style="padding:14px 16px;color:var(--text-body)">{{ i.categoria }}</td>
+                          <td style="padding:14px 16px;text-align:right;font-weight:600;color:var(--text-strong);white-space:nowrap">{{ i.saldoTxt }}</td>
+                          <td style="padding:14px 16px;text-align:right;color:var(--text-muted);white-space:nowrap">{{ i.minimoTxt }}</td>
+                          <td style="padding:14px 16px;text-align:right;color:var(--text-body);white-space:nowrap">{{ i.custoTxt }}</td>
+                          <td style="padding:14px 16px;text-align:right;font-weight:600;color:var(--text-strong);white-space:nowrap">{{ i.valorTxt }}</td>
+                          <td style="padding:14px 16px;color:var(--text-muted)">{{ i.fornecedor }}</td>
+                          <td style="padding:14px 16px">
+                            <span style="display:inline-block;padding:4px 10px;border-radius:999px;font-size:12px;font-weight:600;background:{{ i.stBg }};color:{{ i.stFg }}">{{ i.status }}</span>
+                          </td>
+                        </tr>
+                      </sc-for>
+                    </tbody>
+                  </table>
+                </div>
+              </sc-if>
+
+              <sc-if value="{{ almox.mobile }}" hint-placeholder-val="{{ false }}">
+                <div style="display:flex;flex-direction:column;gap:12px">
+                  <sc-for list="{{ almox.itens }}" as="i" hint-placeholder-count="3">
+                    <div tabIndex="0" onClick="{{ i.abrir }}" onKeyDown="{{ i.onKey }}" style="background:var(--white);border:1px solid var(--border-default);border-radius:16px;padding:16px;display:flex;flex-direction:column;gap:10px;box-shadow:var(--shadow-sm);cursor:pointer">
+                      <div style="display:flex;justify-content:space-between;align-items:center">
+                        <span style="font-size:12px;font-weight:600;color:var(--teal-700)">{{ i.codigo }} · {{ i.categoria }}</span>
+                        <span style="display:inline-block;padding:4px 10px;border-radius:999px;font-size:12px;font-weight:600;background:{{ i.stBg }};color:{{ i.stFg }}">{{ i.status }}</span>
+                      </div>
+                      <strong style="font-size:15px;color:var(--text-strong)">{{ i.nome }}</strong>
+                      <div style="display:flex;justify-content:space-between;align-items:center;font-size:13px;color:var(--text-body)">
+                        <span>Saldo: <strong>{{ i.saldoTxt }}</strong> ({{ i.minimoTxt }})</span>
+                        <strong style="font-size:14px;color:var(--text-strong)">{{ i.valorTxt }}</strong>
+                      </div>
+                    </div>
+                  </sc-for>
+                </div>
+              </sc-if>
+
+              <sc-if value="{{ almox.semItens }}" hint-placeholder-val="{{ false }}">
+                <div style="background:var(--white);border:1px solid var(--border-default);border-radius:16px;padding:48px 20px;text-align:center;display:flex;flex-direction:column;align-items:center;gap:12px;box-shadow:var(--shadow-sm)">
+                  <img src="https://unpkg.com/lucide-static@0.460.0/icons/search.svg" alt="" style="width:36px;height:36px;color:var(--text-muted)">
+                  <strong style="font-size:16px;color:var(--text-strong)">Nenhum item neste filtro</strong>
+                  <p style="margin:0;font-size:13px;color:var(--text-muted)">Tente ajustar o termo de busca, categoria ou status do item.</p>
+                  <x-import component-from-global-scope="DesentupidoraAlertaDesignSystem_e6b749.Button" variant="ghost" size="sm" onClick="{{ almox.filtros.limpar }}" hint-size="140px,36px">
+                    Limpar filtros
+                  </x-import>
+                </div>
+              </sc-if>
+            </div>
+          </sc-if>
+
+          <sc-if value="{{ almox.isMovs }}" hint-placeholder-val="{{ false }}">
+            <div style="display:flex;flex-direction:column;gap:16px">
+              <div style="background:var(--white);border:1px solid var(--border-default);border-radius:16px;padding:16px;display:flex;flex-wrap:wrap;align-items:center;gap:10px;box-shadow:var(--shadow-sm)">
+                <select value="{{ almox.filtrosMov.tipo }}" onChange="{{ almox.filtrosMov.onTipo }}" aria-label="Filtrar por tipo" style="height:44px;max-width:210px;padding:0 12px;border:1.5px solid var(--border-default);border-radius:12px;font-size:13px;font-family:inherit;background:var(--white);color:var(--text-strong);cursor:pointer">
+                  <sc-for list="{{ almox.filtrosMov.tipos }}" as="o" hint-placeholder-count="4">
+                    <option value="{{ o.v }}">{{ o.t }}</option>
+                  </sc-for>
+                </select>
+                <select value="{{ almox.filtrosMov.dest }}" onChange="{{ almox.filtrosMov.onDest }}" aria-label="Filtrar por destino" style="height:44px;max-width:210px;padding:0 12px;border:1.5px solid var(--border-default);border-radius:12px;font-size:13px;font-family:inherit;background:var(--white);color:var(--text-strong);cursor:pointer">
+                  <sc-for list="{{ almox.filtrosMov.dests }}" as="o" hint-placeholder-count="4">
+                    <option value="{{ o.v }}">{{ o.t }}</option>
+                  </sc-for>
+                </select>
+              </div>
+
+              <sc-if value="{{ almox.desktop }}" hint-placeholder-val="{{ false }}">
+                <div style="overflow-x:auto;background:var(--white);border:1px solid var(--border-default);border-radius:16px;box-shadow:var(--shadow-sm)">
+                  <table style="width:100%;border-collapse:collapse;font-size:13px">
+                    <thead>
+                      <tr style="background:var(--gray-50);border-bottom:1px solid var(--border-default);text-align:left;color:var(--text-muted)">
+                        <th scope="col" style="padding:14px 16px;font-weight:600">Nº</th>
+                        <th scope="col" style="padding:14px 16px;font-weight:600">Data</th>
+                        <th scope="col" style="padding:14px 16px;font-weight:600">Tipo</th>
+                        <th scope="col" style="padding:14px 16px;font-weight:600">Item</th>
+                        <th scope="col" style="padding:14px 16px;text-align:right;font-weight:600">Qtd</th>
+                        <th scope="col" style="padding:14px 16px;text-align:right;font-weight:600">Custo unit.</th>
+                        <th scope="col" style="padding:14px 16px;text-align:right;font-weight:600">Total</th>
+                        <th scope="col" style="padding:14px 16px;font-weight:600">Destino/origem</th>
+                        <th scope="col" style="padding:14px 16px;font-weight:600">Responsável</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      <sc-for list="{{ almox.movs }}" as="m" hint-placeholder-count="5">
+                        <tr style="border-top:1px solid var(--gray-100)" style-hover="background:var(--gray-50)">
+                          <td style="padding:14px 16px;font-weight:700;color:var(--teal-700)">#{{ m.num }}</td>
+                          <td style="padding:14px 16px;color:var(--text-body);white-space:nowrap">{{ m.dataTxt }}</td>
+                          <td style="padding:14px 16px">
+                            <span style="display:inline-block;padding:4px 10px;border-radius:999px;font-size:12px;font-weight:600;background:{{ m.tipoBg }};color:{{ m.tipoFg }}">{{ m.tipoTxt }}</span>
+                          </td>
+                          <td style="padding:14px 16px;font-weight:600;color:var(--text-strong)">{{ m.itemNome }}</td>
+                          <td style="padding:14px 16px;text-align:right;font-weight:600;color:var(--text-strong);white-space:nowrap">{{ m.qtdTxt }}</td>
+                          <td style="padding:14px 16px;text-align:right;color:var(--text-body);white-space:nowrap">{{ m.custoTxt }}</td>
+                          <td style="padding:14px 16px;text-align:right;font-weight:600;color:var(--text-strong);white-space:nowrap">{{ m.totalTxt }}</td>
+                          <td style="padding:14px 16px;color:var(--text-body)">{{ m.destinoTxt }}</td>
+                          <td style="padding:14px 16px;color:var(--text-muted)">{{ m.responsavel }}</td>
+                        </tr>
+                      </sc-for>
+                    </tbody>
+                  </table>
+                </div>
+              </sc-if>
+
+              <sc-if value="{{ almox.mobile }}" hint-placeholder-val="{{ false }}">
+                <div style="display:flex;flex-direction:column;gap:12px">
+                  <sc-for list="{{ almox.movs }}" as="m" hint-placeholder-count="3">
+                    <div style="background:var(--white);border:1px solid var(--border-default);border-radius:16px;padding:16px;display:flex;flex-direction:column;gap:10px;box-shadow:var(--shadow-sm)">
+                      <div style="display:flex;justify-content:space-between;align-items:center">
+                        <span style="font-size:13px;font-weight:700;color:var(--teal-700)">#{{ m.num }} · {{ m.dataTxt }}</span>
+                        <span style="display:inline-block;padding:4px 10px;border-radius:999px;font-size:12px;font-weight:600;background:{{ m.tipoBg }};color:{{ m.tipoFg }}">{{ m.tipoTxt }}</span>
+                      </div>
+                      <strong style="font-size:14px;color:var(--text-strong)">{{ m.itemNome }}</strong>
+                      <div style="display:flex;justify-content:space-between;align-items:center;font-size:13px;color:var(--text-body)">
+                        <span>Qtd: <strong>{{ m.qtdTxt }}</strong></span>
+                        <strong style="font-size:14px;color:var(--text-strong)">{{ m.totalTxt }}</strong>
+                      </div>
+                      <div style="display:flex;justify-content:space-between;align-items:center;border-top:1px solid var(--gray-100);padding-top:8px;font-size:12px;color:var(--text-muted)">
+                        <span>{{ m.destinoTxt }}</span>
+                        <span>{{ m.responsavel }}</span>
+                      </div>
+                    </div>
+                  </sc-for>
+                </div>
+              </sc-if>
+
+              <sc-if value="{{ almox.semMovs }}" hint-placeholder-val="{{ false }}">
+                <div style="background:var(--white);border:1px solid var(--border-default);border-radius:16px;padding:48px 20px;text-align:center;display:flex;flex-direction:column;align-items:center;gap:12px;box-shadow:var(--shadow-sm)">
+                  <img src="https://unpkg.com/lucide-static@0.460.0/icons/search.svg" alt="" style="width:36px;height:36px;color:var(--text-muted)">
+                  <strong style="font-size:16px;color:var(--text-strong)">Nenhuma movimentação neste filtro</strong>
+                  <p style="margin:0;font-size:13px;color:var(--text-muted)">Tente ajustar o tipo ou destino da movimentação.</p>
+                  <x-import component-from-global-scope="DesentupidoraAlertaDesignSystem_e6b749.Button" variant="ghost" size="sm" onClick="{{ almox.filtrosMov.limpar }}" hint-size="140px,36px">
+                    Limpar filtros
+                  </x-import>
+                </div>
+              </sc-if>
+            </div>
+          </sc-if>
+
+          <!-- ALMOX:ABAS-EPI-COLAB -->
+
+          <!-- ALMOX:MODAIS -->
+        </div>
+      </sc-if>
+
       <sc-if value="{{ isModulo }}" hint-placeholder-val="{{ false }}">
         <div data-screen-label="Módulo em construção" style="display:flex;flex-direction:column;gap:20px">
           <h1 style="margin:0;font-size:clamp(26px,3.2vw,34px);font-weight:700;letter-spacing:-.02em;color:var(--text-strong)">{{ modulo.label }}</h1>
@@ -2721,6 +3000,146 @@ const OS_VAZIO_MF = {
   assinNome: '',
 };
 
+const ALMOX_CATS = ['EPI', 'Operação', 'Peça de caminhão', 'Químico-limpeza', 'Ferramenta'];
+const ALMOX_TABS = ['Estoque', 'Movimentações', 'EPIs', 'Colaboradores'];
+const ALMOX_MF_VAZIO = { tipo: 'entrada', itemId: '', qtd: '', custo: '', fornecedor: '', nf: '', venc: HOJE, forma: 'Boleto', gerarPagar: true, destinoTipo: 'os', destinoId: '', contagem: '', motivo: '' };
+
+const almoxSaldo = (itemId, movs) => {
+  return (movs || []).filter(m => m.itemId === itemId).reduce((acc, m) => {
+    const q = Number(m.qtd) || 0;
+    if (m.tipo === 'entrada') return acc + q;
+    if (m.tipo === 'saida') return acc - q;
+    if (m.tipo === 'ajuste') return acc + q;
+    return acc;
+  }, 0);
+};
+
+const almoxStatus = (item, saldo) => {
+  if (saldo <= 0) return 'Zerado';
+  if (saldo <= (item && item.minimo != null ? item.minimo : 0)) return 'Baixo';
+  return 'OK';
+};
+
+const ALMOX_ST = {
+  OK: { bg: 'var(--lime-100)', fg: 'var(--teal-800)' },
+  Baixo: { bg: 'var(--amber-100)', fg: 'var(--amber-800)' },
+  Zerado: { bg: 'var(--danger)', fg: 'var(--white)' }
+};
+
+function genAlmox() {
+  const itens = [
+    { id: 'I01', codigo: 'EPI-001', nome: 'Luva nitrílica', categoria: 'EPI', unidade: 'par', minimo: 40, custoMedio: 22.00, fornecedor: 'Casa do EPI', ca: '38240', caValidade: addD(HOJE, 360), vidaUtilDias: 45, ativo: true },
+    { id: 'I02', codigo: 'EPI-002', nome: 'Bota de PVC c/ biqueira', categoria: 'EPI', unidade: 'par', minimo: 6, custoMedio: 78.00, fornecedor: 'Casa do EPI', ca: '41200', caValidade: addD(HOJE, 500), vidaUtilDias: 180, ativo: true },
+    { id: 'I03', codigo: 'EPI-003', nome: 'Máscara PFF2 c/ carvão', categoria: 'EPI', unidade: 'un', minimo: 15, custoMedio: 14.50, fornecedor: 'Casa do EPI', ca: '35120', caValidade: addD(HOJE, 20), vidaUtilDias: 15, ativo: true },
+    { id: 'I04', codigo: 'EPI-004', nome: 'Óculos de proteção ampla visão', categoria: 'EPI', unidade: 'un', minimo: 8, custoMedio: 28.00, fornecedor: 'Casa do EPI', ca: '42310', caValidade: addD(HOJE, 300), vidaUtilDias: 120, ativo: true },
+    { id: 'I05', codigo: 'EPI-005', nome: 'Capuz balaclava térmica', categoria: 'EPI', unidade: 'un', minimo: 5, custoMedio: 19.00, fornecedor: 'Casa do EPI', ca: '39180', caValidade: addD(HOJE, 240), vidaUtilDias: 90, ativo: true },
+    { id: 'I06', codigo: 'MAT-001', nome: 'Mangote de sucção 3"', categoria: 'Operação', unidade: 'm', minimo: 15, custoMedio: 85.00, fornecedor: 'Hidráulica Nordeste', ca: '', caValidade: '', vidaUtilDias: null, ativo: true },
+    { id: 'I07', codigo: 'MAT-002', nome: 'Conexão camlock 3"', categoria: 'Operação', unidade: 'un', minimo: 6, custoMedio: 145.00, fornecedor: 'Hidráulica Nordeste', ca: '', caValidade: '', vidaUtilDias: null, ativo: true },
+    { id: 'I08', codigo: 'MAT-003', nome: 'Mangueira de hidrojateamento', categoria: 'Operação', unidade: 'm', minimo: 50, custoMedio: 37.00, fornecedor: 'Hidráulica Nordeste', ca: '', caValidade: '', vidaUtilDias: null, ativo: true },
+    { id: 'I09', codigo: 'MAT-004', nome: 'Abraçadeira T-Bolt 3" inox', categoria: 'Operação', unidade: 'un', minimo: 10, custoMedio: 38.00, fornecedor: 'Hidráulica Nordeste', ca: '', caValidade: '', vidaUtilDias: null, ativo: true },
+    { id: 'I10', codigo: 'MAT-005', nome: 'Ponteira desobstruidora 1/2"', categoria: 'Operação', unidade: 'un', minimo: 2, custoMedio: 480.00, fornecedor: 'Hidráulica Nordeste', ca: '', caValidade: '', vidaUtilDias: null, ativo: true },
+    { id: 'I11', codigo: 'PEC-001', nome: 'Filtro de óleo motor', categoria: 'Peça de caminhão', unidade: 'un', minimo: 4, custoMedio: 95.00, fornecedor: 'Auto Peças Fortaleza', ca: '', caValidade: '', vidaUtilDias: null, ativo: true },
+    { id: 'I12', codigo: 'PEC-002', nome: 'Filtro diesel separador Racor', categoria: 'Peça de caminhão', unidade: 'un', minimo: 3, custoMedio: 130.00, fornecedor: 'Auto Peças Fortaleza', ca: '', caValidade: '', vidaUtilDias: null, ativo: true },
+    { id: 'I13', codigo: 'PEC-003', nome: 'Óleo lubrificante 15W40 motor', categoria: 'Peça de caminhão', unidade: 'L', minimo: 40, custoMedio: 28.50, fornecedor: 'Auto Peças Fortaleza', ca: '', caValidade: '', vidaUtilDias: null, ativo: true },
+    { id: 'I14', codigo: 'PEC-004', nome: 'Óleo para bomba de vácuo ISO 100', categoria: 'Peça de caminhão', unidade: 'L', minimo: 20, custoMedio: 42.00, fornecedor: 'Auto Peças Fortaleza', ca: '', caValidade: '', vidaUtilDias: null, ativo: true },
+    { id: 'I15', codigo: 'PEC-005', nome: 'Pneu 275/80 R22.5', categoria: 'Peça de caminhão', unidade: 'un', minimo: 2, custoMedio: 2450.00, fornecedor: 'Auto Peças Fortaleza', ca: '', caValidade: '', vidaUtilDias: null, ativo: true },
+    { id: 'I16', codigo: 'QUI-001', nome: 'Neutralizador de odores concentrado', categoria: 'Químico-limpeza', unidade: 'L', minimo: 30, custoMedio: 34.00, fornecedor: 'Química Nordeste', ca: '', caValidade: '', vidaUtilDias: null, ativo: true },
+    { id: 'I17', codigo: 'QUI-002', nome: 'Desengraxante biodegradável', categoria: 'Químico-limpeza', unidade: 'L', minimo: 25, custoMedio: 26.00, fornecedor: 'Química Nordeste', ca: '', caValidade: '', vidaUtilDias: null, ativo: true },
+    { id: 'I18', codigo: 'QUI-003', nome: 'Hipoclorito de sódio 12%', categoria: 'Químico-limpeza', unidade: 'L', minimo: 50, custoMedio: 8.50, fornecedor: 'Química Nordeste', ca: '', caValidade: '', vidaUtilDias: null, ativo: true },
+    { id: 'I19', codigo: 'FER-001', nome: 'Chave de tubo Stillson 24"', categoria: 'Ferramenta', unidade: 'un', minimo: 2, custoMedio: 210.00, fornecedor: 'Ferragens Ceará', ca: '', caValidade: '', vidaUtilDias: null, ativo: true },
+    { id: 'I20', codigo: 'FER-002', nome: 'Marreta oitavada 2kg', categoria: 'Ferramenta', unidade: 'un', minimo: 2, custoMedio: 85.00, fornecedor: 'Ferragens Ceará', ca: '', caValidade: '', vidaUtilDias: null, ativo: true }
+  ];
+
+  const tamanhosBota = ['41', '40', '42', '39', '43', '44', '41', '40', '42', '41', '42'];
+  const tamanhosLuva = ['G', 'M', 'GG', 'M', 'G', 'M', 'G', 'G', 'G', 'M', 'G'];
+  const tamanhosUni = ['G', 'M', 'GG', 'M', 'G', 'G', 'M', 'G', 'GG', 'M', 'G'];
+  const camHabitual = {
+    'Carlos Eduardo': 'NQZ-7814',
+    'Valdir Sobrinho': 'PNB-4310',
+    'Marcelo Paz': 'ORS-3098',
+    'Francisco Lima': 'OIH-9920',
+    'José Carlos Maia': 'QXA-2210',
+    'Manoel Silveira': 'RTV-5531',
+    'Raimundo Nonato': 'SBD-1187',
+    'Antônio Ferreira': 'NQZ-7814',
+    'Rafael Souza': 'PNB-4310',
+    'Jonas Lima': 'ORS-3098',
+    'Pedro Alves': 'QXA-2210'
+  };
+
+  const colabs = PESSOAS.map((p, idx) => ({
+    id: `COL-${String(idx + 1).padStart(2, '0')}`,
+    nome: p.nome,
+    funcao: p.funcao,
+    bota: tamanhosBota[idx % tamanhosBota.length],
+    luva: tamanhosLuva[idx % tamanhosLuva.length],
+    uniforme: tamanhosUni[idx % tamanhosUni.length],
+    caminhao: camHabitual[p.nome] || '',
+    ativo: true
+  }));
+  colabs.push({
+    id: `COL-${String(colabs.length + 1).padStart(2, '0')}`,
+    nome: 'Cláudio Almoxarife',
+    funcao: 'Escritório',
+    bota: '41',
+    luva: 'M',
+    uniforme: 'M',
+    caminhao: '',
+    ativo: true
+  });
+
+  const movs = [
+    { id: 'M01', num: '#E-001', tipo: 'entrada', data: addD(HOJE, -55), itemId: 'I01', qtd: 50, custoUnit: 22.00, destinoTipo: null, destinoId: '', fornecedor: 'Casa do EPI', nf: '10241', motivo: '', responsavel: 'Escritório' },
+    { id: 'M02', num: '#E-002', tipo: 'entrada', data: addD(HOJE, -55), itemId: 'I02', qtd: 10, custoUnit: 78.00, destinoTipo: null, destinoId: '', fornecedor: 'Casa do EPI', nf: '10241', motivo: '', responsavel: 'Escritório' },
+    { id: 'M03', num: '#E-003', tipo: 'entrada', data: addD(HOJE, -54), itemId: 'I03', qtd: 35, custoUnit: 14.50, destinoTipo: null, destinoId: '', fornecedor: 'Casa do EPI', nf: '10245', motivo: '', responsavel: 'Escritório' },
+    { id: 'M04', num: '#E-004', tipo: 'entrada', data: addD(HOJE, -54), itemId: 'I04', qtd: 16, custoUnit: 28.00, destinoTipo: null, destinoId: '', fornecedor: 'Casa do EPI', nf: '10245', motivo: '', responsavel: 'Escritório' },
+    { id: 'M05', num: '#E-005', tipo: 'entrada', data: addD(HOJE, -53), itemId: 'I05', qtd: 12, custoUnit: 19.00, destinoTipo: null, destinoId: '', fornecedor: 'Casa do EPI', nf: '10248', motivo: '', responsavel: 'Escritório' },
+    { id: 'M06', num: '#E-006', tipo: 'entrada', data: addD(HOJE, -50), itemId: 'I06', qtd: 40, custoUnit: 85.00, destinoTipo: null, destinoId: '', fornecedor: 'Hidráulica Nordeste', nf: '8831', motivo: '', responsavel: 'Escritório' },
+    { id: 'M07', num: '#E-007', tipo: 'entrada', data: addD(HOJE, -50), itemId: 'I07', qtd: 6, custoUnit: 145.00, destinoTipo: null, destinoId: '', fornecedor: 'Hidráulica Nordeste', nf: '8831', motivo: '', responsavel: 'Escritório' },
+    { id: 'M08', num: '#E-008', tipo: 'entrada', data: addD(HOJE, -48), itemId: 'I08', qtd: 100, custoUnit: 37.00, destinoTipo: null, destinoId: '', fornecedor: 'Hidráulica Nordeste', nf: '8840', motivo: '', responsavel: 'Escritório' },
+    { id: 'M09', num: '#E-009', tipo: 'entrada', data: addD(HOJE, -48), itemId: 'I09', qtd: 20, custoUnit: 38.00, destinoTipo: null, destinoId: '', fornecedor: 'Hidráulica Nordeste', nf: '8840', motivo: '', responsavel: 'Escritório' },
+    { id: 'M10', num: '#E-010', tipo: 'entrada', data: addD(HOJE, -47), itemId: 'I10', qtd: 4, custoUnit: 480.00, destinoTipo: null, destinoId: '', fornecedor: 'Hidráulica Nordeste', nf: '8842', motivo: '', responsavel: 'Escritório' },
+    { id: 'M11', num: '#E-011', tipo: 'entrada', data: addD(HOJE, -45), itemId: 'I11', qtd: 8, custoUnit: 95.00, destinoTipo: null, destinoId: '', fornecedor: 'Auto Peças Fortaleza', nf: '4410', motivo: '', responsavel: 'Escritório' },
+    { id: 'M12', num: '#E-012', tipo: 'entrada', data: addD(HOJE, -45), itemId: 'I12', qtd: 3, custoUnit: 130.00, destinoTipo: null, destinoId: '', fornecedor: 'Auto Peças Fortaleza', nf: '4410', motivo: '', responsavel: 'Escritório' },
+    { id: 'M13', num: '#E-013', tipo: 'entrada', data: addD(HOJE, -44), itemId: 'I13', qtd: 120, custoUnit: 28.50, destinoTipo: null, destinoId: '', fornecedor: 'Auto Peças Fortaleza', nf: '4415', motivo: '', responsavel: 'Escritório' },
+    { id: 'M14', num: '#E-014', tipo: 'entrada', data: addD(HOJE, -44), itemId: 'I14', qtd: 30, custoUnit: 42.00, destinoTipo: null, destinoId: '', fornecedor: 'Auto Peças Fortaleza', nf: '4415', motivo: '', responsavel: 'Escritório' },
+    { id: 'M15', num: '#E-015', tipo: 'entrada', data: addD(HOJE, -43), itemId: 'I15', qtd: 4, custoUnit: 2450.00, destinoTipo: null, destinoId: '', fornecedor: 'Auto Peças Fortaleza', nf: '4420', motivo: '', responsavel: 'Escritório' },
+    { id: 'M16', num: '#E-016', tipo: 'entrada', data: addD(HOJE, -40), itemId: 'I16', qtd: 80, custoUnit: 34.00, destinoTipo: null, destinoId: '', fornecedor: 'Química Nordeste', nf: '7120', motivo: '', responsavel: 'Escritório' },
+    { id: 'M17', num: '#E-017', tipo: 'entrada', data: addD(HOJE, -40), itemId: 'I17', qtd: 60, custoUnit: 26.00, destinoTipo: null, destinoId: '', fornecedor: 'Química Nordeste', nf: '7120', motivo: '', responsavel: 'Escritório' },
+    { id: 'M18', num: '#E-018', tipo: 'entrada', data: addD(HOJE, -39), itemId: 'I18', qtd: 135, custoUnit: 8.50, destinoTipo: null, destinoId: '', fornecedor: 'Química Nordeste', nf: '7125', motivo: '', responsavel: 'Escritório' },
+    { id: 'M19', num: '#E-019', tipo: 'entrada', data: addD(HOJE, -38), itemId: 'I19', qtd: 3, custoUnit: 210.00, destinoTipo: null, destinoId: '', fornecedor: 'Ferragens Ceará', nf: '9901', motivo: '', responsavel: 'Escritório' },
+    { id: 'M20', num: '#E-020', tipo: 'entrada', data: addD(HOJE, -38), itemId: 'I20', qtd: 4, custoUnit: 85.00, destinoTipo: null, destinoId: '', fornecedor: 'Ferragens Ceará', nf: '9901', motivo: '', responsavel: 'Escritório' },
+    { id: 'M21', num: '#S-001', tipo: 'saida', data: addD(HOJE, -35), itemId: 'I01', qtd: 10, custoUnit: 22.00, destinoTipo: 'colab', destinoId: 'Carlos Eduardo', fornecedor: '', nf: '', motivo: '', responsavel: 'Escritório' },
+    { id: 'M22', num: '#S-002', tipo: 'saida', data: addD(HOJE, -32), itemId: 'I02', qtd: 2, custoUnit: 78.00, destinoTipo: 'colab', destinoId: 'Carlos Eduardo', fornecedor: '', nf: '', motivo: '', responsavel: 'Escritório' },
+    { id: 'M23', num: '#S-003', tipo: 'saida', data: addD(HOJE, -30), itemId: 'I01', qtd: 10, custoUnit: 22.00, destinoTipo: 'colab', destinoId: 'Valdir Sobrinho', fornecedor: '', nf: '', motivo: '', responsavel: 'Escritório' },
+    { id: 'M24', num: '#S-004', tipo: 'saida', data: addD(HOJE, -28), itemId: 'I02', qtd: 2, custoUnit: 78.00, destinoTipo: 'colab', destinoId: 'Valdir Sobrinho', fornecedor: '', nf: '', motivo: '', responsavel: 'Escritório' },
+    { id: 'M25', num: '#S-005', tipo: 'saida', data: addD(HOJE, -25), itemId: 'I01', qtd: 10, custoUnit: 22.00, destinoTipo: 'colab', destinoId: 'Antônio Ferreira', fornecedor: '', nf: '', motivo: '', responsavel: 'Escritório' },
+    { id: 'M26', num: '#S-006', tipo: 'saida', data: addD(HOJE, -24), itemId: 'I02', qtd: 2, custoUnit: 78.00, destinoTipo: 'colab', destinoId: 'Antônio Ferreira', fornecedor: '', nf: '', motivo: '', responsavel: 'Escritório' },
+    { id: 'M27', num: '#S-007', tipo: 'saida', data: addD(HOJE, -22), itemId: 'I03', qtd: 10, custoUnit: 14.50, destinoTipo: 'colab', destinoId: 'Carlos Eduardo', fornecedor: '', nf: '', motivo: '', responsavel: 'Escritório' },
+    { id: 'M28', num: '#S-008', tipo: 'saida', data: addD(HOJE, -20), itemId: 'I04', qtd: 4, custoUnit: 28.00, destinoTipo: 'colab', destinoId: 'Carlos Eduardo', fornecedor: '', nf: '', motivo: '', responsavel: 'Escritório' },
+    { id: 'M29', num: '#S-009', tipo: 'saida', data: addD(HOJE, -18), itemId: 'I05', qtd: 4, custoUnit: 19.00, destinoTipo: 'colab', destinoId: 'Valdir Sobrinho', fornecedor: '', nf: '', motivo: '', responsavel: 'Escritório' },
+    { id: 'M30', num: '#S-010', tipo: 'saida', data: addD(HOJE, -15), itemId: 'I11', qtd: 2, custoUnit: 95.00, destinoTipo: 'caminhao', destinoId: 'PMQ-4819', fornecedor: '', nf: '', motivo: '', responsavel: 'Escritório' },
+    { id: 'M31', num: '#S-011', tipo: 'saida', data: addD(HOJE, -15), itemId: 'I12', qtd: 3, custoUnit: 130.00, destinoTipo: 'caminhao', destinoId: 'PMQ-4819', fornecedor: '', nf: '', motivo: '', responsavel: 'Escritório' },
+    { id: 'M32', num: '#S-012', tipo: 'saida', data: addD(HOJE, -14), itemId: 'I13', qtd: 40, custoUnit: 28.50, destinoTipo: 'caminhao', destinoId: 'PMQ-4819', fornecedor: '', nf: '', motivo: '', responsavel: 'Escritório' },
+    { id: 'M33', num: '#S-013', tipo: 'saida', data: addD(HOJE, -14), itemId: 'I14', qtd: 15, custoUnit: 42.00, destinoTipo: 'caminhao', destinoId: 'PMQ-4819', fornecedor: '', nf: '', motivo: '', responsavel: 'Escritório' },
+    { id: 'M34', num: '#S-014', tipo: 'saida', data: addD(HOJE, -12), itemId: 'I15', qtd: 2, custoUnit: 2450.00, destinoTipo: 'caminhao', destinoId: 'NQZ-7814', fornecedor: '', nf: '', motivo: '', responsavel: 'Escritório' },
+    { id: 'M35', num: '#S-015', tipo: 'saida', data: addD(HOJE, -10), itemId: 'I06', qtd: 10, custoUnit: 85.00, destinoTipo: 'os', destinoId: 1038, fornecedor: '', nf: '', motivo: '', responsavel: 'Escritório' },
+    { id: 'M36', num: '#S-016', tipo: 'saida', data: addD(HOJE, -10), itemId: 'I10', qtd: 1, custoUnit: 480.00, destinoTipo: 'os', destinoId: 1038, fornecedor: '', nf: '', motivo: '', responsavel: 'Escritório' },
+    { id: 'M37', num: '#S-017', tipo: 'saida', data: addD(HOJE, -9), itemId: 'I16', qtd: 20, custoUnit: 34.00, destinoTipo: 'os', destinoId: 1038, fornecedor: '', nf: '', motivo: '', responsavel: 'Escritório' },
+    { id: 'M38', num: '#S-018', tipo: 'saida', data: addD(HOJE, -8), itemId: 'I07', qtd: 2, custoUnit: 145.00, destinoTipo: 'os', destinoId: 1039, fornecedor: '', nf: '', motivo: '', responsavel: 'Escritório' },
+    { id: 'M39', num: '#S-019', tipo: 'saida', data: addD(HOJE, -8), itemId: 'I17', qtd: 15, custoUnit: 26.00, destinoTipo: 'os', destinoId: 1039, fornecedor: '', nf: '', motivo: '', responsavel: 'Escritório' },
+    { id: 'M40', num: '#S-020', tipo: 'saida', data: addD(HOJE, -7), itemId: 'I09', qtd: 6, custoUnit: 38.00, destinoTipo: 'os', destinoId: 1040, fornecedor: '', nf: '', motivo: '', responsavel: 'Escritório' },
+    { id: 'M41', num: '#S-021', tipo: 'saida', data: addD(HOJE, -7), itemId: 'I18', qtd: 40, custoUnit: 8.50, destinoTipo: 'os', destinoId: 1040, fornecedor: '', nf: '', motivo: '', responsavel: 'Escritório' },
+    { id: 'M42', num: '#S-022', tipo: 'saida', data: addD(HOJE, -5), itemId: 'I07', qtd: 2, custoUnit: 145.00, destinoTipo: 'os', destinoId: 1042, fornecedor: '', nf: '', motivo: '', responsavel: 'Escritório' },
+    { id: 'M43', num: '#S-023', tipo: 'saida', data: addD(HOJE, -5), itemId: 'I08', qtd: 40, custoUnit: 37.00, destinoTipo: 'os', destinoId: 1042, fornecedor: '', nf: '', motivo: '', responsavel: 'Escritório' },
+    { id: 'M44', num: '#S-024', tipo: 'saida', data: addD(HOJE, -3), itemId: 'I01', qtd: 8, custoUnit: 22.00, destinoTipo: 'colab', destinoId: 'Rafael Souza', fornecedor: '', nf: '', motivo: '', responsavel: 'Escritório' },
+    { id: 'M45', num: '#A-001', tipo: 'ajuste', data: addD(HOJE, -6), itemId: 'I19', qtd: -1, custoUnit: 210.00, destinoTipo: null, destinoId: '', fornecedor: '', nf: '', motivo: 'Material avariado em operação', responsavel: 'Escritório' },
+    { id: 'M46', num: '#A-002', tipo: 'ajuste', data: addD(HOJE, -2), itemId: 'I18', qtd: 5, custoUnit: 8.50, destinoTipo: null, destinoId: '', fornecedor: '', nf: '', motivo: 'Inventário periódico (sobra)', responsavel: 'Escritório' }
+  ];
+
+  return { itens, movs, colabs };
+}
+
 class Component extends DCLogic {
   state = {
     lgTab: 'Escala', lgOff: 0, dias: { 0: genDay(0) }, cams: CAMS, pessoas: PESSOAS, pend: PEND, manut: MANUT, lgModal: null, calcOpen: false, cf: { ...CALC_VAZIO }, mf: { ...LG_EMPTY }, mIdx: null, mErro: '', page: 'dashboard', w: typeof window !== 'undefined' ? window.innerWidth : 1280, menu: false, osAtivas: 24, osCampo: 18, proxima: 1046, form: { ...VAZIO }, tentou: false, toast: '',
@@ -2731,7 +3150,8 @@ class Component extends DCLogic {
     osExtra: {}, osPer: '7 dias', osPassadas: false, osQ: '', osStatus: '', osOrig: '', osServ: '', osCam: '', osDe: HOJE, osAte: HOJE, osModal: null, osItem: null, osItemN: null, osMF: { ...OS_VAZIO_MF }, osErro: '', osMenu: null, osCalc: false,
     precos: (typeof window !== 'undefined' && window.localStorage && window.localStorage.getItem('alerta_precos')) ? JSON.parse(window.localStorage.getItem('alerta_precos')) : DEFAULT_PRECOS,
     editPrecosOpen: false,
-    epForm: { transpViagem: 600, transpKm: 6, fossa: 650, gordura: 590, desentupimento: 350, hidro: 600, oleo: 400 }
+    epForm: { transpViagem: 600, transpKm: 6, fossa: 650, gordura: 590, desentupimento: 350, hidro: 600, oleo: 400 },
+    almoxTab: 'Estoque', almoxQ: '', almoxCat: '', almoxStatus: '', almoxMovTipo: '', almoxMovDest: '', almoxData: null, almoxModal: null, almoxMF: { ...ALMOX_MF_VAZIO }, almoxItemMF: null, almoxColabMF: null, almoxErro: '', almoxAviso: '', almoxColabSel: ''
   };
   componentDidMount() {
     this._r = () => this.setState({ w: window.innerWidth });
@@ -2746,12 +3166,13 @@ class Component extends DCLogic {
         if (this.state.osModal) return this.osClose();
         if (this.state.osMenu) return this.setState({ osMenu: null });
         if (this.state.comMenu) return this.setState({ comMenu: null });
+        if (this.state.almoxModal) return this.setState({ almoxModal: null, almoxErro: '', almoxAviso: '' });
         this.setState({ osOpen: false, tentou: false, lgModal: null });
       }
     };
     window.addEventListener('keydown', this._k);
   }
-  componentDidUpdate() { document.body.style.overflow = (this.state.osOpen || this.state.lgModal || this.state.calcOpen || this.state.finModal || this.state.comModal || this.state.osModal || this.state.editPrecosOpen) ? 'hidden' : ''; }
+  componentDidUpdate() { document.body.style.overflow = (this.state.osOpen || this.state.lgModal || this.state.calcOpen || this.state.finModal || this.state.comModal || this.state.osModal || this.state.editPrecosOpen || this.state.almoxModal) ? 'hidden' : ''; }
   componentWillUnmount() { this.comDragCleanup(); window.removeEventListener('resize', this._r); window.removeEventListener('keydown', this._k); clearTimeout(this._t); document.body.style.overflow = ''; }
   go = (page) => (e) => { if (e && e.preventDefault) e.preventDefault(); if (page === 'novaOS') { this.setState({ osOpen: true, menu: false }); return; } if (page === 'calc') { this.setState({ calcOpen: true, calcLead: null, menu: false }); return; } this.setState({ page, menu: false, tentou: false, osOpen: false }); if (typeof window !== 'undefined') window.scrollTo(0, 0); };
   salvar = () => {
@@ -5596,8 +6017,23 @@ class Component extends DCLogic {
     const itemSel = this.state.osItem;
     const rowSel = itemSel ? todas.find(x => x.k === itemSel) : null;
     const extraSel = rowSel ? this.osX(rowSel.n) : {};
-    let det = { fotosAntes: [], fotosDepois: [], hist: [], acoes: [] };
+    let det = { fotosAntes: [], fotosDepois: [], hist: [], acoes: [], materiais: [], temMateriais: false, semMateriais: true, materiaisTotal: brl(0) };
     if (rowSel) {
+      const almData = this.almoxData();
+      const almItensMap = (almData.itens || []).reduce((acc, it) => { acc[it.id] = it; return acc; }, {});
+      const matMovs = (almData.movs || []).filter(m => m.tipo === 'saida' && m.destinoTipo === 'os' && Number(m.destinoId) === Number(rowSel.n));
+      let matSoma = 0;
+      const matList = matMovs.map(m => {
+        const it = almItensMap[m.itemId] || {};
+        const q = Number(m.qtd) || 0;
+        const c = Number(m.custoUnit) || 0;
+        const tot = q * c;
+        matSoma += tot;
+        return {
+          txt: `${m.qtd} ${it.unidade || 'un'} ${it.nome || m.itemId}`,
+          totalTxt: brl(tot)
+        };
+      });
       let sbg = 'var(--gray-100)';
       let sfg = 'var(--text-muted)';
       if (OS_COR[rowSel.status]) {
@@ -5650,6 +6086,10 @@ class Component extends DCLogic {
         semAssinatura: !extraSel.assinatura && !extraSel.assinNome,
         hist: histList,
         temHist: histList.length > 0,
+        materiais: matList,
+        temMateriais: matList.length > 0,
+        semMateriais: matList.length === 0,
+        materiaisTotal: brl(matSoma),
         podeEditar: rowSel.status !== 'Concluído',
         podeAlocar: rowSel.status === 'Pendente',
         podeStatus: rowSel.status !== 'Pendente' && rowSel.status !== 'Cancelada',
@@ -5737,6 +6177,346 @@ class Component extends DCLogic {
     };
   }
 
+  almoxData() {
+    if (this.state.almoxData) return this.state.almoxData;
+    if (!this._almoxSeed) this._almoxSeed = genAlmox();
+    return this._almoxSeed;
+  }
+
+  almoxExportar = () => {
+    this.toast('Exportação em breve');
+  };
+
+  almoxVals(desktop) {
+    const st = this.state;
+    const data = this.almoxData();
+    const itens = data.itens || [];
+    const movs = data.movs || [];
+    const colabs = data.colabs || [];
+
+    const tab = st.almoxTab || 'Estoque';
+    const isEstoque = tab === 'Estoque';
+    const isMovs = tab === 'Movimentações';
+    const isEpis = tab === 'EPIs';
+    const isColabs = tab === 'Colaboradores';
+    const setTab = t => {
+      const v = (t && t.target) ? t.target.value : (typeof t === 'string' ? t : (t && t.tab ? t.tab : t));
+      this.setState({ almoxTab: v });
+    };
+
+    const saldoMap = {};
+    itens.forEach(it => {
+      saldoMap[it.id] = almoxSaldo(it.id, movs);
+    });
+
+    let abaixoCount = 0;
+    let valorEstoqueTot = 0;
+    let caVencendoCount = 0;
+    let temCaVencido = false;
+
+    itens.forEach(it => {
+      const s = saldoMap[it.id] || 0;
+      if (s <= (it.minimo != null ? it.minimo : 0)) {
+        abaixoCount++;
+      }
+      valorEstoqueTot += s * (it.custoMedio || 0);
+      if (it.categoria === 'EPI' && it.caValidade) {
+        const diasCa = difD(it.caValidade, HOJE);
+        if (diasCa <= 30) caVencendoCount++;
+        if (diasCa < 0) temCaVencido = true;
+      }
+    });
+
+    const mesRef = (HOJE || '').slice(0, 7);
+    const saidasMesTot = movs
+      .filter(m => m.tipo === 'saida' && (m.data || '').startsWith(mesRef))
+      .reduce((acc, m) => acc + (Number(m.qtd) || 0) * (Number(m.custoUnit) || 0), 0);
+
+    const kpis = {
+      abaixo: abaixoCount,
+      abaixoTxt: `${abaixoCount}`,
+      valorEstoqueTxt: brl(valorEstoqueTot),
+      saidasMesTxt: brl(saidasMesTot),
+      caVencendo: caVencendoCount,
+      caVencendoTxt: `${caVencendoCount}`,
+      temCaVencido
+    };
+
+    const repor = itens
+      .filter(it => (saldoMap[it.id] || 0) <= (it.minimo != null ? it.minimo : 0))
+      .map(it => {
+        const s = saldoMap[it.id] || 0;
+        return {
+          id: it.id,
+          codigo: it.codigo,
+          nome: it.nome,
+          saldoTxt: `${s} ${it.unidade}`,
+          minimoTxt: `mín. ${it.minimo}`,
+          registrar: () => this.setState({
+            almoxModal: 'mov',
+            almoxMF: { ...ALMOX_MF_VAZIO, tipo: 'entrada', itemId: it.id, fornecedor: it.fornecedor || '', custo: it.custoMedio || '' },
+            almoxErro: ''
+          })
+        };
+      });
+    const temRepor = repor.length > 0;
+
+    const fQ = (st.almoxQ || '').toLowerCase().trim();
+    const fCat = st.almoxCat || '';
+    const fStatus = st.almoxStatus || '';
+
+    const itensFiltrados = itens.filter(it => {
+      const s = saldoMap[it.id] || 0;
+      const stStatus = almoxStatus(it, s);
+      if (fQ) {
+        const c = (it.codigo || '').toLowerCase();
+        const n = (it.nome || '').toLowerCase();
+        const f = (it.fornecedor || '').toLowerCase();
+        if (!c.includes(fQ) && !n.includes(fQ) && !f.includes(fQ)) return false;
+      }
+      if (fCat && it.categoria !== fCat) return false;
+      if (fStatus && stStatus !== fStatus) return false;
+      return true;
+    });
+
+    const itensList = itensFiltrados.map(it => {
+      const s = saldoMap[it.id] || 0;
+      const stStatus = almoxStatus(it, s);
+      const stVisual = ALMOX_ST[stStatus] || ALMOX_ST.OK;
+      const abrir = () => this.setState({
+        almoxModal: 'item',
+        almoxItemMF: { ...it },
+        almoxErro: ''
+      });
+      return {
+        id: it.id,
+        codigo: it.codigo,
+        nome: it.nome,
+        categoria: it.categoria,
+        saldoTxt: `${s} ${it.unidade}`,
+        minimoTxt: `${it.minimo} ${it.unidade}`,
+        custoTxt: brl(it.custoMedio),
+        valorTxt: brl(s * (it.custoMedio || 0)),
+        fornecedor: it.fornecedor,
+        status: stStatus,
+        stBg: stVisual.bg,
+        stFg: stVisual.fg,
+        abrir,
+        onKey: e => { if (e && e.key === 'Enter') abrir(); }
+      };
+    });
+
+    const filtros = {
+      q: st.almoxQ || '',
+      onQ: e => this.setState({ almoxQ: (e && e.target) ? e.target.value : (e || '') }),
+      cat: st.almoxCat || '',
+      onCat: e => this.setState({ almoxCat: (e && e.target) ? e.target.value : (e || '') }),
+      cats: [{ v: '', t: 'Todas as categorias' }, ...ALMOX_CATS.map(c => ({ v: c, t: c }))],
+      status: st.almoxStatus || '',
+      onStatus: e => this.setState({ almoxStatus: (e && e.target) ? e.target.value : (e || '') }),
+      statusOpts: [
+        { v: '', t: 'Todos os status' },
+        { v: 'OK', t: 'OK' },
+        { v: 'Baixo', t: 'Baixo' },
+        { v: 'Zerado', t: 'Zerado' }
+      ],
+      limpar: () => this.setState({ almoxQ: '', almoxCat: '', almoxStatus: '' })
+    };
+
+    const fMovTipo = st.almoxMovTipo || '';
+    const fMovDest = st.almoxMovDest || '';
+
+    const movsFiltrados = [...movs].filter(m => {
+      if (fMovTipo && m.tipo !== fMovTipo) return false;
+      if (fMovDest && m.destinoTipo !== fMovDest) return false;
+      return true;
+    }).sort((a, b) => (b.data || '').localeCompare(a.data || ''));
+
+    const itensMap = itens.reduce((acc, it) => { acc[it.id] = it; return acc; }, {});
+
+    const movsList = movsFiltrados.map(m => {
+      const it = itensMap[m.itemId];
+      const tipoTxt = m.tipo === 'entrada' ? 'Entrada' : (m.tipo === 'saida' ? 'Saída' : 'Ajuste');
+      let tipoBg = 'var(--lime-100)';
+      let tipoFg = 'var(--teal-800)';
+      if (m.tipo === 'saida') {
+        tipoBg = 'var(--teal-700)';
+        tipoFg = 'var(--white)';
+      } else if (m.tipo === 'ajuste') {
+        tipoBg = 'var(--amber-100)';
+        tipoFg = 'var(--amber-800)';
+      }
+
+      let sinal = '';
+      if (m.tipo === 'saida') sinal = '- ';
+      else if (m.tipo === 'entrada') sinal = '+ ';
+      else if (m.tipo === 'ajuste') sinal = m.qtd >= 0 ? '+ ' : '- ';
+
+      const qtdNum = Math.abs(Number(m.qtd) || 0);
+      const qtdTxt = `${sinal}${qtdNum} ${it ? it.unidade : 'un'}`;
+      const custoTxt = brl(m.custoUnit);
+      const totalTxt = brl(qtdNum * (Number(m.custoUnit) || 0));
+
+      let destinoTxt = '—';
+      if (m.tipo === 'entrada') {
+        destinoTxt = `${m.fornecedor || 'Fornecedor'}${m.nf ? ` · NF ${m.nf}` : ''}`;
+      } else if (m.tipo === 'saida') {
+        if (m.destinoTipo === 'os') destinoTxt = `OS #${m.destinoId}`;
+        else if (m.destinoTipo === 'caminhao') destinoTxt = `${m.destinoId}`;
+        else if (m.destinoTipo === 'colab') destinoTxt = `${m.destinoId}`;
+        else destinoTxt = `${m.destinoId || '—'}`;
+      } else if (m.tipo === 'ajuste') {
+        destinoTxt = `Ajuste: ${m.motivo || 'Inventário'}`;
+      }
+
+      return {
+        id: m.id,
+        num: m.num,
+        dataTxt: ddmm(m.data),
+        tipoTxt,
+        tipoBg,
+        tipoFg,
+        itemNome: it ? `${it.codigo} · ${it.nome}` : (m.itemId || '—'),
+        qtdTxt,
+        custoTxt,
+        totalTxt,
+        destinoTxt,
+        responsavel: m.responsavel || 'Escritório'
+      };
+    });
+
+    const filtrosMov = {
+      tipo: st.almoxMovTipo || '',
+      onTipo: e => this.setState({ almoxMovTipo: (e && e.target) ? e.target.value : (e || '') }),
+      tipos: [
+        { v: '', t: 'Todos os tipos' },
+        { v: 'entrada', t: 'Entrada' },
+        { v: 'saida', t: 'Saída' },
+        { v: 'ajuste', t: 'Ajuste' }
+      ],
+      dest: st.almoxMovDest || '',
+      onDest: e => this.setState({ almoxMovDest: (e && e.target) ? e.target.value : (e || '') }),
+      dests: [
+        { v: '', t: 'Todos os destinos' },
+        { v: 'os', t: 'OS' },
+        { v: 'caminhao', t: 'Caminhão' },
+        { v: 'colab', t: 'Colaborador' }
+      ],
+      limpar: () => this.setState({ almoxMovTipo: '', almoxMovDest: '' })
+    };
+
+    const colabsList = colabs.map(c => ({
+      id: c.id,
+      nome: c.nome,
+      funcao: c.funcao,
+      botaTxt: c.bota ? `Bota ${c.bota}` : '—',
+      luvaTxt: c.luva ? `Luva ${c.luva}` : '—',
+      uniformeTxt: c.uniforme ? `Uniforme ${c.uniforme}` : '—',
+      caminhaoTxt: c.caminhao || 'Nenhum',
+      ativoTxt: c.ativo ? 'Ativo' : 'Inativo',
+      editar: () => this.setState({
+        almoxModal: 'colab',
+        almoxColabMF: { ...c },
+        almoxErro: ''
+      })
+    }));
+
+    const novoColab = () => this.setState({
+      almoxModal: 'colab',
+      almoxColabMF: { id: '', nome: '', funcao: 'Ajudante', bota: '41', luva: 'G', uniforme: 'G', caminhao: '', ativo: true },
+      almoxErro: ''
+    });
+
+    const colabSel = st.almoxColabSel || (colabs[0] ? colabs[0].nome : '');
+    const onColab = e => this.setState({ almoxColabSel: (e && e.target) ? e.target.value : (e || '') });
+    const colabOpts = colabs.map(c => c.nome);
+    const colabAtual = colabs.find(c => c.nome === colabSel) || colabs[0] || null;
+
+    const fichaEpiMovs = movs
+      .filter(m => m.tipo === 'saida' && m.destinoTipo === 'colab' && m.destinoId === colabSel)
+      .sort((a, b) => (b.data || '').localeCompare(a.data || ''));
+
+    const ficha = fichaEpiMovs.map(m => {
+      const it = itensMap[m.itemId] || {};
+      const proximaTrocaData = (m.data && it.vidaUtilDias) ? addD(m.data, it.vidaUtilDias) : '';
+      const caVencido = !!(it.caValidade && it.caValidade < HOJE);
+      const trocaAtrasada = !!(proximaTrocaData && proximaTrocaData < HOJE);
+      let rowBg = 'transparent';
+      if (caVencido) rowBg = 'rgba(239, 68, 68, 0.08)';
+      else if (trocaAtrasada) rowBg = 'var(--amber-100)';
+
+      return {
+        id: m.id,
+        dataTxt: ddmm(m.data),
+        itemNome: it.nome || m.itemId,
+        qtdTxt: `${m.qtd} ${it.unidade || 'un'}`,
+        ca: it.ca || '—',
+        caValidadeTxt: it.caValidade ? ddmmyy(it.caValidade) : '—',
+        proximaTrocaTxt: proximaTrocaData ? ddmmyy(proximaTrocaData) : '—',
+        caVencido,
+        trocaAtrasada,
+        rowBg
+      };
+    });
+
+    const novaMov = () => this.setState({
+      almoxModal: 'mov',
+      almoxMF: { ...ALMOX_MF_VAZIO },
+      almoxErro: ''
+    });
+    const novoItem = () => this.setState({
+      almoxModal: 'item',
+      almoxItemMF: { id: '', codigo: '', nome: '', categoria: 'EPI', unidade: 'un', minimo: 5, custoMedio: 0, fornecedor: '', ca: '', caValidade: '', vidaUtilDias: null, ativo: true },
+      almoxErro: ''
+    });
+    const exportar = this.almoxExportar;
+
+    const almoxModal = st.almoxModal;
+    const modal = {
+      aberto: !!almoxModal,
+      isMov: almoxModal === 'mov',
+      isItem: almoxModal === 'item',
+      isColab: almoxModal === 'colab',
+      fechar: () => this.setState({ almoxModal: null, almoxErro: '', almoxAviso: '' })
+    };
+
+    return {
+      desktop: !!desktop,
+      mobile: !desktop,
+      tabs: ALMOX_TABS,
+      tab,
+      setTab,
+      isEstoque,
+      isMovs,
+      isEpis,
+      isColabs,
+      kpis,
+      repor,
+      temRepor,
+      itens: itensList,
+      semItens: itensList.length === 0,
+      filtros,
+      movs: movsList,
+      semMovs: movsList.length === 0,
+      filtrosMov,
+      colabs: colabsList,
+      novoColab,
+      epi: {
+        colabSel,
+        colabAtual,
+        onColab,
+        colabOpts,
+        ficha,
+        semFicha: ficha.length === 0,
+        imprimir: () => { if (typeof window !== 'undefined') window.print(); }
+      },
+      novaMov,
+      novoItem,
+      exportar,
+      modal
+    };
+  }
+
   renderVals() {
     const { page, w, form, tentou } = this.state;
     const desktop = w >= 900;
@@ -5768,7 +6548,8 @@ class Component extends DCLogic {
       showSidebar: desktop, showMobileBar: !desktop, menuOpen: !desktop && this.state.menu,
       openMenu: () => this.setState({ menu: true }), closeMenu: () => this.setState({ menu: false }),
       nav,
-      isDashboard: page === 'dashboard', isNovaOS: !!this.state.osOpen, isModulo: page !== 'dashboard' && page !== 'logistica' && page !== 'financeiro' && page !== 'comercial' && page !== 'os', isOS: page === 'os', os: page === 'os' ? this.osVals(desktop) : {}, isComercial: page === 'comercial', com: this.comVals(desktop), ct: this.ctVals(), calcOpen: !!this.state.calcOpen, calc: this.calcVals(),
+      isDashboard: page === 'dashboard', isNovaOS: !!this.state.osOpen, isModulo: page !== 'dashboard' && page !== 'logistica' && page !== 'financeiro' && page !== 'comercial' && page !== 'os' && page !== 'almox', isOS: page === 'os', os: page === 'os' ? this.osVals(desktop) : {}, isComercial: page === 'comercial', com: this.comVals(desktop), ct: this.ctVals(), calcOpen: !!this.state.calcOpen, calc: this.calcVals(),
+      isAlmox: page === 'almox', almox: page === 'almox' ? this.almoxVals(desktop) : {},
       editPrecosOpen: !!this.state.editPrecosOpen,
       closeEditPrecos: this.closeEditPrecos,
       saveEditPrecos: this.saveEditPrecos,

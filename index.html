@@ -2341,6 +2341,266 @@
         </div>
       </sc-if>
 
+      <sc-if value="{{ isAlmox }}" hint-placeholder-val="{{ false }}">
+        <div data-screen-label="Almoxarifado" style="display:flex;flex-direction:column;gap:20px">
+          <div style="display:flex;flex-wrap:wrap;justify-content:space-between;align-items:flex-start;gap:16px">
+            <div style="display:flex;flex-direction:column;gap:6px">
+              <div style="display:flex;flex-wrap:wrap;align-items:center;gap:10px">
+                <h1 style="margin:0;font-size:clamp(26px,3.2vw,34px);font-weight:700;letter-spacing:-.02em;line-height:1.1;color:var(--text-strong)">Almoxarifado</h1>
+                <span style="display:inline-flex;align-items:center;gap:5px;font-size:12px;font-weight:600;color:var(--teal-800);background:var(--lime-100);border-radius:999px;padding:3px 10px">
+                  <img src="https://unpkg.com/lucide-static@0.460.0/icons/package.svg" alt="" style="width:12px;height:12px;opacity:.8">
+                  Escritório e almoxarifado
+                </span>
+              </div>
+              <span style="font-size:14px;color:var(--text-muted)">EPIs, materiais de operação e peças da frota — depósito central.</span>
+            </div>
+            <div style="display:flex;align-items:center;gap:10px;flex-wrap:wrap">
+              <x-import component-from-global-scope="DesentupidoraAlertaDesignSystem_e6b749.Button" variant="ghost" size="sm" onClick="{{ almox.exportar }}" hint-size="140px,36px">
+                <img src="https://unpkg.com/lucide-static@0.460.0/icons/download.svg" alt="" style="width:14px;height:14px;margin-right:6px;opacity:.8">
+                Exportar Excel
+              </x-import>
+              <x-import component-from-global-scope="DesentupidoraAlertaDesignSystem_e6b749.Button" variant="primary" size="sm" onClick="{{ almox.novaMov }}" hint-size="150px,36px">
+                + Movimentação
+              </x-import>
+            </div>
+          </div>
+
+          <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(190px,1fr));gap:16px">
+            <div style="background:var(--white);border:1px solid var(--border-default);border-radius:16px;padding:20px;display:flex;flex-direction:column;gap:10px;box-shadow:var(--shadow-sm)">
+              <span style="font-size:14px;font-weight:600;color:var(--text-muted)">Abaixo do mínimo</span>
+              <span style="font-size:30px;font-weight:700;color:var(--amber-800)">{{ almox.kpis.abaixoTxt }}</span>
+              <span style="font-size:13px;color:var(--text-body)">Itens para reposição urgente</span>
+            </div>
+            <div style="background:var(--white);border:1px solid var(--border-default);border-radius:16px;padding:20px;display:flex;flex-direction:column;gap:10px;box-shadow:var(--shadow-sm)">
+              <span style="font-size:14px;font-weight:600;color:var(--text-muted)">Valor em estoque</span>
+              <span style="font-size:30px;font-weight:700;color:var(--text-strong)">{{ almox.kpis.valorEstoqueTxt }}</span>
+              <span style="font-size:13px;color:var(--text-body)">Custo médio total imobilizado</span>
+            </div>
+            <div style="background:var(--white);border:1px solid var(--border-default);border-radius:16px;padding:20px;display:flex;flex-direction:column;gap:10px;box-shadow:var(--shadow-sm)">
+              <span style="font-size:14px;font-weight:600;color:var(--text-muted)">Saídas no mês</span>
+              <span style="font-size:30px;font-weight:700;color:var(--text-strong)">{{ almox.kpis.saidasMesTxt }}</span>
+              <span style="font-size:13px;color:var(--text-body)">Consumo e baixas no período</span>
+            </div>
+            <div style="background:var(--white);border:1px solid var(--border-default);border-radius:16px;padding:20px;display:flex;flex-direction:column;gap:10px;box-shadow:var(--shadow-sm)">
+              <span style="font-size:14px;font-weight:600;color:var(--text-muted)">CAs vencendo em 30 dias</span>
+              <span style="font-size:30px;font-weight:700;color:var(--text-strong)">{{ almox.kpis.caVencendoTxt }}</span>
+              <span style="font-size:13px;color:var(--text-body)">Certificados de EPI a renovar</span>
+            </div>
+          </div>
+
+          <sc-if value="{{ almox.temRepor }}" hint-placeholder-val="{{ false }}">
+            <div style="background:var(--amber-100);border:1px solid var(--amber-500);border-left:5px solid var(--amber-500);border-radius:16px;padding:16px 20px;display:flex;flex-direction:column;gap:12px">
+              <div style="display:flex;align-items:center;gap:8px">
+                <img src="https://unpkg.com/lucide-static@0.460.0/icons/triangle-alert.svg" alt="" style="width:18px;height:18px;color:var(--amber-800)">
+                <strong style="font-size:14px;color:var(--amber-800)">Repor</strong>
+              </div>
+              <div style="display:flex;gap:12px;overflow-x:auto;padding-bottom:6px">
+                <sc-for list="{{ almox.repor }}" as="r" hint-placeholder-count="3">
+                  <div style="background:var(--white);border:1px solid var(--border-default);border-radius:12px;padding:12px 14px;display:flex;flex-direction:column;gap:6px;min-width:220px;max-width:260px;flex-shrink:0;box-shadow:var(--shadow-sm)">
+                    <div style="display:flex;justify-content:space-between;align-items:center">
+                      <span style="font-size:12px;font-weight:700;color:var(--teal-700)">{{ r.codigo }}</span>
+                      <span style="font-size:11px;font-weight:600;color:var(--amber-800)">{{ r.minimoTxt }}</span>
+                    </div>
+                    <strong style="font-size:13px;color:var(--text-strong);white-space:nowrap;overflow:hidden;text-overflow:ellipsis">{{ r.nome }}</strong>
+                    <span style="font-size:12px;color:var(--text-body)">Saldo: <strong>{{ r.saldoTxt }}</strong></span>
+                    <button onClick="{{ r.registrar }}" style="margin-top:4px;height:32px;background:var(--teal-700);color:var(--white);border:none;border-radius:8px;font-size:12px;font-weight:600;cursor:pointer">Registrar entrada</button>
+                  </div>
+                </sc-for>
+              </div>
+            </div>
+          </sc-if>
+
+          <div style="overflow-x:auto;scrollbar-width:none">
+            <x-import component-from-global-scope="DesentupidoraAlertaDesignSystem_e6b749.Tabs" items="{{ almox.tabs }}" value="{{ almox.tab }}" on-change="{{ almox.setTab }}" onChange="{{ almox.setTab }}" hint-size="100%,48px"></x-import>
+          </div>
+
+          <sc-if value="{{ almox.isEstoque }}" hint-placeholder-val="{{ false }}">
+            <div style="display:flex;flex-direction:column;gap:16px">
+              <div style="background:var(--white);border:1px solid var(--border-default);border-radius:16px;padding:16px;display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:12px;box-shadow:var(--shadow-sm)">
+                <div style="display:flex;flex-wrap:wrap;align-items:center;gap:10px;flex:1;min-width:260px">
+                  <div style="position:relative;flex:1;min-width:220px;max-width:360px">
+                    <img src="https://unpkg.com/lucide-static@0.460.0/icons/search.svg" alt="" style="position:absolute;left:14px;top:50%;transform:translateY(-50%);width:16px;height:16px;color:var(--text-muted);pointer-events:none">
+                    <input type="text" placeholder="Buscar item ou código" value="{{ almox.filtros.q }}" onChange="{{ almox.filtros.onQ }}" aria-label="Buscar item ou código" style="width:100%;height:44px;padding:0 14px 0 40px;border:1.5px solid var(--border-default);border-radius:12px;font-size:13px;font-family:inherit;background:var(--white);color:var(--text-strong);box-sizing:border-box">
+                  </div>
+                  <select value="{{ almox.filtros.cat }}" onChange="{{ almox.filtros.onCat }}" aria-label="Filtrar por categoria" style="height:44px;max-width:210px;padding:0 12px;border:1.5px solid var(--border-default);border-radius:12px;font-size:13px;font-family:inherit;background:var(--white);color:var(--text-strong);cursor:pointer">
+                    <sc-for list="{{ almox.filtros.cats }}" as="o" hint-placeholder-count="4">
+                      <option value="{{ o.v }}">{{ o.t }}</option>
+                    </sc-for>
+                  </select>
+                  <select value="{{ almox.filtros.status }}" onChange="{{ almox.filtros.onStatus }}" aria-label="Filtrar por status" style="height:44px;max-width:210px;padding:0 12px;border:1.5px solid var(--border-default);border-radius:12px;font-size:13px;font-family:inherit;background:var(--white);color:var(--text-strong);cursor:pointer">
+                    <sc-for list="{{ almox.filtros.statusOpts }}" as="o" hint-placeholder-count="4">
+                      <option value="{{ o.v }}">{{ o.t }}</option>
+                    </sc-for>
+                  </select>
+                </div>
+                <div>
+                  <x-import component-from-global-scope="DesentupidoraAlertaDesignSystem_e6b749.Button" variant="ghost" size="sm" onClick="{{ almox.novoItem }}" hint-size="130px,36px">
+                    + Novo item
+                  </x-import>
+                </div>
+              </div>
+
+              <sc-if value="{{ almox.desktop }}" hint-placeholder-val="{{ false }}">
+                <div style="overflow-x:auto;background:var(--white);border:1px solid var(--border-default);border-radius:16px;box-shadow:var(--shadow-sm)">
+                  <table style="width:100%;border-collapse:collapse;font-size:13px">
+                    <thead>
+                      <tr style="background:var(--gray-50);border-bottom:1px solid var(--border-default);text-align:left;color:var(--text-muted)">
+                        <th scope="col" style="padding:14px 16px;font-weight:600">Código</th>
+                        <th scope="col" style="padding:14px 16px;font-weight:600">Item</th>
+                        <th scope="col" style="padding:14px 16px;font-weight:600">Categoria</th>
+                        <th scope="col" style="padding:14px 16px;text-align:right;font-weight:600">Saldo</th>
+                        <th scope="col" style="padding:14px 16px;text-align:right;font-weight:600">Mínimo</th>
+                        <th scope="col" style="padding:14px 16px;text-align:right;font-weight:600">Custo médio</th>
+                        <th scope="col" style="padding:14px 16px;text-align:right;font-weight:600">Valor</th>
+                        <th scope="col" style="padding:14px 16px;font-weight:600">Fornecedor</th>
+                        <th scope="col" style="padding:14px 16px;font-weight:600">Status</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      <sc-for list="{{ almox.itens }}" as="i" hint-placeholder-count="5">
+                        <tr tabIndex="0" onClick="{{ i.abrir }}" onKeyDown="{{ i.onKey }}" style="cursor:pointer;border-top:1px solid var(--gray-100)" style-hover="background:var(--gray-50)">
+                          <td style="padding:14px 16px;font-weight:700;color:var(--teal-700)">{{ i.codigo }}</td>
+                          <td style="padding:14px 16px;font-weight:600;color:var(--text-strong)">{{ i.nome }}</td>
+                          <td style="padding:14px 16px;color:var(--text-body)">{{ i.categoria }}</td>
+                          <td style="padding:14px 16px;text-align:right;font-weight:600;color:var(--text-strong);white-space:nowrap">{{ i.saldoTxt }}</td>
+                          <td style="padding:14px 16px;text-align:right;color:var(--text-muted);white-space:nowrap">{{ i.minimoTxt }}</td>
+                          <td style="padding:14px 16px;text-align:right;color:var(--text-body);white-space:nowrap">{{ i.custoTxt }}</td>
+                          <td style="padding:14px 16px;text-align:right;font-weight:600;color:var(--text-strong);white-space:nowrap">{{ i.valorTxt }}</td>
+                          <td style="padding:14px 16px;color:var(--text-muted)">{{ i.fornecedor }}</td>
+                          <td style="padding:14px 16px">
+                            <span style="display:inline-block;padding:4px 10px;border-radius:999px;font-size:12px;font-weight:600;background:{{ i.stBg }};color:{{ i.stFg }}">{{ i.status }}</span>
+                          </td>
+                        </tr>
+                      </sc-for>
+                    </tbody>
+                  </table>
+                </div>
+              </sc-if>
+
+              <sc-if value="{{ almox.mobile }}" hint-placeholder-val="{{ false }}">
+                <div style="display:flex;flex-direction:column;gap:12px">
+                  <sc-for list="{{ almox.itens }}" as="i" hint-placeholder-count="3">
+                    <div tabIndex="0" onClick="{{ i.abrir }}" onKeyDown="{{ i.onKey }}" style="background:var(--white);border:1px solid var(--border-default);border-radius:16px;padding:16px;display:flex;flex-direction:column;gap:10px;box-shadow:var(--shadow-sm);cursor:pointer">
+                      <div style="display:flex;justify-content:space-between;align-items:center">
+                        <span style="font-size:12px;font-weight:600;color:var(--teal-700)">{{ i.codigo }} · {{ i.categoria }}</span>
+                        <span style="display:inline-block;padding:4px 10px;border-radius:999px;font-size:12px;font-weight:600;background:{{ i.stBg }};color:{{ i.stFg }}">{{ i.status }}</span>
+                      </div>
+                      <strong style="font-size:15px;color:var(--text-strong)">{{ i.nome }}</strong>
+                      <div style="display:flex;justify-content:space-between;align-items:center;font-size:13px;color:var(--text-body)">
+                        <span>Saldo: <strong>{{ i.saldoTxt }}</strong> ({{ i.minimoTxt }})</span>
+                        <strong style="font-size:14px;color:var(--text-strong)">{{ i.valorTxt }}</strong>
+                      </div>
+                    </div>
+                  </sc-for>
+                </div>
+              </sc-if>
+
+              <sc-if value="{{ almox.semItens }}" hint-placeholder-val="{{ false }}">
+                <div style="background:var(--white);border:1px solid var(--border-default);border-radius:16px;padding:48px 20px;text-align:center;display:flex;flex-direction:column;align-items:center;gap:12px;box-shadow:var(--shadow-sm)">
+                  <img src="https://unpkg.com/lucide-static@0.460.0/icons/search.svg" alt="" style="width:36px;height:36px;color:var(--text-muted)">
+                  <strong style="font-size:16px;color:var(--text-strong)">Nenhum item neste filtro</strong>
+                  <p style="margin:0;font-size:13px;color:var(--text-muted)">Tente ajustar o termo de busca, categoria ou status do item.</p>
+                  <x-import component-from-global-scope="DesentupidoraAlertaDesignSystem_e6b749.Button" variant="ghost" size="sm" onClick="{{ almox.filtros.limpar }}" hint-size="140px,36px">
+                    Limpar filtros
+                  </x-import>
+                </div>
+              </sc-if>
+            </div>
+          </sc-if>
+
+          <sc-if value="{{ almox.isMovs }}" hint-placeholder-val="{{ false }}">
+            <div style="display:flex;flex-direction:column;gap:16px">
+              <div style="background:var(--white);border:1px solid var(--border-default);border-radius:16px;padding:16px;display:flex;flex-wrap:wrap;align-items:center;gap:10px;box-shadow:var(--shadow-sm)">
+                <select value="{{ almox.filtrosMov.tipo }}" onChange="{{ almox.filtrosMov.onTipo }}" aria-label="Filtrar por tipo" style="height:44px;max-width:210px;padding:0 12px;border:1.5px solid var(--border-default);border-radius:12px;font-size:13px;font-family:inherit;background:var(--white);color:var(--text-strong);cursor:pointer">
+                  <sc-for list="{{ almox.filtrosMov.tipos }}" as="o" hint-placeholder-count="4">
+                    <option value="{{ o.v }}">{{ o.t }}</option>
+                  </sc-for>
+                </select>
+                <select value="{{ almox.filtrosMov.dest }}" onChange="{{ almox.filtrosMov.onDest }}" aria-label="Filtrar por destino" style="height:44px;max-width:210px;padding:0 12px;border:1.5px solid var(--border-default);border-radius:12px;font-size:13px;font-family:inherit;background:var(--white);color:var(--text-strong);cursor:pointer">
+                  <sc-for list="{{ almox.filtrosMov.dests }}" as="o" hint-placeholder-count="4">
+                    <option value="{{ o.v }}">{{ o.t }}</option>
+                  </sc-for>
+                </select>
+              </div>
+
+              <sc-if value="{{ almox.desktop }}" hint-placeholder-val="{{ false }}">
+                <div style="overflow-x:auto;background:var(--white);border:1px solid var(--border-default);border-radius:16px;box-shadow:var(--shadow-sm)">
+                  <table style="width:100%;border-collapse:collapse;font-size:13px">
+                    <thead>
+                      <tr style="background:var(--gray-50);border-bottom:1px solid var(--border-default);text-align:left;color:var(--text-muted)">
+                        <th scope="col" style="padding:14px 16px;font-weight:600">Nº</th>
+                        <th scope="col" style="padding:14px 16px;font-weight:600">Data</th>
+                        <th scope="col" style="padding:14px 16px;font-weight:600">Tipo</th>
+                        <th scope="col" style="padding:14px 16px;font-weight:600">Item</th>
+                        <th scope="col" style="padding:14px 16px;text-align:right;font-weight:600">Qtd</th>
+                        <th scope="col" style="padding:14px 16px;text-align:right;font-weight:600">Custo unit.</th>
+                        <th scope="col" style="padding:14px 16px;text-align:right;font-weight:600">Total</th>
+                        <th scope="col" style="padding:14px 16px;font-weight:600">Destino/origem</th>
+                        <th scope="col" style="padding:14px 16px;font-weight:600">Responsável</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      <sc-for list="{{ almox.movs }}" as="m" hint-placeholder-count="5">
+                        <tr style="border-top:1px solid var(--gray-100)" style-hover="background:var(--gray-50)">
+                          <td style="padding:14px 16px;font-weight:700;color:var(--teal-700)">#{{ m.num }}</td>
+                          <td style="padding:14px 16px;color:var(--text-body);white-space:nowrap">{{ m.dataTxt }}</td>
+                          <td style="padding:14px 16px">
+                            <span style="display:inline-block;padding:4px 10px;border-radius:999px;font-size:12px;font-weight:600;background:{{ m.tipoBg }};color:{{ m.tipoFg }}">{{ m.tipoTxt }}</span>
+                          </td>
+                          <td style="padding:14px 16px;font-weight:600;color:var(--text-strong)">{{ m.itemNome }}</td>
+                          <td style="padding:14px 16px;text-align:right;font-weight:600;color:var(--text-strong);white-space:nowrap">{{ m.qtdTxt }}</td>
+                          <td style="padding:14px 16px;text-align:right;color:var(--text-body);white-space:nowrap">{{ m.custoTxt }}</td>
+                          <td style="padding:14px 16px;text-align:right;font-weight:600;color:var(--text-strong);white-space:nowrap">{{ m.totalTxt }}</td>
+                          <td style="padding:14px 16px;color:var(--text-body)">{{ m.destinoTxt }}</td>
+                          <td style="padding:14px 16px;color:var(--text-muted)">{{ m.responsavel }}</td>
+                        </tr>
+                      </sc-for>
+                    </tbody>
+                  </table>
+                </div>
+              </sc-if>
+
+              <sc-if value="{{ almox.mobile }}" hint-placeholder-val="{{ false }}">
+                <div style="display:flex;flex-direction:column;gap:12px">
+                  <sc-for list="{{ almox.movs }}" as="m" hint-placeholder-count="3">
+                    <div style="background:var(--white);border:1px solid var(--border-default);border-radius:16px;padding:16px;display:flex;flex-direction:column;gap:10px;box-shadow:var(--shadow-sm)">
+                      <div style="display:flex;justify-content:space-between;align-items:center">
+                        <span style="font-size:13px;font-weight:700;color:var(--teal-700)">#{{ m.num }} · {{ m.dataTxt }}</span>
+                        <span style="display:inline-block;padding:4px 10px;border-radius:999px;font-size:12px;font-weight:600;background:{{ m.tipoBg }};color:{{ m.tipoFg }}">{{ m.tipoTxt }}</span>
+                      </div>
+                      <strong style="font-size:14px;color:var(--text-strong)">{{ m.itemNome }}</strong>
+                      <div style="display:flex;justify-content:space-between;align-items:center;font-size:13px;color:var(--text-body)">
+                        <span>Qtd: <strong>{{ m.qtdTxt }}</strong></span>
+                        <strong style="font-size:14px;color:var(--text-strong)">{{ m.totalTxt }}</strong>
+                      </div>
+                      <div style="display:flex;justify-content:space-between;align-items:center;border-top:1px solid var(--gray-100);padding-top:8px;font-size:12px;color:var(--text-muted)">
+                        <span>{{ m.destinoTxt }}</span>
+                        <span>{{ m.responsavel }}</span>
+                      </div>
+                    </div>
+                  </sc-for>
+                </div>
+              </sc-if>
+
+              <sc-if value="{{ almox.semMovs }}" hint-placeholder-val="{{ false }}">
+                <div style="background:var(--white);border:1px solid var(--border-default);border-radius:16px;padding:48px 20px;text-align:center;display:flex;flex-direction:column;align-items:center;gap:12px;box-shadow:var(--shadow-sm)">
+                  <img src="https://unpkg.com/lucide-static@0.460.0/icons/search.svg" alt="" style="width:36px;height:36px;color:var(--text-muted)">
+                  <strong style="font-size:16px;color:var(--text-strong)">Nenhuma movimentação neste filtro</strong>
+                  <p style="margin:0;font-size:13px;color:var(--text-muted)">Tente ajustar o tipo ou destino da movimentação.</p>
+                  <x-import component-from-global-scope="DesentupidoraAlertaDesignSystem_e6b749.Button" variant="ghost" size="sm" onClick="{{ almox.filtrosMov.limpar }}" hint-size="140px,36px">
+                    Limpar filtros
+                  </x-import>
+                </div>
+              </sc-if>
+            </div>
+          </sc-if>
+
+          <!-- ALMOX:ABAS-EPI-COLAB -->
+
+          <!-- ALMOX:MODAIS -->
+        </div>
+      </sc-if>
+
       <sc-if value="{{ isModulo }}" hint-placeholder-val="{{ false }}">
         <div data-screen-label="Módulo em construção" style="display:flex;flex-direction:column;gap:20px">
           <h1 style="margin:0;font-size:clamp(26px,3.2vw,34px);font-weight:700;letter-spacing:-.02em;color:var(--text-strong)">{{ modulo.label }}</h1>
@@ -6051,10 +6311,15 @@ class Component extends DCLogic {
       onQ: e => this.setState({ almoxQ: (e && e.target) ? e.target.value : (e || '') }),
       cat: st.almoxCat || '',
       onCat: e => this.setState({ almoxCat: (e && e.target) ? e.target.value : (e || '') }),
-      cats: ['', ...ALMOX_CATS],
+      cats: [{ v: '', t: 'Todas as categorias' }, ...ALMOX_CATS.map(c => ({ v: c, t: c }))],
       status: st.almoxStatus || '',
       onStatus: e => this.setState({ almoxStatus: (e && e.target) ? e.target.value : (e || '') }),
-      statusOpts: ['', 'OK', 'Baixo', 'Zerado'],
+      statusOpts: [
+        { v: '', t: 'Todos os status' },
+        { v: 'OK', t: 'OK' },
+        { v: 'Baixo', t: 'Baixo' },
+        { v: 'Zerado', t: 'Zerado' }
+      ],
       limpar: () => this.setState({ almoxQ: '', almoxCat: '', almoxStatus: '' })
     };
 
@@ -6123,10 +6388,20 @@ class Component extends DCLogic {
     const filtrosMov = {
       tipo: st.almoxMovTipo || '',
       onTipo: e => this.setState({ almoxMovTipo: (e && e.target) ? e.target.value : (e || '') }),
-      tipos: ['', 'entrada', 'saida', 'ajuste'],
+      tipos: [
+        { v: '', t: 'Todos os tipos' },
+        { v: 'entrada', t: 'Entrada' },
+        { v: 'saida', t: 'Saída' },
+        { v: 'ajuste', t: 'Ajuste' }
+      ],
       dest: st.almoxMovDest || '',
       onDest: e => this.setState({ almoxMovDest: (e && e.target) ? e.target.value : (e || '') }),
-      dests: ['', 'os', 'caminhao', 'colab'],
+      dests: [
+        { v: '', t: 'Todos os destinos' },
+        { v: 'os', t: 'OS' },
+        { v: 'caminhao', t: 'Caminhão' },
+        { v: 'colab', t: 'Colaborador' }
+      ],
       limpar: () => this.setState({ almoxMovTipo: '', almoxMovDest: '' })
     };
 
@@ -6207,6 +6482,7 @@ class Component extends DCLogic {
 
     return {
       desktop: !!desktop,
+      mobile: !desktop,
       tabs: ALMOX_TABS,
       tab,
       setTab,
