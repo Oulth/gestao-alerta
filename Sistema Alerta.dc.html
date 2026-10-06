@@ -2454,6 +2454,7 @@
                         <th scope="col" style="padding:14px 16px;text-align:right;font-weight:600">Valor</th>
                         <th scope="col" style="padding:14px 16px;font-weight:600">Fornecedor</th>
                         <th scope="col" style="padding:14px 16px;font-weight:600">Status</th>
+                        <th scope="col" style="padding:14px 16px;text-align:right"><span style="position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0)">Ações</span></th>
                       </tr>
                     </thead>
                     <tbody>
@@ -2470,6 +2471,11 @@
                           <td style="padding:14px 16px">
                             <span style="display:inline-block;padding:4px 10px;border-radius:999px;font-size:12px;font-weight:600;background:{{ i.stBg }};color:{{ i.stFg }}">{{ i.status }}</span>
                           </td>
+                          <td style="padding:14px 16px;text-align:right">
+                            <button type="button" aria-label="{{ i.editarLabel }}" onClick="{{ i.abrir }}" style="width:36px;height:36px;border-radius:10px;background:transparent;border:1px solid var(--border-default);cursor:pointer;display:inline-flex;align-items:center;justify-content:center;padding:0">
+                              <img src="https://unpkg.com/lucide-static@0.460.0/icons/pencil.svg" alt="" style="width:16px;height:16px;color:var(--text-strong)">
+                            </button>
+                          </td>
                         </tr>
                       </sc-for>
                     </tbody>
@@ -2483,7 +2489,12 @@
                     <div tabIndex="0" onClick="{{ i.abrir }}" onKeyDown="{{ i.onKey }}" style="background:var(--white);border:1px solid var(--border-default);border-radius:16px;padding:16px;display:flex;flex-direction:column;gap:10px;box-shadow:var(--shadow-sm);cursor:pointer">
                       <div style="display:flex;justify-content:space-between;align-items:center">
                         <span style="font-size:12px;font-weight:600;color:var(--teal-700)">{{ i.codigo }} · {{ i.categoria }}</span>
-                        <span style="display:inline-block;padding:4px 10px;border-radius:999px;font-size:12px;font-weight:600;background:{{ i.stBg }};color:{{ i.stFg }}">{{ i.status }}</span>
+                        <div style="display:flex;align-items:center;gap:8px">
+                          <span style="display:inline-block;padding:4px 10px;border-radius:999px;font-size:12px;font-weight:600;background:{{ i.stBg }};color:{{ i.stFg }}">{{ i.status }}</span>
+                          <button type="button" aria-label="{{ i.editarLabel }}" onClick="{{ i.abrir }}" style="width:36px;height:36px;border-radius:10px;background:transparent;border:1px solid var(--border-default);cursor:pointer;display:inline-flex;align-items:center;justify-content:center;padding:0">
+                            <img src="https://unpkg.com/lucide-static@0.460.0/icons/pencil.svg" alt="" style="width:16px;height:16px;color:var(--text-strong)">
+                          </button>
+                        </div>
                       </div>
                       <strong style="font-size:15px;color:var(--text-strong)">{{ i.nome }}</strong>
                       <div style="display:flex;justify-content:space-between;align-items:center;font-size:13px;color:var(--text-body)">
@@ -2720,6 +2731,7 @@
                         <th scope="col" style="padding:14px 16px;font-weight:600">Uniforme</th>
                         <th scope="col" style="padding:14px 16px;font-weight:600">Caminhão habitual</th>
                         <th scope="col" style="padding:14px 16px;font-weight:600">Situação</th>
+                        <th scope="col" style="padding:14px 16px;text-align:right"><span style="position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0)">Ações</span></th>
                       </tr>
                     </thead>
                     <tbody>
@@ -2734,6 +2746,11 @@
                           <td style="padding:14px 16px">
                             <span style="display:inline-block;padding:4px 10px;border-radius:999px;font-size:12px;font-weight:600;background:{{ c.ativoBg }};color:{{ c.ativoFg }}">{{ c.ativoTxt }}</span>
                           </td>
+                          <td style="padding:14px 16px;text-align:right">
+                            <button type="button" aria-label="{{ c.editarLabel }}" onClick="{{ c.editar }}" style="width:36px;height:36px;border-radius:10px;background:transparent;border:1px solid var(--border-default);cursor:pointer;display:inline-flex;align-items:center;justify-content:center;padding:0">
+                              <img src="https://unpkg.com/lucide-static@0.460.0/icons/pencil.svg" alt="" style="width:16px;height:16px;color:var(--text-strong)">
+                            </button>
+                          </td>
                         </tr>
                       </sc-for>
                     </tbody>
@@ -2747,7 +2764,12 @@
                     <div tabIndex="0" onClick="{{ c.editar }}" onKeyDown="{{ c.onKey }}" style="background:var(--white);border:1px solid var(--border-default);border-radius:16px;padding:16px;display:flex;flex-direction:column;gap:10px;box-shadow:var(--shadow-sm);cursor:pointer">
                       <div style="display:flex;justify-content:space-between;align-items:center">
                         <strong style="font-size:15px;color:var(--text-strong)">{{ c.nome }}</strong>
-                        <span style="display:inline-block;padding:4px 10px;border-radius:999px;font-size:12px;font-weight:600;background:{{ c.ativoBg }};color:{{ c.ativoFg }}">{{ c.ativoTxt }}</span>
+                        <div style="display:flex;align-items:center;gap:8px">
+                          <span style="display:inline-block;padding:4px 10px;border-radius:999px;font-size:12px;font-weight:600;background:{{ c.ativoBg }};color:{{ c.ativoFg }}">{{ c.ativoTxt }}</span>
+                          <button type="button" aria-label="{{ c.editarLabel }}" onClick="{{ c.editar }}" style="width:36px;height:36px;border-radius:10px;background:transparent;border:1px solid var(--border-default);cursor:pointer;display:inline-flex;align-items:center;justify-content:center;padding:0">
+                            <img src="https://unpkg.com/lucide-static@0.460.0/icons/pencil.svg" alt="" style="width:16px;height:16px;color:var(--text-strong)">
+                          </button>
+                        </div>
                       </div>
                       <div style="font-size:13px;color:var(--teal-700);font-weight:600">{{ c.funcao }}</div>
                       <div style="display:flex;flex-wrap:wrap;gap:8px;font-size:12px;color:var(--text-body)">
@@ -3006,6 +3028,26 @@
                         </label>
                       </div>
                     </div>
+
+                    <sc-if value="{{ almox.modal.isItemExistente }}" hint-placeholder-val="{{ false }}">
+                      <div style="background:var(--gray-50);border:1px solid var(--border-default);border-radius:12px;padding:16px;display:flex;flex-direction:column;gap:12px">
+                        <span style="font-size:14px;font-weight:700;color:var(--text-strong)">Saldo em estoque</span>
+                        <label for="almox-it-saldo" style="display:flex;flex-direction:column;gap:6px;font-family:var(--font-sans)">
+                          <span style="font-size:14px;font-weight:600;color:var(--text-strong)">Saldo atual ({{ almox.modal.imf.unidade }})</span>
+                          <input id="almox-it-saldo" type="number" min="0" step="any" value="{{ almox.modal.imf.saldoNovo }}" onChange="{{ almox.modal.onIMF.saldoNovo }}" placeholder="0" style="height:48px;padding:0 16px;background:var(--white);border-radius:var(--radius-sm);border:1.5px solid var(--border-default);font-family:inherit;font-size:15px;color:var(--text-strong);outline:none;box-sizing:border-box;width:100%">
+                        </label>
+                        <p style="margin:0;font-size:12px;color:var(--text-muted)">Alterar o saldo gera um ajuste no histórico de movimentações.</p>
+                        <sc-if value="{{ almox.modal.saldoMudou }}" hint-placeholder-val="{{ false }}">
+                          <div style="display:flex;flex-direction:column;gap:10px;padding:12px;background:var(--amber-100);border:1px solid var(--amber-800);border-radius:10px;color:var(--amber-800)">
+                            <div style="font-size:13px;font-weight:600">{{ almox.modal.saldoDifTxt }}</div>
+                            <label for="almox-it-motivo-saldo" style="display:flex;flex-direction:column;gap:6px;font-family:var(--font-sans)">
+                              <span style="font-size:13px;font-weight:600;color:var(--amber-800)">Motivo do ajuste *</span>
+                              <input id="almox-it-motivo-saldo" type="text" value="{{ almox.modal.imf.motivoSaldo }}" onChange="{{ almox.modal.onIMF.motivoSaldo }}" placeholder="Ex.: Inventário mensal, acerto de contagem" style="height:44px;padding:0 14px;background:var(--white);border-radius:var(--radius-sm);border:1.5px solid var(--border-default);font-family:inherit;font-size:14px;color:var(--text-strong);outline:none;box-sizing:border-box;width:100%">
+                            </label>
+                          </div>
+                        </sc-if>
+                      </div>
+                    </sc-if>
 
                     <sc-if value="{{ almox.modal.temErro }}" hint-placeholder-val="{{ false }}">
                       <div role="alert" style="padding:10px 14px;border-radius:8px;background:var(--gray-100);color:var(--danger);font-size:13px;font-weight:600;border:1px solid var(--danger)">
@@ -3517,6 +3559,17 @@ const almoxStatus = (item, saldo) => {
   if (saldo <= 0) return 'Zerado';
   if (saldo <= (item && item.minimo != null ? item.minimo : 0)) return 'Baixo';
   return 'OK';
+};
+
+const almoxProxNum = (movs, prefixo) => {
+  const pfx = prefixo.startsWith('#') ? (prefixo.endsWith('-') ? prefixo : prefixo + '-') : (`#${prefixo}-`);
+  const max = (movs || [])
+    .filter(m => (m.num || '').startsWith(pfx))
+    .reduce((acc, m) => {
+      const n = parseInt((m.num || '').replace(pfx, ''), 10);
+      return !isNaN(n) && n > acc ? n : acc;
+    }, 0);
+  return pfx + String(max + 1).padStart(3, '0');
 };
 
 const ALMOX_ST = {
@@ -6912,13 +6965,7 @@ class Component extends DCLogic {
         return it;
       });
 
-      const maxE = movs
-        .filter(m => m.tipo === 'entrada' && (m.num || '').startsWith('#E-'))
-        .reduce((max, m) => {
-          const n = parseInt((m.num || '').replace('#E-', ''), 10);
-          return !isNaN(n) && n > max ? n : max;
-        }, 0);
-      num = '#E-' + String(maxE + 1).padStart(3, '0');
+      num = almoxProxNum(movs, '#E-');
 
       if (mf.gerarPagar) {
         const data = this.state.finData || genFin();
@@ -6975,13 +7022,7 @@ class Component extends DCLogic {
       }
 
       custoUnit = Number(item.custoMedio) || 0;
-      const maxS = movs
-        .filter(m => m.tipo === 'saida' && (m.num || '').startsWith('#S-'))
-        .reduce((max, m) => {
-          const n = parseInt((m.num || '').replace('#S-', ''), 10);
-          return !isNaN(n) && n > max ? n : max;
-        }, 0);
-      num = '#S-' + String(maxS + 1).padStart(3, '0');
+      num = almoxProxNum(movs, '#S-');
 
       const destIdFinal = mf.destinoTipo === 'os' ? Number(mf.destinoId) : mf.destinoId;
 
@@ -7035,14 +7076,7 @@ class Component extends DCLogic {
 
       qtd = contagem - saldo;
       custoUnit = Number(item.custoMedio) || 0;
-
-      const maxA = movs
-        .filter(m => m.tipo === 'ajuste' && (m.num || '').startsWith('#A-'))
-        .reduce((max, m) => {
-          const n = parseInt((m.num || '').replace('#A-', ''), 10);
-          return !isNaN(n) && n > max ? n : max;
-        }, 0);
-      num = '#A-' + String(maxA + 1).padStart(3, '0');
+      num = almoxProxNum(movs, '#A-');
 
       novoMov = {
         id: 'M' + (movs.length + 1) + '-' + Date.now(),
@@ -7086,7 +7120,7 @@ class Component extends DCLogic {
   almoxSalvarItem = () => {
     const imf = this.state.almoxItemMF;
     if (!imf) return;
-    const { itens } = this.almoxListas();
+    const { itens, movs, saldoMap } = this.almoxListas();
 
     const cod = (imf.codigo || '').trim().toUpperCase();
     const nome = (imf.nome || '').trim();
@@ -7116,6 +7150,48 @@ class Component extends DCLogic {
       }
     }
 
+    const isExistente = !!imf.id;
+    let novoMovAjuste = null;
+    let numAjuste = '';
+
+    if (isExistente && imf.saldoNovo !== undefined && imf.saldoNovo !== null) {
+      const saldoAtual = imf.saldoAtual != null ? Number(imf.saldoAtual) : (saldoMap[imf.id] || 0);
+      const sNovoNum = Number(imf.saldoNovo);
+
+      if (imf.saldoNovo === '' || isNaN(sNovoNum) || sNovoNum < 0) {
+        this.setState({ almoxErro: 'O saldo deve ser maior ou igual a zero.' });
+        return;
+      }
+
+      if (sNovoNum !== saldoAtual) {
+        const motivo = (imf.motivoSaldo || '').trim();
+        if (!motivo) {
+          this.setState({ almoxErro: 'Informe o motivo do ajuste de saldo' });
+          return;
+        }
+
+        const qtdAjuste = sNovoNum - saldoAtual;
+        const custoMedioItem = Number(imf.custoMedio) || 0;
+        numAjuste = almoxProxNum(movs, '#A-');
+
+        novoMovAjuste = {
+          id: 'M' + (movs.length + 1) + '-' + Date.now(),
+          num: numAjuste,
+          tipo: 'ajuste',
+          data: HOJE,
+          itemId: imf.id,
+          qtd: qtdAjuste,
+          custoUnit: custoMedioItem,
+          destinoTipo: null,
+          destinoId: '',
+          fornecedor: '',
+          nf: '',
+          motivo,
+          responsavel: 'Escritório'
+        };
+      }
+    }
+
     const id = imf.id || ('I' + Date.now());
     const itemAtualizado = {
       ...imf,
@@ -7132,19 +7208,29 @@ class Component extends DCLogic {
       vidaUtilDias: cat === 'EPI' ? Number(imf.vidaUtilDias) : null,
       ativo: imf.ativo !== false
     };
+    delete itemAtualizado.saldoNovo;
+    delete itemAtualizado.saldoAtual;
+    delete itemAtualizado.motivoSaldo;
 
     const novosItens = imf.id
       ? itens.map(it => it.id === imf.id ? itemAtualizado : it)
       : [itemAtualizado, ...itens];
 
     const d = this.almoxData();
+    const novosMovs = novoMovAjuste ? [novoMovAjuste, ...(d.movs || [])] : (d.movs || []);
+
     this.setState({
-      almoxData: { ...d, itens: novosItens },
+      almoxData: { ...d, itens: novosItens, movs: novosMovs },
       almoxModal: null,
       almoxItemMF: null,
       almoxErro: ''
     });
-    this.toast('Item salvo');
+
+    if (novoMovAjuste) {
+      this.toast(`Item salvo · ajuste ${numAjuste} registrado`);
+    } else {
+      this.toast('Item salvo');
+    }
   };
 
   almoxExcluirItem = () => {
@@ -7289,11 +7375,19 @@ class Component extends DCLogic {
       const s = saldoMap[it.id] || 0;
       const stStatus = almoxStatus(it, s);
       const stVisual = ALMOX_ST[stStatus] || ALMOX_ST.OK;
-      const abrir = () => this.setState({
-        almoxModal: 'item',
-        almoxItemMF: { ...it },
-        almoxErro: ''
-      });
+      const abrir = e => {
+        if (e && e.stopPropagation) e.stopPropagation();
+        this.setState({
+          almoxModal: 'item',
+          almoxItemMF: {
+            ...it,
+            saldoNovo: String(s),
+            saldoAtual: s,
+            motivoSaldo: ''
+          },
+          almoxErro: ''
+        });
+      };
       return {
         id: it.id,
         codigo: it.codigo,
@@ -7307,8 +7401,9 @@ class Component extends DCLogic {
         status: stStatus,
         stBg: stVisual.bg,
         stFg: stVisual.fg,
+        editarLabel: `Editar ${it.nome}`,
         abrir,
-        onKey: e => { if (e && e.key === 'Enter') abrir(); }
+        onKey: e => { if (e && e.key === 'Enter') abrir(e); }
       };
     });
 
@@ -7401,11 +7496,14 @@ class Component extends DCLogic {
     };
 
     const colabsList = colabs.map(c => {
-      const editar = () => this.setState({
-        almoxModal: 'colab',
-        almoxColabMF: { ...c },
-        almoxErro: ''
-      });
+      const editar = e => {
+        if (e && e.stopPropagation) e.stopPropagation();
+        this.setState({
+          almoxModal: 'colab',
+          almoxColabMF: { ...c },
+          almoxErro: ''
+        });
+      };
       return {
         id: c.id,
         nome: c.nome,
@@ -7422,8 +7520,9 @@ class Component extends DCLogic {
         ativoTxt: c.ativo ? 'Ativo' : 'Inativo',
         ativoBg: c.ativo ? 'var(--lime-100)' : 'var(--gray-100)',
         ativoFg: c.ativo ? 'var(--teal-800)' : 'var(--text-muted)',
+        editarLabel: `Editar ${c.nome}`,
         editar,
-        onKey: e => { if (e && e.key === 'Enter') editar(); }
+        onKey: e => { if (e && e.key === 'Enter') editar(e); }
       };
     });
 
@@ -7651,6 +7750,17 @@ class Component extends DCLogic {
     const podeExcluir = !isNovoItem && (saldoMap[imf.id] || 0) === 0 && !movs.some(m => m.itemId === imf.id);
     const inativarTxt = 'Este item possui saldo ou histórico de movimentações e não pode ser excluído. Utilize a opção Inativar.';
 
+    const saldoAtualItem = isItemExistente ? (imf.saldoAtual != null ? Number(imf.saldoAtual) : (saldoMap[imf.id] || 0)) : 0;
+    const saldoNovoVal = imf.saldoNovo;
+    const saldoNovoNum = Number(saldoNovoVal);
+    const saldoMudou = isItemExistente && saldoNovoVal !== '' && saldoNovoVal != null && !isNaN(saldoNovoNum) && saldoNovoNum !== saldoAtualItem;
+    let saldoDifTxt = '';
+    if (saldoMudou) {
+      const dif = saldoNovoNum - saldoAtualItem;
+      const difSinalTxt = dif > 0 ? `+${dif}` : `−${Math.abs(dif)}`;
+      saldoDifTxt = `Ajuste de ${difSinalTxt} ${imf.unidade || 'un'}`;
+    }
+
     const onIMF = {
       codigo: e => { const v = (e && e.target) ? e.target.value : e; this.setState(s => ({ almoxItemMF: { ...s.almoxItemMF, codigo: v }, almoxErro: '' })); },
       nome: e => { const v = (e && e.target) ? e.target.value : e; this.setState(s => ({ almoxItemMF: { ...s.almoxItemMF, nome: v }, almoxErro: '' })); },
@@ -7662,7 +7772,9 @@ class Component extends DCLogic {
       ca: e => { const v = (e && e.target) ? e.target.value : e; this.setState(s => ({ almoxItemMF: { ...s.almoxItemMF, ca: v }, almoxErro: '' })); },
       caValidade: e => { const v = (e && e.target) ? e.target.value : e; this.setState(s => ({ almoxItemMF: { ...s.almoxItemMF, caValidade: v }, almoxErro: '' })); },
       vidaUtilDias: e => { const v = (e && e.target) ? e.target.value : e; this.setState(s => ({ almoxItemMF: { ...s.almoxItemMF, vidaUtilDias: v }, almoxErro: '' })); },
-      ativo: e => { const v = (e && e.target) ? e.target.checked : (e === true); this.setState(s => ({ almoxItemMF: { ...s.almoxItemMF, ativo: v }, almoxErro: '' })); }
+      ativo: e => { const v = (e && e.target) ? e.target.checked : (e === true); this.setState(s => ({ almoxItemMF: { ...s.almoxItemMF, ativo: v }, almoxErro: '' })); },
+      saldoNovo: e => { const v = (e && e.target) ? e.target.value : e; this.setState(s => ({ almoxItemMF: { ...s.almoxItemMF, saldoNovo: v }, almoxErro: '' })); },
+      motivoSaldo: e => { const v = (e && e.target) ? e.target.value : e; this.setState(s => ({ almoxItemMF: { ...s.almoxItemMF, motivoSaldo: v }, almoxErro: '' })); }
     };
 
     const cmf = st.almoxColabMF || {};
@@ -7723,6 +7835,8 @@ class Component extends DCLogic {
       isNovoItem,
       isItemExistente,
       isEpiItem,
+      saldoMudou,
+      saldoDifTxt,
       salvarItem: this.almoxSalvarItem,
       excluirItem: this.almoxExcluirItem,
       podeExcluir,
