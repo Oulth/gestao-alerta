@@ -2767,7 +2767,336 @@
             </div>
           </sc-if>
 
-          <!-- ALMOX:MODAIS -->
+          <sc-if value="{{ almox.modal.aberto }}" hint-placeholder-val="{{ false }}">
+            <div onClick="{{ almox.modal.fechar }}" style="position:fixed;inset:0;z-index:70;background:rgba(14,46,37,.6);backdrop-filter:blur(4px);display:flex;justify-content:center;align-items:flex-start;overflow-y:auto;padding:clamp(0px,6vh,60px) clamp(0px,2vw,24px)">
+              <div onClick="{{ stop }}" role="dialog" aria-modal="true" aria-labelledby="almox-modal-title" style="background:var(--white);border-radius:20px;width:100%;max-width:640px;display:flex;flex-direction:column;gap:18px;padding:clamp(18px,2.5vw,28px);box-shadow:var(--shadow-lg)">
+                <div style="display:flex;align-items:flex-start;justify-content:space-between;gap:12px">
+                  <div style="display:flex;flex-direction:column;gap:2px;min-width:0">
+                    <sc-if value="{{ almox.modal.isMov }}" hint-placeholder-val="{{ true }}">
+                      <h2 id="almox-modal-title" style="margin:0;font-size:24px;font-weight:700;letter-spacing:-.01em;color:var(--teal-700)">{{ almox.modal.tituloMov }}</h2>
+                      <span style="font-size:14px;color:var(--text-muted)">Entrada, saída ou ajuste de estoque</span>
+                    </sc-if>
+                    <sc-if value="{{ almox.modal.isItem }}" hint-placeholder-val="{{ false }}">
+                      <h2 id="almox-modal-title" style="margin:0;font-size:24px;font-weight:700;letter-spacing:-.01em;color:var(--teal-700)">{{ almox.modal.tituloItem }}</h2>
+                      <span style="font-size:14px;color:var(--text-muted)">Dados cadastrais e controle de estoque</span>
+                    </sc-if>
+                    <sc-if value="{{ almox.modal.isColab }}" hint-placeholder-val="{{ false }}">
+                      <h2 id="almox-modal-title" style="margin:0;font-size:24px;font-weight:700;letter-spacing:-.01em;color:var(--teal-700)">{{ almox.modal.tituloColab }}</h2>
+                      <span style="font-size:14px;color:var(--text-muted)">Tamanhos de uniforme/EPI e caminhão habitual</span>
+                    </sc-if>
+                  </div>
+                  <button onClick="{{ almox.modal.fechar }}" aria-label="Fechar" style="width:44px;height:44px;flex-shrink:0;border:none;border-radius:50%;background:var(--gray-100);display:flex;align-items:center;justify-content:center;cursor:pointer">
+                    <img src="https://unpkg.com/lucide-static@0.460.0/icons/x.svg" alt="" style="width:20px;height:20px;opacity:.85">
+                  </button>
+                </div>
+
+                <sc-if value="{{ almox.modal.isMov }}" hint-placeholder-val="{{ true }}">
+                  <div style="display:flex;flex-direction:column;gap:16px">
+                    <div style="display:flex;gap:8px;padding:4px;background:var(--gray-100);border-radius:var(--radius-sm)">
+                      <sc-for list="{{ almox.modal.tipoBtns }}" as="b">
+                        <button type="button" onClick="{{ b.pick }}" style="flex:1;height:38px;border:none;border-radius:calc(var(--radius-sm) - 2px);background:{{ b.bg }};color:{{ b.fg }};font-family:inherit;font-size:14px;font-weight:600;cursor:pointer">
+                          {{ b.t }}
+                        </button>
+                      </sc-for>
+                    </div>
+
+                    <label for="almox-mov-item" style="display:flex;flex-direction:column;gap:6px;font-family:var(--font-sans)">
+                      <span style="font-size:14px;font-weight:600;color:var(--text-strong)">Item *</span>
+                      <select id="almox-mov-item" value="{{ almox.modal.mf.itemId }}" onChange="{{ almox.modal.onMF.itemId }}" style="height:48px;padding:0 16px;background:var(--white);border-radius:var(--radius-sm);border:1.5px solid var(--border-default);font-family:inherit;font-size:15px;color:var(--text-strong);outline:none;box-sizing:border-box;width:100%">
+                        <option value="">Selecione um item...</option>
+                        <sc-for list="{{ almox.modal.itemOpts }}" as="opt">
+                          <option value="{{ opt.v }}">{{ opt.t }}</option>
+                        </sc-for>
+                      </select>
+                    </label>
+
+                    <div style="padding:10px 14px;background:var(--gray-50);border:1px solid var(--border-default);border-radius:var(--radius-sm);font-size:13px;color:var(--text-body);min-height:20px">
+                      <span>{{ almox.modal.itemInfoTxt }}</span>
+                    </div>
+
+                    <sc-if value="{{ almox.modal.isEntrada }}" hint-placeholder-val="{{ true }}">
+                      <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:14px">
+                        <label for="almox-ent-qtd" style="display:flex;flex-direction:column;gap:6px;font-family:var(--font-sans)">
+                          <span style="font-size:14px;font-weight:600;color:var(--text-strong)">Quantidade *</span>
+                          <input id="almox-ent-qtd" type="number" min="0.01" step="any" value="{{ almox.modal.mf.qtd }}" onChange="{{ almox.modal.onMF.qtd }}" placeholder="0" style="height:48px;padding:0 16px;background:var(--white);border-radius:var(--radius-sm);border:1.5px solid var(--border-default);font-family:inherit;font-size:15px;color:var(--text-strong);outline:none;box-sizing:border-box;width:100%">
+                        </label>
+                        <label for="almox-ent-custo" style="display:flex;flex-direction:column;gap:6px;font-family:var(--font-sans)">
+                          <span style="font-size:14px;font-weight:600;color:var(--text-strong)">Custo unitário (R$) *</span>
+                          <input id="almox-ent-custo" type="number" min="0.01" step="any" value="{{ almox.modal.mf.custo }}" onChange="{{ almox.modal.onMF.custo }}" placeholder="0,00" style="height:48px;padding:0 16px;background:var(--white);border-radius:var(--radius-sm);border:1.5px solid var(--border-default);font-family:inherit;font-size:15px;color:var(--text-strong);outline:none;box-sizing:border-box;width:100%">
+                        </label>
+                        <label for="almox-ent-forn" style="display:flex;flex-direction:column;gap:6px;font-family:var(--font-sans)">
+                          <span style="font-size:14px;font-weight:600;color:var(--text-strong)">Fornecedor</span>
+                          <input id="almox-ent-forn" type="text" value="{{ almox.modal.mf.fornecedor }}" onChange="{{ almox.modal.onMF.fornecedor }}" placeholder="Nome do fornecedor" style="height:48px;padding:0 16px;background:var(--white);border-radius:var(--radius-sm);border:1.5px solid var(--border-default);font-family:inherit;font-size:15px;color:var(--text-strong);outline:none;box-sizing:border-box;width:100%">
+                        </label>
+                        <label for="almox-ent-nf" style="display:flex;flex-direction:column;gap:6px;font-family:var(--font-sans)">
+                          <span style="font-size:14px;font-weight:600;color:var(--text-strong)">Nº NF</span>
+                          <input id="almox-ent-nf" type="text" value="{{ almox.modal.mf.nf }}" onChange="{{ almox.modal.onMF.nf }}" placeholder="Ex.: 45890" style="height:48px;padding:0 16px;background:var(--white);border-radius:var(--radius-sm);border:1.5px solid var(--border-default);font-family:inherit;font-size:15px;color:var(--text-strong);outline:none;box-sizing:border-box;width:100%">
+                        </label>
+                        <label for="almox-ent-venc" style="display:flex;flex-direction:column;gap:6px;font-family:var(--font-sans)">
+                          <span style="font-size:14px;font-weight:600;color:var(--text-strong)">Vencimento</span>
+                          <input id="almox-ent-venc" type="date" value="{{ almox.modal.mf.venc }}" onChange="{{ almox.modal.onMF.venc }}" style="height:48px;padding:0 16px;background:var(--white);border-radius:var(--radius-sm);border:1.5px solid var(--border-default);font-family:inherit;font-size:15px;color:var(--text-strong);outline:none;box-sizing:border-box;width:100%">
+                        </label>
+                        <label for="almox-ent-forma" style="display:flex;flex-direction:column;gap:6px;font-family:var(--font-sans)">
+                          <span style="font-size:14px;font-weight:600;color:var(--text-strong)">Forma de pagamento</span>
+                          <select id="almox-ent-forma" value="{{ almox.modal.mf.forma }}" onChange="{{ almox.modal.onMF.forma }}" style="height:48px;padding:0 16px;background:var(--white);border-radius:var(--radius-sm);border:1.5px solid var(--border-default);font-family:inherit;font-size:15px;color:var(--text-strong);outline:none;box-sizing:border-box;width:100%">
+                            <sc-for list="{{ almox.modal.formaOpts }}" as="opt">
+                              <option value="{{ opt.v }}">{{ opt.t }}</option>
+                            </sc-for>
+                          </select>
+                        </label>
+                        <div style="grid-column:1/-1;display:flex;align-items:center;gap:10px;padding:4px 0">
+                          <label for="almox-ent-gerar-pagar" style="display:flex;align-items:center;gap:10px;cursor:pointer;font-size:14px;font-weight:600;color:var(--text-strong)">
+                            <input id="almox-ent-gerar-pagar" type="checkbox" checked="{{ almox.modal.mf.gerarPagar }}" onChange="{{ almox.modal.onMF.gerarPagar }}" style="width:18px;height:18px;accent-color:var(--teal-700);cursor:pointer">
+                            Gerar conta a pagar no Financeiro
+                          </label>
+                        </div>
+                      </div>
+                    </sc-if>
+
+                    <sc-if value="{{ almox.modal.isSaida }}" hint-placeholder-val="{{ false }}">
+                      <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:14px">
+                        <label for="almox-sai-qtd" style="display:flex;flex-direction:column;gap:6px;font-family:var(--font-sans)">
+                          <span style="font-size:14px;font-weight:600;color:var(--text-strong)">Quantidade *</span>
+                          <input id="almox-sai-qtd" type="number" min="0.01" step="any" value="{{ almox.modal.mf.qtd }}" onChange="{{ almox.modal.onMF.qtd }}" placeholder="0" style="height:48px;padding:0 16px;background:var(--white);border-radius:var(--radius-sm);border:1.5px solid var(--border-default);font-family:inherit;font-size:15px;color:var(--text-strong);outline:none;box-sizing:border-box;width:100%">
+                        </label>
+                        <label for="almox-sai-tipo-dest" style="display:flex;flex-direction:column;gap:6px;font-family:var(--font-sans)">
+                          <span style="font-size:14px;font-weight:600;color:var(--text-strong)">Tipo de destino *</span>
+                          <select id="almox-sai-tipo-dest" value="{{ almox.modal.mf.destinoTipo }}" onChange="{{ almox.modal.onMF.destinoTipo }}" style="height:48px;padding:0 16px;background:var(--white);border-radius:var(--radius-sm);border:1.5px solid var(--border-default);font-family:inherit;font-size:15px;color:var(--text-strong);outline:none;box-sizing:border-box;width:100%">
+                            <sc-for list="{{ almox.modal.destinoTipoOpts }}" as="opt">
+                              <option value="{{ opt.v }}">{{ opt.t }}</option>
+                            </sc-for>
+                          </select>
+                        </label>
+                        <div style="grid-column:1/-1">
+                          <label for="almox-sai-dest" style="display:flex;flex-direction:column;gap:6px;font-family:var(--font-sans)">
+                            <span style="font-size:14px;font-weight:600;color:var(--text-strong)">Destino *</span>
+                            <select id="almox-sai-dest" value="{{ almox.modal.mf.destinoId }}" onChange="{{ almox.modal.onMF.destinoId }}" style="height:48px;padding:0 16px;background:var(--white);border-radius:var(--radius-sm);border:1.5px solid var(--border-default);font-family:inherit;font-size:15px;color:var(--text-strong);outline:none;box-sizing:border-box;width:100%">
+                              <option value="">Selecione o destino...</option>
+                              <sc-for list="{{ almox.modal.destinoOpts }}" as="opt">
+                                <option value="{{ opt.v }}">{{ opt.t }}</option>
+                              </sc-for>
+                            </select>
+                          </label>
+                        </div>
+                      </div>
+                    </sc-if>
+
+                    <sc-if value="{{ almox.modal.isAjuste }}" hint-placeholder-val="{{ false }}">
+                      <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:14px">
+                        <label for="almox-aju-contagem" style="display:flex;flex-direction:column;gap:6px;font-family:var(--font-sans)">
+                          <span style="font-size:14px;font-weight:600;color:var(--text-strong)">Contagem física apurada *</span>
+                          <input id="almox-aju-contagem" type="number" min="0" step="any" value="{{ almox.modal.mf.contagem }}" onChange="{{ almox.modal.onMF.contagem }}" placeholder="0" style="height:48px;padding:0 16px;background:var(--white);border-radius:var(--radius-sm);border:1.5px solid var(--border-default);font-family:inherit;font-size:15px;color:var(--text-strong);outline:none;box-sizing:border-box;width:100%">
+                        </label>
+                        <div style="display:flex;align-items:flex-end">
+                          <div style="height:48px;display:flex;align-items:center;padding:0 16px;background:var(--gray-50);border:1.5px solid var(--border-default);border-radius:var(--radius-sm);font-size:14px;font-weight:600;color:var(--teal-800);box-sizing:border-box;width:100%">
+                            {{ almox.modal.diferencaTxt }}
+                          </div>
+                        </div>
+                        <div style="grid-column:1/-1">
+                          <label for="almox-aju-motivo" style="display:flex;flex-direction:column;gap:6px;font-family:var(--font-sans)">
+                            <span style="font-size:14px;font-weight:600;color:var(--text-strong)">Motivo do ajuste *</span>
+                            <input id="almox-aju-motivo" type="text" value="{{ almox.modal.mf.motivo }}" onChange="{{ almox.modal.onMF.motivo }}" placeholder="Ex.: Inventário periódico, avaria em operação, etc." style="height:48px;padding:0 16px;background:var(--white);border-radius:var(--radius-sm);border:1.5px solid var(--border-default);font-family:inherit;font-size:15px;color:var(--text-strong);outline:none;box-sizing:border-box;width:100%">
+                          </label>
+                        </div>
+                      </div>
+                    </sc-if>
+
+                    <sc-if value="{{ almox.modal.isEntrada }}" hint-placeholder-val="{{ true }}">
+                      <div style="display:flex;justify-content:space-between;align-items:center;padding:12px 16px;background:var(--gray-50);border-radius:12px;border:1px solid var(--border-default)">
+                        <span style="font-size:14px;color:var(--text-muted)">Total estimado da compra</span>
+                        <span style="font-size:18px;font-weight:700;color:var(--teal-800)">{{ almox.modal.totalTxt }}</span>
+                      </div>
+                    </sc-if>
+                    <sc-if value="{{ almox.modal.isSaida }}" hint-placeholder-val="{{ false }}">
+                      <div style="display:flex;justify-content:space-between;align-items:center;padding:12px 16px;background:var(--gray-50);border-radius:12px;border:1px solid var(--border-default)">
+                        <span style="font-size:14px;color:var(--text-muted)">Custo total da saída</span>
+                        <span style="font-size:18px;font-weight:700;color:var(--teal-800)">{{ almox.modal.totalTxt }}</span>
+                      </div>
+                    </sc-if>
+
+                    <sc-if value="{{ almox.modal.temAviso }}" hint-placeholder-val="{{ false }}">
+                      <div style="padding:10px 14px;border-radius:8px;background:var(--amber-100);color:var(--amber-800);font-size:13px;font-weight:500">
+                        {{ almox.modal.aviso }}
+                      </div>
+                    </sc-if>
+                    <sc-if value="{{ almox.modal.temErro }}" hint-placeholder-val="{{ false }}">
+                      <div role="alert" style="padding:10px 14px;border-radius:8px;background:var(--gray-100);color:var(--danger);font-size:13px;font-weight:600;border:1px solid var(--danger)">
+                        {{ almox.modal.erro }}
+                      </div>
+                    </sc-if>
+
+                    <div style="display:flex;flex-wrap:wrap;justify-content:flex-end;gap:10px;border-top:1px solid var(--border-default);padding-top:14px">
+                      <button type="button" onClick="{{ almox.modal.fechar }}" style="height:38px;padding:0 16px;border-radius:var(--radius-sm);border:1px solid var(--border-default);background:transparent;color:var(--text-strong);font-family:inherit;font-size:14px;font-weight:600;cursor:pointer">Cancelar</button>
+                      <button type="button" onClick="{{ almox.modal.salvar }}" style="height:38px;padding:0 20px;border-radius:var(--radius-sm);border:none;background:var(--teal-700);color:var(--white);font-family:inherit;font-size:14px;font-weight:600;cursor:pointer">Registrar</button>
+                    </div>
+                  </div>
+                </sc-if>
+
+                <sc-if value="{{ almox.modal.isItem }}" hint-placeholder-val="{{ false }}">
+                  <div style="display:flex;flex-direction:column;gap:16px">
+                    <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:14px">
+                      <label for="almox-it-cod" style="display:flex;flex-direction:column;gap:6px;font-family:var(--font-sans)">
+                        <span style="font-size:14px;font-weight:600;color:var(--text-strong)">Código *</span>
+                        <input id="almox-it-cod" type="text" value="{{ almox.modal.imf.codigo }}" onChange="{{ almox.modal.onIMF.codigo }}" placeholder="Ex.: EPI-006" style="height:48px;padding:0 16px;background:var(--white);border-radius:var(--radius-sm);border:1.5px solid var(--border-default);font-family:inherit;font-size:15px;color:var(--text-strong);outline:none;box-sizing:border-box;width:100%">
+                      </label>
+                      <div style="grid-column:1/-1">
+                        <label for="almox-it-nome" style="display:flex;flex-direction:column;gap:6px;font-family:var(--font-sans)">
+                          <span style="font-size:14px;font-weight:600;color:var(--text-strong)">Nome do item *</span>
+                          <input id="almox-it-nome" type="text" value="{{ almox.modal.imf.nome }}" onChange="{{ almox.modal.onIMF.nome }}" placeholder="Ex.: Luva nitrílica cano longo" style="height:48px;padding:0 16px;background:var(--white);border-radius:var(--radius-sm);border:1.5px solid var(--border-default);font-family:inherit;font-size:15px;color:var(--text-strong);outline:none;box-sizing:border-box;width:100%">
+                        </label>
+                      </div>
+                      <label for="almox-it-cat" style="display:flex;flex-direction:column;gap:6px;font-family:var(--font-sans)">
+                        <span style="font-size:14px;font-weight:600;color:var(--text-strong)">Categoria *</span>
+                        <select id="almox-it-cat" value="{{ almox.modal.imf.categoria }}" onChange="{{ almox.modal.onIMF.categoria }}" style="height:48px;padding:0 16px;background:var(--white);border-radius:var(--radius-sm);border:1.5px solid var(--border-default);font-family:inherit;font-size:15px;color:var(--text-strong);outline:none;box-sizing:border-box;width:100%">
+                          <sc-for list="{{ almox.modal.catOpts }}" as="opt">
+                            <option value="{{ opt.v }}">{{ opt.t }}</option>
+                          </sc-for>
+                        </select>
+                      </label>
+                      <label for="almox-it-un" style="display:flex;flex-direction:column;gap:6px;font-family:var(--font-sans)">
+                        <span style="font-size:14px;font-weight:600;color:var(--text-strong)">Unidade *</span>
+                        <select id="almox-it-un" value="{{ almox.modal.imf.unidade }}" onChange="{{ almox.modal.onIMF.unidade }}" style="height:48px;padding:0 16px;background:var(--white);border-radius:var(--radius-sm);border:1.5px solid var(--border-default);font-family:inherit;font-size:15px;color:var(--text-strong);outline:none;box-sizing:border-box;width:100%">
+                          <sc-for list="{{ almox.modal.unidadeOpts }}" as="opt">
+                            <option value="{{ opt.v }}">{{ opt.t }}</option>
+                          </sc-for>
+                        </select>
+                      </label>
+                      <label for="almox-it-min" style="display:flex;flex-direction:column;gap:6px;font-family:var(--font-sans)">
+                        <span style="font-size:14px;font-weight:600;color:var(--text-strong)">Estoque mínimo *</span>
+                        <input id="almox-it-min" type="number" min="0" step="any" value="{{ almox.modal.imf.minimo }}" onChange="{{ almox.modal.onIMF.minimo }}" placeholder="0" style="height:48px;padding:0 16px;background:var(--white);border-radius:var(--radius-sm);border:1.5px solid var(--border-default);font-family:inherit;font-size:15px;color:var(--text-strong);outline:none;box-sizing:border-box;width:100%">
+                      </label>
+                      <sc-if value="{{ almox.modal.isNovoItem }}" hint-placeholder-val="{{ true }}">
+                        <label for="almox-it-custo" style="display:flex;flex-direction:column;gap:6px;font-family:var(--font-sans)">
+                          <span style="font-size:14px;font-weight:600;color:var(--text-strong)">Custo médio inicial (R$)</span>
+                          <input id="almox-it-custo" type="number" min="0" step="any" value="{{ almox.modal.imf.custoMedio }}" onChange="{{ almox.modal.onIMF.custoMedio }}" placeholder="0,00" style="height:48px;padding:0 16px;background:var(--white);border-radius:var(--radius-sm);border:1.5px solid var(--border-default);font-family:inherit;font-size:15px;color:var(--text-strong);outline:none;box-sizing:border-box;width:100%">
+                        </label>
+                      </sc-if>
+                      <sc-if value="{{ almox.modal.isItemExistente }}" hint-placeholder-val="{{ false }}">
+                        <div style="display:flex;flex-direction:column;gap:6px;font-family:var(--font-sans)">
+                          <span style="font-size:14px;font-weight:600;color:var(--text-muted)">Custo médio atual</span>
+                          <div style="height:48px;padding:0 16px;background:var(--gray-50);border-radius:var(--radius-sm);border:1.5px solid var(--border-default);font-family:inherit;font-size:15px;color:var(--text-strong);display:flex;align-items:center;box-sizing:border-box">
+                            R$ {{ almox.modal.imf.custoMedio }}
+                          </div>
+                        </div>
+                      </sc-if>
+                      <div style="grid-column:1/-1">
+                        <label for="almox-it-forn" style="display:flex;flex-direction:column;gap:6px;font-family:var(--font-sans)">
+                          <span style="font-size:14px;font-weight:600;color:var(--text-strong)">Fornecedor habitual</span>
+                          <input id="almox-it-forn" type="text" value="{{ almox.modal.imf.fornecedor }}" onChange="{{ almox.modal.onIMF.fornecedor }}" placeholder="Fornecedor padrão" style="height:48px;padding:0 16px;background:var(--white);border-radius:var(--radius-sm);border:1.5px solid var(--border-default);font-family:inherit;font-size:15px;color:var(--text-strong);outline:none;box-sizing:border-box;width:100%">
+                        </label>
+                      </div>
+                      <sc-if value="{{ almox.modal.isEpiItem }}" hint-placeholder-val="{{ true }}">
+                        <label for="almox-it-ca" style="display:flex;flex-direction:column;gap:6px;font-family:var(--font-sans)">
+                          <span style="font-size:14px;font-weight:600;color:var(--text-strong)">Certificado de Aprovação (CA)</span>
+                          <input id="almox-it-ca" type="text" value="{{ almox.modal.imf.ca }}" onChange="{{ almox.modal.onIMF.ca }}" placeholder="Ex.: 38240" style="height:48px;padding:0 16px;background:var(--white);border-radius:var(--radius-sm);border:1.5px solid var(--border-default);font-family:inherit;font-size:15px;color:var(--text-strong);outline:none;box-sizing:border-box;width:100%">
+                        </label>
+                        <label for="almox-it-caval" style="display:flex;flex-direction:column;gap:6px;font-family:var(--font-sans)">
+                          <span style="font-size:14px;font-weight:600;color:var(--text-strong)">Validade do CA</span>
+                          <input id="almox-it-caval" type="date" value="{{ almox.modal.imf.caValidade }}" onChange="{{ almox.modal.onIMF.caValidade }}" style="height:48px;padding:0 16px;background:var(--white);border-radius:var(--radius-sm);border:1.5px solid var(--border-default);font-family:inherit;font-size:15px;color:var(--text-strong);outline:none;box-sizing:border-box;width:100%">
+                        </label>
+                        <label for="almox-it-vida" style="display:flex;flex-direction:column;gap:6px;font-family:var(--font-sans)">
+                          <span style="font-size:14px;font-weight:600;color:var(--text-strong)">Vida útil (dias) *</span>
+                          <input id="almox-it-vida" type="number" min="1" step="1" value="{{ almox.modal.imf.vidaUtilDias }}" onChange="{{ almox.modal.onIMF.vidaUtilDias }}" placeholder="Ex.: 45" style="height:48px;padding:0 16px;background:var(--white);border-radius:var(--radius-sm);border:1.5px solid var(--border-default);font-family:inherit;font-size:15px;color:var(--text-strong);outline:none;box-sizing:border-box;width:100%">
+                        </label>
+                      </sc-if>
+                      <div style="grid-column:1/-1;display:flex;align-items:center;gap:10px;padding:4px 0">
+                        <label for="almox-it-ativo" style="display:flex;align-items:center;gap:10px;cursor:pointer;font-size:14px;font-weight:600;color:var(--text-strong)">
+                          <input id="almox-it-ativo" type="checkbox" checked="{{ almox.modal.imf.ativo }}" onChange="{{ almox.modal.onIMF.ativo }}" style="width:18px;height:18px;accent-color:var(--teal-700);cursor:pointer">
+                          Item ativo no almoxarifado
+                        </label>
+                      </div>
+                    </div>
+
+                    <sc-if value="{{ almox.modal.temErro }}" hint-placeholder-val="{{ false }}">
+                      <div role="alert" style="padding:10px 14px;border-radius:8px;background:var(--gray-100);color:var(--danger);font-size:13px;font-weight:600;border:1px solid var(--danger)">
+                        {{ almox.modal.erro }}
+                      </div>
+                    </sc-if>
+
+                    <div style="display:flex;flex-wrap:wrap;justify-content:space-between;align-items:center;gap:10px;border-top:1px solid var(--border-default);padding-top:14px">
+                      <div>
+                        <sc-if value="{{ almox.modal.podeExcluir }}" hint-placeholder-val="{{ false }}">
+                          <button type="button" onClick="{{ almox.modal.excluirItem }}" style="height:38px;padding:0 16px;border-radius:var(--radius-sm);border:1px solid var(--danger);background:transparent;color:var(--danger);font-family:inherit;font-size:14px;font-weight:600;cursor:pointer">Excluir</button>
+                        </sc-if>
+                      </div>
+                      <div style="display:flex;gap:10px">
+                        <button type="button" onClick="{{ almox.modal.fechar }}" style="height:38px;padding:0 16px;border-radius:var(--radius-sm);border:1px solid var(--border-default);background:transparent;color:var(--text-strong);font-family:inherit;font-size:14px;font-weight:600;cursor:pointer">Cancelar</button>
+                        <button type="button" onClick="{{ almox.modal.salvarItem }}" style="height:38px;padding:0 20px;border-radius:var(--radius-sm);border:none;background:var(--teal-700);color:var(--white);font-family:inherit;font-size:14px;font-weight:600;cursor:pointer">Salvar</button>
+                      </div>
+                    </div>
+                  </div>
+                </sc-if>
+
+                <sc-if value="{{ almox.modal.isColab }}" hint-placeholder-val="{{ false }}">
+                  <div style="display:flex;flex-direction:column;gap:16px">
+                    <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:14px">
+                      <div style="grid-column:1/-1">
+                        <label for="almox-col-nome" style="display:flex;flex-direction:column;gap:6px;font-family:var(--font-sans)">
+                          <span style="font-size:14px;font-weight:600;color:var(--text-strong)">Nome completo *</span>
+                          <input id="almox-col-nome" type="text" value="{{ almox.modal.cmf.nome }}" onChange="{{ almox.modal.onCMF.nome }}" placeholder="Ex.: Carlos Eduardo" style="height:48px;padding:0 16px;background:var(--white);border-radius:var(--radius-sm);border:1.5px solid var(--border-default);font-family:inherit;font-size:15px;color:var(--text-strong);outline:none;box-sizing:border-box;width:100%">
+                        </label>
+                      </div>
+                      <label for="almox-col-funcao" style="display:flex;flex-direction:column;gap:6px;font-family:var(--font-sans)">
+                        <span style="font-size:14px;font-weight:600;color:var(--text-strong)">Função</span>
+                        <select id="almox-col-funcao" value="{{ almox.modal.cmf.funcao }}" onChange="{{ almox.modal.onCMF.funcao }}" style="height:48px;padding:0 16px;background:var(--white);border-radius:var(--radius-sm);border:1.5px solid var(--border-default);font-family:inherit;font-size:15px;color:var(--text-strong);outline:none;box-sizing:border-box;width:100%">
+                          <sc-for list="{{ almox.modal.funcaoOpts }}" as="opt">
+                            <option value="{{ opt.v }}">{{ opt.t }}</option>
+                          </sc-for>
+                        </select>
+                      </label>
+                      <label for="almox-col-bota" style="display:flex;flex-direction:column;gap:6px;font-family:var(--font-sans)">
+                        <span style="font-size:14px;font-weight:600;color:var(--text-strong)">Tamanho da bota</span>
+                        <input id="almox-col-bota" type="text" value="{{ almox.modal.cmf.bota }}" onChange="{{ almox.modal.onCMF.bota }}" placeholder="Ex.: 41" style="height:48px;padding:0 16px;background:var(--white);border-radius:var(--radius-sm);border:1.5px solid var(--border-default);font-family:inherit;font-size:15px;color:var(--text-strong);outline:none;box-sizing:border-box;width:100%">
+                      </label>
+                      <label for="almox-col-luva" style="display:flex;flex-direction:column;gap:6px;font-family:var(--font-sans)">
+                        <span style="font-size:14px;font-weight:600;color:var(--text-strong)">Tamanho da luva</span>
+                        <select id="almox-col-luva" value="{{ almox.modal.cmf.luva }}" onChange="{{ almox.modal.onCMF.luva }}" style="height:48px;padding:0 16px;background:var(--white);border-radius:var(--radius-sm);border:1.5px solid var(--border-default);font-family:inherit;font-size:15px;color:var(--text-strong);outline:none;box-sizing:border-box;width:100%">
+                          <sc-for list="{{ almox.modal.luvaOpts }}" as="opt">
+                            <option value="{{ opt.v }}">{{ opt.t }}</option>
+                          </sc-for>
+                        </select>
+                      </label>
+                      <label for="almox-col-uni" style="display:flex;flex-direction:column;gap:6px;font-family:var(--font-sans)">
+                        <span style="font-size:14px;font-weight:600;color:var(--text-strong)">Tamanho do uniforme</span>
+                        <select id="almox-col-uni" value="{{ almox.modal.cmf.uniforme }}" onChange="{{ almox.modal.onCMF.uniforme }}" style="height:48px;padding:0 16px;background:var(--white);border-radius:var(--radius-sm);border:1.5px solid var(--border-default);font-family:inherit;font-size:15px;color:var(--text-strong);outline:none;box-sizing:border-box;width:100%">
+                          <sc-for list="{{ almox.modal.uniformeOpts }}" as="opt">
+                            <option value="{{ opt.v }}">{{ opt.t }}</option>
+                          </sc-for>
+                        </select>
+                      </label>
+                      <div style="grid-column:1/-1">
+                        <label for="almox-col-cam" style="display:flex;flex-direction:column;gap:6px;font-family:var(--font-sans)">
+                          <span style="font-size:14px;font-weight:600;color:var(--text-strong)">Caminhão habitual</span>
+                          <select id="almox-col-cam" value="{{ almox.modal.cmf.caminhao }}" onChange="{{ almox.modal.onCMF.caminhao }}" style="height:48px;padding:0 16px;background:var(--white);border-radius:var(--radius-sm);border:1.5px solid var(--border-default);font-family:inherit;font-size:15px;color:var(--text-strong);outline:none;box-sizing:border-box;width:100%">
+                            <sc-for list="{{ almox.modal.caminhaoOpts }}" as="opt">
+                              <option value="{{ opt.v }}">{{ opt.t }}</option>
+                            </sc-for>
+                          </select>
+                        </label>
+                      </div>
+                      <div style="grid-column:1/-1;display:flex;align-items:center;gap:10px;padding:4px 0">
+                        <label for="almox-col-ativo" style="display:flex;align-items:center;gap:10px;cursor:pointer;font-size:14px;font-weight:600;color:var(--text-strong)">
+                          <input id="almox-col-ativo" type="checkbox" checked="{{ almox.modal.cmf.ativo }}" onChange="{{ almox.modal.onCMF.ativo }}" style="width:18px;height:18px;accent-color:var(--teal-700);cursor:pointer">
+                          Colaborador ativo
+                        </label>
+                      </div>
+                    </div>
+
+                    <sc-if value="{{ almox.modal.temErro }}" hint-placeholder-val="{{ false }}">
+                      <div role="alert" style="padding:10px 14px;border-radius:8px;background:var(--gray-100);color:var(--danger);font-size:13px;font-weight:600;border:1px solid var(--danger)">
+                        {{ almox.modal.erro }}
+                      </div>
+                    </sc-if>
+
+                    <div style="display:flex;flex-wrap:wrap;justify-content:flex-end;gap:10px;border-top:1px solid var(--border-default);padding-top:14px">
+                      <button type="button" onClick="{{ almox.modal.fechar }}" style="height:38px;padding:0 16px;border-radius:var(--radius-sm);border:1px solid var(--border-default);background:transparent;color:var(--text-strong);font-family:inherit;font-size:14px;font-weight:600;cursor:pointer">Cancelar</button>
+                      <button type="button" onClick="{{ almox.modal.salvarColab }}" style="height:38px;padding:0 20px;border-radius:var(--radius-sm);border:none;background:var(--teal-700);color:var(--white);font-family:inherit;font-size:14px;font-weight:600;cursor:pointer">Salvar</button>
+                    </div>
+                  </div>
+                </sc-if>
+              </div>
+            </div>
+          </sc-if>
         </div>
       </sc-if>
 
@@ -6532,6 +6861,353 @@ class Component extends DCLogic {
     this.toast('Planilha exportada');
   };
 
+  almoxSalvarMov = () => {
+    const st = this.state;
+    const mf = st.almoxMF || ALMOX_MF_VAZIO;
+    const { itens, movs, saldoMap } = this.almoxListas();
+    const tipo = mf.tipo || 'entrada';
+
+    if (!mf.itemId) {
+      this.setState({ almoxErro: 'Selecione um item.' });
+      return;
+    }
+    const item = itens.find(it => it.id === mf.itemId);
+    if (!item) {
+      this.setState({ almoxErro: 'Item não encontrado.' });
+      return;
+    }
+    const saldo = saldoMap[item.id] || 0;
+
+    let num = '';
+    let qtd = 0;
+    let custoUnit = Number(item.custoMedio) || 0;
+    let novoMov = null;
+    let novosItens = [...itens];
+
+    if (tipo === 'entrada') {
+      qtd = Number(mf.qtd);
+      if (!qtd || qtd <= 0) {
+        this.setState({ almoxErro: 'Informe uma quantidade válida maior que zero.' });
+        return;
+      }
+      const custo = Number(mf.custo);
+      if (mf.custo === '' || isNaN(custo) || custo <= 0) {
+        this.setState({ almoxErro: 'Informe o custo unitário (maior que zero).' });
+        return;
+      }
+      custoUnit = custo;
+
+      const saldoAnt = saldo;
+      const cmAnt = Number(item.custoMedio) || 0;
+      const novoCustoMedio = saldoAnt <= 0 ? custo : ((saldoAnt * cmAnt) + (qtd * custo)) / (saldoAnt + qtd);
+
+      novosItens = itens.map(it => {
+        if (it.id === item.id) {
+          return {
+            ...it,
+            custoMedio: Math.round(novoCustoMedio * 100) / 100,
+            fornecedor: mf.fornecedor ? mf.fornecedor.trim() : it.fornecedor
+          };
+        }
+        return it;
+      });
+
+      const maxE = movs
+        .filter(m => m.tipo === 'entrada' && (m.num || '').startsWith('#E-'))
+        .reduce((max, m) => {
+          const n = parseInt((m.num || '').replace('#E-', ''), 10);
+          return !isNaN(n) && n > max ? n : max;
+        }, 0);
+      num = '#E-' + String(maxE + 1).padStart(3, '0');
+
+      if (mf.gerarPagar) {
+        const data = this.state.finData || genFin();
+        const novo = {
+          ...BLANK_IT,
+          id: 'P' + (data.length + 1),
+          tipo: 'pagar',
+          nome: (mf.fornecedor || item.fornecedor || 'Fornecedor').trim(),
+          desc: `Entrada almox ${num} · ${item.nome}`,
+          cat: 'Peças/almoxarifado',
+          emissao: HOJE,
+          venc: mf.venc || addD(HOJE, 30),
+          forma: mf.forma || 'Boleto',
+          valor: qtd * custo,
+          origem: 'Almoxarifado',
+          nf: (mf.nf || '').trim()
+        };
+        this.setState({ finData: [novo, ...data] });
+      }
+
+      novoMov = {
+        id: 'M' + (movs.length + 1) + '-' + Date.now(),
+        num,
+        tipo: 'entrada',
+        data: HOJE,
+        itemId: item.id,
+        qtd,
+        custoUnit,
+        destinoTipo: null,
+        destinoId: '',
+        fornecedor: (mf.fornecedor || item.fornecedor || '').trim(),
+        nf: (mf.nf || '').trim(),
+        motivo: '',
+        responsavel: 'Escritório'
+      };
+
+    } else if (tipo === 'saida') {
+      qtd = Number(mf.qtd);
+      if (!qtd || qtd <= 0) {
+        this.setState({ almoxErro: 'Informe uma quantidade válida maior que zero.' });
+        return;
+      }
+      if (!mf.destinoId && mf.destinoId !== 0) {
+        this.setState({ almoxErro: 'Selecione o destino da saída.' });
+        return;
+      }
+      if (item.categoria === 'EPI' && mf.destinoTipo !== 'colab') {
+        this.setState({ almoxErro: 'EPI deve ser entregue a um colaborador' });
+        return;
+      }
+      if (qtd > saldo) {
+        this.setState({ almoxErro: `Saldo insuficiente (tem ${saldo} ${item.unidade})` });
+        return;
+      }
+
+      custoUnit = Number(item.custoMedio) || 0;
+      const maxS = movs
+        .filter(m => m.tipo === 'saida' && (m.num || '').startsWith('#S-'))
+        .reduce((max, m) => {
+          const n = parseInt((m.num || '').replace('#S-', ''), 10);
+          return !isNaN(n) && n > max ? n : max;
+        }, 0);
+      num = '#S-' + String(maxS + 1).padStart(3, '0');
+
+      const destIdFinal = mf.destinoTipo === 'os' ? Number(mf.destinoId) : mf.destinoId;
+
+      if (item.categoria === 'Peça de caminhão' && mf.destinoTipo === 'caminhao') {
+        const cam = CAMS.find(c => c.placa === destIdFinal) || { placa: destIdFinal, modelo: '' };
+        const total = qtd * custoUnit;
+        this.setState(s => ({
+          manut: [
+            {
+              item: `Peça aplicada: ${item.nome} · ${brl(total)}`,
+              ref: `${cam.placa} · ${cam.modelo}`,
+              prazo: `Aplicado em ${ddmm(HOJE)}`,
+              status: 'Em dia',
+              tone: 'success-soft'
+            },
+            ...(s.manut || MANUT)
+          ]
+        }));
+      }
+
+      novoMov = {
+        id: 'M' + (movs.length + 1) + '-' + Date.now(),
+        num,
+        tipo: 'saida',
+        data: HOJE,
+        itemId: item.id,
+        qtd,
+        custoUnit,
+        destinoTipo: mf.destinoTipo || 'os',
+        destinoId: destIdFinal,
+        fornecedor: '',
+        nf: '',
+        motivo: '',
+        responsavel: 'Escritório'
+      };
+
+    } else if (tipo === 'ajuste') {
+      const contagem = Number(mf.contagem);
+      if (mf.contagem === '' || isNaN(contagem) || contagem < 0) {
+        this.setState({ almoxErro: 'Informe a contagem física (zero ou maior).' });
+        return;
+      }
+      if (contagem === saldo) {
+        this.setState({ almoxErro: 'A contagem é igual ao saldo atual. Não há divergência a ajustar.' });
+        return;
+      }
+      if (!mf.motivo || !mf.motivo.trim()) {
+        this.setState({ almoxErro: 'Informe o motivo do ajuste' });
+        return;
+      }
+
+      qtd = contagem - saldo;
+      custoUnit = Number(item.custoMedio) || 0;
+
+      const maxA = movs
+        .filter(m => m.tipo === 'ajuste' && (m.num || '').startsWith('#A-'))
+        .reduce((max, m) => {
+          const n = parseInt((m.num || '').replace('#A-', ''), 10);
+          return !isNaN(n) && n > max ? n : max;
+        }, 0);
+      num = '#A-' + String(maxA + 1).padStart(3, '0');
+
+      novoMov = {
+        id: 'M' + (movs.length + 1) + '-' + Date.now(),
+        num,
+        tipo: 'ajuste',
+        data: HOJE,
+        itemId: item.id,
+        qtd,
+        custoUnit,
+        destinoTipo: null,
+        destinoId: '',
+        fornecedor: '',
+        nf: '',
+        motivo: mf.motivo.trim(),
+        responsavel: 'Escritório'
+      };
+    }
+
+    const d = this.almoxData();
+    this.setState({
+      almoxData: {
+        ...d,
+        itens: novosItens,
+        movs: [novoMov, ...(d.movs || [])]
+      },
+      almoxModal: null,
+      almoxMF: { ...ALMOX_MF_VAZIO },
+      almoxErro: '',
+      almoxAviso: ''
+    });
+
+    if (tipo === 'entrada') {
+      this.toast(`Entrada ${num} registrada${mf.gerarPagar ? ' · conta a pagar criada no Financeiro' : ''}`);
+    } else if (tipo === 'saida') {
+      this.toast(`Saída ${num} registrada`);
+    } else if (tipo === 'ajuste') {
+      this.toast(`Ajuste ${num} registrado`);
+    }
+  };
+
+  almoxSalvarItem = () => {
+    const imf = this.state.almoxItemMF;
+    if (!imf) return;
+    const { itens } = this.almoxListas();
+
+    const cod = (imf.codigo || '').trim().toUpperCase();
+    const nome = (imf.nome || '').trim();
+    if (!cod || !nome) {
+      this.setState({ almoxErro: 'Código e nome são obrigatórios.' });
+      return;
+    }
+
+    const codDuplicado = itens.some(it => it.id !== imf.id && (it.codigo || '').trim().toUpperCase() === cod);
+    if (codDuplicado) {
+      this.setState({ almoxErro: 'Já existe um item cadastrado com este código.' });
+      return;
+    }
+
+    const min = Number(imf.minimo);
+    if (imf.minimo === '' || isNaN(min) || min < 0) {
+      this.setState({ almoxErro: 'O estoque mínimo deve ser igual ou maior que zero.' });
+      return;
+    }
+
+    const cat = imf.categoria || 'EPI';
+    if (cat === 'EPI') {
+      const vida = Number(imf.vidaUtilDias);
+      if (!vida || vida <= 0) {
+        this.setState({ almoxErro: 'Para itens EPI, a vida útil (em dias) deve ser maior que zero.' });
+        return;
+      }
+    }
+
+    const id = imf.id || ('I' + Date.now());
+    const itemAtualizado = {
+      ...imf,
+      id,
+      codigo: cod,
+      nome,
+      categoria: cat,
+      unidade: imf.unidade || 'un',
+      minimo: min,
+      custoMedio: imf.id ? (Number(imf.custoMedio) || 0) : (Number(imf.custoMedio) || 0),
+      fornecedor: (imf.fornecedor || '').trim(),
+      ca: (imf.ca || '').trim(),
+      caValidade: imf.caValidade || '',
+      vidaUtilDias: cat === 'EPI' ? Number(imf.vidaUtilDias) : null,
+      ativo: imf.ativo !== false
+    };
+
+    const novosItens = imf.id
+      ? itens.map(it => it.id === imf.id ? itemAtualizado : it)
+      : [itemAtualizado, ...itens];
+
+    const d = this.almoxData();
+    this.setState({
+      almoxData: { ...d, itens: novosItens },
+      almoxModal: null,
+      almoxItemMF: null,
+      almoxErro: ''
+    });
+    this.toast('Item salvo');
+  };
+
+  almoxExcluirItem = () => {
+    const imf = this.state.almoxItemMF;
+    if (!imf || !imf.id) return;
+    const { itens, movs, saldoMap } = this.almoxListas();
+
+    const saldo = saldoMap[imf.id] || 0;
+    const temMov = movs.some(m => m.itemId === imf.id);
+    if (saldo > 0 || temMov) {
+      this.setState({ almoxErro: 'Este item possui saldo ou histórico de movimentações e não pode ser excluído. Utilize a opção Inativar.' });
+      return;
+    }
+
+    const novosItens = itens.filter(it => it.id !== imf.id);
+    const d = this.almoxData();
+    this.setState({
+      almoxData: { ...d, itens: novosItens },
+      almoxModal: null,
+      almoxItemMF: null,
+      almoxErro: ''
+    });
+    this.toast('Item excluído');
+  };
+
+  almoxSalvarColab = () => {
+    const cmf = this.state.almoxColabMF;
+    if (!cmf) return;
+    const { colabs } = this.almoxListas();
+
+    const nome = (cmf.nome || '').trim();
+    if (!nome) {
+      this.setState({ almoxErro: 'O nome do colaborador é obrigatório.' });
+      return;
+    }
+
+    const id = cmf.id || ('COL-' + Date.now());
+    const colabAtualizado = {
+      ...cmf,
+      id,
+      nome,
+      funcao: cmf.funcao || 'Ajudante',
+      bota: cmf.bota || '',
+      luva: cmf.luva || '',
+      uniforme: cmf.uniforme || '',
+      caminhao: cmf.caminhao || '',
+      ativo: cmf.ativo !== false
+    };
+
+    const novosColabs = cmf.id
+      ? colabs.map(c => c.id === cmf.id ? colabAtualizado : c)
+      : [colabAtualizado, ...colabs];
+
+    const d = this.almoxData();
+    this.setState({
+      almoxData: { ...d, colabs: novosColabs },
+      almoxModal: null,
+      almoxColabMF: null,
+      almoxErro: ''
+    });
+    this.toast('Colaborador salvo');
+  };
+
   almoxVals(desktop) {
     const st = this.state;
     const {
@@ -6584,7 +7260,7 @@ class Component extends DCLogic {
       abaixo: abaixoCount,
       abaixoTxt: `${abaixoCount}`,
       valorEstoqueTxt: brl(valorEstoqueTot),
-      saidasMesTot: brl(saidasMesTot),
+      saidasMesTxt: brl(saidasMesTot),
       caVencendo: caVencendoCount,
       caVencendoTxt: `${caVencendoCount}`,
       temCaVencido
@@ -6829,12 +7505,242 @@ class Component extends DCLogic {
     const exportar = this.almoxExportar;
 
     const almoxModal = st.almoxModal;
+    const mf = st.almoxMF || ALMOX_MF_VAZIO;
+    const tipo = mf.tipo || 'entrada';
+    const isEntrada = tipo === 'entrada';
+    const isSaida = tipo === 'saida';
+    const isAjuste = tipo === 'ajuste';
+
+    const setTipo = tKey => () => this.setState(s => ({
+      almoxMF: { ...s.almoxMF, tipo: tKey },
+      almoxErro: '',
+      almoxAviso: ''
+    }));
+
+    const tipoBtns = [
+      { key: 'entrada', t: 'Entrada' },
+      { key: 'saida', t: 'Saída' },
+      { key: 'ajuste', t: 'Ajuste' }
+    ].map(b => {
+      const ativo = tipo === b.key;
+      return {
+        t: b.t,
+        ativo,
+        bg: ativo ? 'var(--teal-700)' : 'var(--gray-100)',
+        fg: ativo ? 'var(--white)' : 'var(--text-strong)',
+        pick: setTipo(b.key)
+      };
+    });
+
+    const itSel = itensMap[mf.itemId] || null;
+    const sSel = itSel ? (saldoMap[itSel.id] || 0) : 0;
+    const itemInfoTxt = itSel ? `Saldo atual: ${sSel} ${itSel.unidade} · Custo médio: ${brl(itSel.custoMedio)}` : '';
+    const isEpiSel = itSel ? itSel.categoria === 'EPI' : false;
+
+    let totalTxt = '—';
+    if (isEntrada) {
+      const q = Number(mf.qtd) || 0;
+      const c = Number(mf.custo) || 0;
+      totalTxt = brl(q * c);
+    } else if (isSaida) {
+      const q = Number(mf.qtd) || 0;
+      const cm = Number(itSel ? itSel.custoMedio : 0) || 0;
+      totalTxt = brl(q * cm);
+    }
+
+    const difQtd = (Number(mf.contagem) || 0) - sSel;
+    const diferencaTxt = `Diferença: ${difQtd >= 0 ? '+' : ''}${difQtd} ${itSel ? itSel.unidade : 'un'}`;
+
+    const onMF = {
+      itemId: e => {
+        const v = (e && e.target) ? e.target.value : e;
+        const it = itensMap[v];
+        this.setState(s => ({
+          almoxMF: {
+            ...s.almoxMF,
+            itemId: v,
+            ...(it && (s.almoxMF.tipo || 'entrada') === 'entrada' && !s.almoxMF.fornecedor ? { fornecedor: it.fornecedor || '' } : {}),
+            ...(it && (s.almoxMF.tipo || 'entrada') === 'entrada' && !s.almoxMF.custo ? { custo: it.custoMedio || '' } : {})
+          },
+          almoxErro: ''
+        }));
+      },
+      qtd: e => {
+        const v = (e && e.target) ? e.target.value : e;
+        this.setState(s => ({ almoxMF: { ...s.almoxMF, qtd: v }, almoxErro: '' }));
+      },
+      custo: e => {
+        const v = (e && e.target) ? e.target.value : e;
+        this.setState(s => ({ almoxMF: { ...s.almoxMF, custo: v }, almoxErro: '' }));
+      },
+      fornecedor: e => {
+        const v = (e && e.target) ? e.target.value : e;
+        this.setState(s => ({ almoxMF: { ...s.almoxMF, fornecedor: v }, almoxErro: '' }));
+      },
+      nf: e => {
+        const v = (e && e.target) ? e.target.value : e;
+        this.setState(s => ({ almoxMF: { ...s.almoxMF, nf: v }, almoxErro: '' }));
+      },
+      venc: e => {
+        const v = (e && e.target) ? e.target.value : e;
+        this.setState(s => ({ almoxMF: { ...s.almoxMF, venc: v }, almoxErro: '' }));
+      },
+      forma: e => {
+        const v = (e && e.target) ? e.target.value : e;
+        this.setState(s => ({ almoxMF: { ...s.almoxMF, forma: v }, almoxErro: '' }));
+      },
+      gerarPagar: e => {
+        const v = (e && e.target) ? e.target.checked : (e === true);
+        this.setState(s => ({ almoxMF: { ...s.almoxMF, gerarPagar: v }, almoxErro: '' }));
+      },
+      destinoTipo: e => {
+        const v = (e && e.target) ? e.target.value : e;
+        this.setState(s => ({ almoxMF: { ...s.almoxMF, destinoTipo: v, destinoId: '' }, almoxErro: '' }));
+      },
+      destinoId: e => {
+        const v = (e && e.target) ? e.target.value : e;
+        this.setState(s => ({ almoxMF: { ...s.almoxMF, destinoId: v }, almoxErro: '' }));
+      },
+      contagem: e => {
+        const v = (e && e.target) ? e.target.value : e;
+        this.setState(s => ({ almoxMF: { ...s.almoxMF, contagem: v }, almoxErro: '' }));
+      },
+      motivo: e => {
+        const v = (e && e.target) ? e.target.value : e;
+        this.setState(s => ({ almoxMF: { ...s.almoxMF, motivo: v }, almoxErro: '' }));
+      }
+    };
+
+    const itemOpts = itens
+      .filter(it => it.ativo)
+      .map(it => {
+        const s = saldoMap[it.id] || 0;
+        return {
+          v: it.id,
+          t: `${it.codigo} · ${it.nome} (saldo ${s} ${it.unidade})`
+        };
+      });
+
+    const formaOpts = ['PIX', 'Boleto', 'Transferência', 'Dinheiro', 'Cartão'].map(f => ({ v: f, t: f }));
+
+    const destinoTipoOpts = [
+      { v: 'os', t: 'OS' },
+      { v: 'caminhao', t: 'Caminhão' },
+      { v: 'colab', t: 'Colaborador' }
+    ];
+
+    let destinoOpts = [];
+    if (mf.destinoTipo === 'os') {
+      const de = addD(HOJE, -30);
+      const ate = addD(HOJE, 7);
+      destinoOpts = this.osRows()
+        .filter(r => r.data >= de && r.data <= ate)
+        .map(r => ({ v: r.n, t: `#${r.n} · ${r.cliente} · ${ddmm(r.data)}` }));
+    } else if (mf.destinoTipo === 'caminhao') {
+      destinoOpts = CAMS.map(c => ({ v: c.placa, t: `${c.placa} · ${c.modelo}` }));
+    } else if (mf.destinoTipo === 'colab') {
+      destinoOpts = colabs.filter(c => c.ativo).map(c => ({ v: c.nome, t: c.nome }));
+    }
+
+    const imf = st.almoxItemMF || {};
+    const isNovoItem = !imf.id;
+    const isItemExistente = !!imf.id;
+    const isEpiItem = (imf.categoria || 'EPI') === 'EPI';
+    const catOpts = ALMOX_CATS.map(c => ({ v: c, t: c }));
+    const unidadeOpts = ['un', 'par', 'm', 'L', 'cx', 'kg'].map(u => ({ v: u, t: u }));
+    const podeExcluir = !isNovoItem && (saldoMap[imf.id] || 0) === 0 && !movs.some(m => m.itemId === imf.id);
+    const inativarTxt = 'Este item possui saldo ou histórico de movimentações e não pode ser excluído. Utilize a opção Inativar.';
+
+    const onIMF = {
+      codigo: e => { const v = (e && e.target) ? e.target.value : e; this.setState(s => ({ almoxItemMF: { ...s.almoxItemMF, codigo: v }, almoxErro: '' })); },
+      nome: e => { const v = (e && e.target) ? e.target.value : e; this.setState(s => ({ almoxItemMF: { ...s.almoxItemMF, nome: v }, almoxErro: '' })); },
+      categoria: e => { const v = (e && e.target) ? e.target.value : e; this.setState(s => ({ almoxItemMF: { ...s.almoxItemMF, categoria: v }, almoxErro: '' })); },
+      unidade: e => { const v = (e && e.target) ? e.target.value : e; this.setState(s => ({ almoxItemMF: { ...s.almoxItemMF, unidade: v }, almoxErro: '' })); },
+      minimo: e => { const v = (e && e.target) ? e.target.value : e; this.setState(s => ({ almoxItemMF: { ...s.almoxItemMF, minimo: v }, almoxErro: '' })); },
+      custoMedio: e => { const v = (e && e.target) ? e.target.value : e; this.setState(s => ({ almoxItemMF: { ...s.almoxItemMF, custoMedio: v }, almoxErro: '' })); },
+      fornecedor: e => { const v = (e && e.target) ? e.target.value : e; this.setState(s => ({ almoxItemMF: { ...s.almoxItemMF, fornecedor: v }, almoxErro: '' })); },
+      ca: e => { const v = (e && e.target) ? e.target.value : e; this.setState(s => ({ almoxItemMF: { ...s.almoxItemMF, ca: v }, almoxErro: '' })); },
+      caValidade: e => { const v = (e && e.target) ? e.target.value : e; this.setState(s => ({ almoxItemMF: { ...s.almoxItemMF, caValidade: v }, almoxErro: '' })); },
+      vidaUtilDias: e => { const v = (e && e.target) ? e.target.value : e; this.setState(s => ({ almoxItemMF: { ...s.almoxItemMF, vidaUtilDias: v }, almoxErro: '' })); },
+      ativo: e => { const v = (e && e.target) ? e.target.checked : (e === true); this.setState(s => ({ almoxItemMF: { ...s.almoxItemMF, ativo: v }, almoxErro: '' })); }
+    };
+
+    const cmf = st.almoxColabMF || {};
+    const funcaoOpts = ['Motorista', 'Ajudante', 'Escritório', 'Outro'].map(f => ({ v: f, t: f }));
+    const luvaOpts = ['P', 'M', 'G', 'GG'].map(l => ({ v: l, t: l }));
+    const uniformeOpts = ['P', 'M', 'G', 'GG', 'XG'].map(u => ({ v: u, t: u }));
+    const caminhaoOpts = [{ v: '', t: 'Nenhum' }, ...CAMS.map(c => ({ v: c.placa, t: `${c.placa} · ${c.modelo}` }))];
+
+    const onCMF = {
+      nome: e => { const v = (e && e.target) ? e.target.value : e; this.setState(s => ({ almoxColabMF: { ...s.almoxColabMF, nome: v }, almoxErro: '' })); },
+      funcao: e => { const v = (e && e.target) ? e.target.value : e; this.setState(s => ({ almoxColabMF: { ...s.almoxColabMF, funcao: v }, almoxErro: '' })); },
+      bota: e => { const v = (e && e.target) ? e.target.value : e; this.setState(s => ({ almoxColabMF: { ...s.almoxColabMF, bota: v }, almoxErro: '' })); },
+      luva: e => { const v = (e && e.target) ? e.target.value : e; this.setState(s => ({ almoxColabMF: { ...s.almoxColabMF, luva: v }, almoxErro: '' })); },
+      uniforme: e => { const v = (e && e.target) ? e.target.value : e; this.setState(s => ({ almoxColabMF: { ...s.almoxColabMF, uniforme: v }, almoxErro: '' })); },
+      caminhao: e => { const v = (e && e.target) ? e.target.value : e; this.setState(s => ({ almoxColabMF: { ...s.almoxColabMF, caminhao: v }, almoxErro: '' })); },
+      ativo: e => { const v = (e && e.target) ? e.target.checked : (e === true); this.setState(s => ({ almoxColabMF: { ...s.almoxColabMF, ativo: v }, almoxErro: '' })); }
+    };
+
+    const tituloMov = 'Nova movimentação';
+    const tituloItem = imf && imf.id ? 'Editar item' : 'Novo item';
+    const tituloColab = cmf && cmf.id ? 'Editar colaborador' : 'Novo colaborador';
+
     const modal = {
       aberto: !!almoxModal,
       isMov: almoxModal === 'mov',
       isItem: almoxModal === 'item',
       isColab: almoxModal === 'colab',
-      fechar: () => this.setState({ almoxModal: null, almoxErro: '', almoxAviso: '' })
+      fechar: () => this.setState({ almoxModal: null, almoxErro: '', almoxAviso: '' }),
+
+      // Movimentação
+      mf,
+      tipo,
+      isEntrada,
+      isSaida,
+      isAjuste,
+      setTipo,
+      tipoBtns,
+      onMF,
+      itemOpts,
+      formaOpts,
+      destinoTipoOpts,
+      destinoOpts,
+      itemInfoTxt,
+      isEpiSel,
+      totalTxt,
+      diferencaTxt,
+      erro: st.almoxErro || '',
+      temErro: !!st.almoxErro,
+      aviso: st.almoxAviso || '',
+      temAviso: !!st.almoxAviso,
+      salvar: this.almoxSalvarMov,
+
+      // Item
+      imf,
+      onIMF,
+      catOpts,
+      unidadeOpts,
+      isNovoItem,
+      isItemExistente,
+      isEpiItem,
+      salvarItem: this.almoxSalvarItem,
+      excluirItem: this.almoxExcluirItem,
+      podeExcluir,
+      inativarTxt,
+
+      // Colaborador
+      cmf,
+      onCMF,
+      funcaoOpts,
+      luvaOpts,
+      uniformeOpts,
+      caminhaoOpts,
+      salvarColab: this.almoxSalvarColab,
+
+      // Títulos
+      tituloMov,
+      tituloItem,
+      tituloColab
     };
 
     return {
