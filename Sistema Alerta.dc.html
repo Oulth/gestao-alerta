@@ -2548,15 +2548,21 @@
                         <th scope="col" style="padding:14px 16px;text-align:right;font-weight:600">Total</th>
                         <th scope="col" style="padding:14px 16px;font-weight:600">Destino/origem</th>
                         <th scope="col" style="padding:14px 16px;font-weight:600">Responsável</th>
+                        <th scope="col" style="padding:14px 16px;text-align:right"><span style="position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0)">Ações</span></th>
                       </tr>
                     </thead>
                     <tbody>
                       <sc-for list="{{ almox.movs }}" as="m" hint-placeholder-count="5">
-                        <tr style="border-top:1px solid var(--gray-100)" style-hover="background:var(--gray-50)">
+                        <tr tabIndex="0" onClick="{{ m.editar }}" onKeyDown="{{ m.onKey }}" style="cursor:pointer;border-top:1px solid var(--gray-100)" style-hover="background:var(--gray-50)">
                           <td style="padding:14px 16px;font-weight:700;color:var(--teal-700)">#{{ m.num }}</td>
                           <td style="padding:14px 16px;color:var(--text-body);white-space:nowrap">{{ m.dataTxt }}</td>
                           <td style="padding:14px 16px">
-                            <span style="display:inline-block;padding:4px 10px;border-radius:999px;font-size:12px;font-weight:600;background:{{ m.tipoBg }};color:{{ m.tipoFg }}">{{ m.tipoTxt }}</span>
+                            <div style="display:flex;align-items:center;gap:6px">
+                              <span style="display:inline-block;padding:4px 10px;border-radius:999px;font-size:12px;font-weight:600;background:{{ m.tipoBg }};color:{{ m.tipoFg }}">{{ m.tipoTxt }}</span>
+                              <sc-if value="{{ m.estornada }}" hint-placeholder-val="{{ false }}">
+                                <span title="{{ m.estornoTxt }}" style="display:inline-block;padding:4px 10px;border-radius:999px;font-size:12px;font-weight:600;background:var(--gray-100);color:var(--text-muted)">Estornada</span>
+                              </sc-if>
+                            </div>
                           </td>
                           <td style="padding:14px 16px;font-weight:600;color:var(--text-strong)">{{ m.itemNome }}</td>
                           <td style="padding:14px 16px;text-align:right;font-weight:600;color:var(--text-strong);white-space:nowrap">{{ m.qtdTxt }}</td>
@@ -2564,6 +2570,11 @@
                           <td style="padding:14px 16px;text-align:right;font-weight:600;color:var(--text-strong);white-space:nowrap">{{ m.totalTxt }}</td>
                           <td style="padding:14px 16px;color:var(--text-body)">{{ m.destinoTxt }}</td>
                           <td style="padding:14px 16px;color:var(--text-muted)">{{ m.responsavel }}</td>
+                          <td style="padding:14px 16px;text-align:right">
+                            <button type="button" aria-label="{{ m.editarLabel }}" onClick="{{ m.editar }}" style="width:36px;height:36px;border-radius:10px;background:transparent;border:1px solid var(--border-default);cursor:pointer;display:inline-flex;align-items:center;justify-content:center;padding:0">
+                              <img src="https://unpkg.com/lucide-static@0.460.0/icons/pencil.svg" alt="" style="width:16px;height:16px;color:var(--text-strong)">
+                            </button>
+                          </td>
                         </tr>
                       </sc-for>
                     </tbody>
@@ -2574,10 +2585,18 @@
               <sc-if value="{{ almox.mobile }}" hint-placeholder-val="{{ false }}">
                 <div style="display:flex;flex-direction:column;gap:12px">
                   <sc-for list="{{ almox.movs }}" as="m" hint-placeholder-count="3">
-                    <div style="background:var(--white);border:1px solid var(--border-default);border-radius:16px;padding:16px;display:flex;flex-direction:column;gap:10px;box-shadow:var(--shadow-sm)">
+                    <div tabIndex="0" onClick="{{ m.editar }}" onKeyDown="{{ m.onKey }}" style="background:var(--white);border:1px solid var(--border-default);border-radius:16px;padding:16px;display:flex;flex-direction:column;gap:10px;box-shadow:var(--shadow-sm);cursor:pointer">
                       <div style="display:flex;justify-content:space-between;align-items:center">
                         <span style="font-size:13px;font-weight:700;color:var(--teal-700)">#{{ m.num }} · {{ m.dataTxt }}</span>
-                        <span style="display:inline-block;padding:4px 10px;border-radius:999px;font-size:12px;font-weight:600;background:{{ m.tipoBg }};color:{{ m.tipoFg }}">{{ m.tipoTxt }}</span>
+                        <div style="display:flex;align-items:center;gap:8px">
+                          <sc-if value="{{ m.estornada }}" hint-placeholder-val="{{ false }}">
+                            <span title="{{ m.estornoTxt }}" style="display:inline-block;padding:4px 10px;border-radius:999px;font-size:12px;font-weight:600;background:var(--gray-100);color:var(--text-muted)">Estornada</span>
+                          </sc-if>
+                          <span style="display:inline-block;padding:4px 10px;border-radius:999px;font-size:12px;font-weight:600;background:{{ m.tipoBg }};color:{{ m.tipoFg }}">{{ m.tipoTxt }}</span>
+                          <button type="button" aria-label="{{ m.editarLabel }}" onClick="{{ m.editar }}" style="width:36px;height:36px;border-radius:10px;background:transparent;border:1px solid var(--border-default);cursor:pointer;display:inline-flex;align-items:center;justify-content:center;padding:0">
+                            <img src="https://unpkg.com/lucide-static@0.460.0/icons/pencil.svg" alt="" style="width:16px;height:16px;color:var(--text-strong)">
+                          </button>
+                        </div>
                       </div>
                       <strong style="font-size:14px;color:var(--text-strong)">{{ m.itemNome }}</strong>
                       <div style="display:flex;justify-content:space-between;align-items:center;font-size:13px;color:var(--text-body)">
@@ -2617,7 +2636,10 @@
                     </sc-for>
                   </select>
                 </div>
-                <div>
+                <div style="display:flex;align-items:center;gap:10px">
+                  <x-import component-from-global-scope="DesentupidoraAlertaDesignSystem_e6b749.Button" variant="primary" size="sm" onClick="{{ almox.epi.registrarEntrega }}" hint-size="160px,36px">
+                    Registrar entrega
+                  </x-import>
                   <x-import component-from-global-scope="DesentupidoraAlertaDesignSystem_e6b749.Button" variant="ghost" size="sm" onClick="{{ almox.epi.imprimir }}" hint-size="140px,36px">
                     <img src="https://unpkg.com/lucide-static@0.460.0/icons/printer.svg" alt="" style="width:14px;height:14px;margin-right:6px;opacity:.8">
                     Imprimir ficha
@@ -2657,11 +2679,12 @@
                             <th scope="col" style="padding:14px 16px;font-weight:600">Validade do CA</th>
                             <th scope="col" style="padding:14px 16px;font-weight:600">Próxima troca</th>
                             <th scope="col" style="padding:14px 16px;font-weight:600">Situação</th>
+                            <th scope="col" style="padding:14px 16px;text-align:right"><span style="position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0)">Ações</span></th>
                           </tr>
                         </thead>
                         <tbody>
                           <sc-for list="{{ almox.epi.ficha }}" as="f" hint-placeholder-count="4">
-                            <tr style="border-top:1px solid var(--gray-100);background:{{ f.rowBg }}" style-hover="background:var(--gray-50)">
+                            <tr tabIndex="0" onClick="{{ f.editar }}" onKeyDown="{{ f.onKey }}" style="cursor:pointer;border-top:1px solid var(--gray-100);background:{{ f.rowBg }}" style-hover="background:var(--gray-50)">
                               <td style="padding:14px 16px;color:var(--text-body);white-space:nowrap">{{ f.dataTxt }}</td>
                               <td style="padding:14px 16px;font-weight:600;color:var(--text-strong)">{{ f.itemNome }}</td>
                               <td style="padding:14px 16px;text-align:right;font-weight:600;color:var(--text-strong);white-space:nowrap">{{ f.qtdTxt }}</td>
@@ -2670,6 +2693,11 @@
                               <td style="padding:14px 16px;color:var(--text-body);white-space:nowrap">{{ f.proximaTrocaTxt }}</td>
                               <td style="padding:14px 16px">
                                 <span style="display:inline-block;padding:4px 10px;border-radius:999px;font-size:12px;font-weight:600;background:{{ f.sitBg }};color:{{ f.sitFg }}">{{ f.situacaoTxt }}</span>
+                              </td>
+                              <td style="padding:14px 16px;text-align:right">
+                                <button type="button" aria-label="{{ f.editarLabel }}" onClick="{{ f.editar }}" style="width:36px;height:36px;border-radius:10px;background:transparent;border:1px solid var(--border-default);cursor:pointer;display:inline-flex;align-items:center;justify-content:center;padding:0">
+                                  <img src="https://unpkg.com/lucide-static@0.460.0/icons/pencil.svg" alt="" style="width:16px;height:16px;color:var(--text-strong)">
+                                </button>
                               </td>
                             </tr>
                           </sc-for>
@@ -2681,10 +2709,15 @@
                   <sc-if value="{{ almox.mobile }}" hint-placeholder-val="{{ false }}">
                     <div style="display:flex;flex-direction:column;gap:12px">
                       <sc-for list="{{ almox.epi.ficha }}" as="f" hint-placeholder-count="3">
-                        <div style="background:var(--white);border:1px solid var(--border-default);border-radius:16px;padding:16px;display:flex;flex-direction:column;gap:10px;box-shadow:var(--shadow-sm);background-color:{{ f.rowBg }}">
+                        <div tabIndex="0" onClick="{{ f.editar }}" onKeyDown="{{ f.onKey }}" style="background:var(--white);border:1px solid var(--border-default);border-radius:16px;padding:16px;display:flex;flex-direction:column;gap:10px;box-shadow:var(--shadow-sm);background-color:{{ f.rowBg }};cursor:pointer">
                           <div style="display:flex;justify-content:space-between;align-items:center">
                             <span style="font-size:13px;font-weight:700;color:var(--teal-700)">{{ f.dataTxt }}</span>
-                            <span style="display:inline-block;padding:4px 10px;border-radius:999px;font-size:12px;font-weight:600;background:{{ f.sitBg }};color:{{ f.sitFg }}">{{ f.situacaoTxt }}</span>
+                            <div style="display:flex;align-items:center;gap:8px">
+                              <span style="display:inline-block;padding:4px 10px;border-radius:999px;font-size:12px;font-weight:600;background:{{ f.sitBg }};color:{{ f.sitFg }}">{{ f.situacaoTxt }}</span>
+                              <button type="button" aria-label="{{ f.editarLabel }}" onClick="{{ f.editar }}" style="width:36px;height:36px;border-radius:10px;background:transparent;border:1px solid var(--border-default);cursor:pointer;display:inline-flex;align-items:center;justify-content:center;padding:0">
+                                <img src="https://unpkg.com/lucide-static@0.460.0/icons/pencil.svg" alt="" style="width:16px;height:16px;color:var(--text-strong)">
+                              </button>
+                            </div>
                           </div>
                           <strong style="font-size:14px;color:var(--text-strong)">{{ f.itemNome }}</strong>
                           <div style="display:flex;justify-content:space-between;align-items:center;font-size:13px;color:var(--text-body)">
@@ -2797,6 +2830,10 @@
                     <sc-if value="{{ almox.modal.isMov }}" hint-placeholder-val="{{ true }}">
                       <h2 id="almox-modal-title" style="margin:0;font-size:24px;font-weight:700;letter-spacing:-.01em;color:var(--teal-700)">{{ almox.modal.tituloMov }}</h2>
                       <span style="font-size:14px;color:var(--text-muted)">Entrada, saída ou ajuste de estoque</span>
+                    </sc-if>
+                    <sc-if value="{{ almox.modal.isMovEdit }}" hint-placeholder-val="{{ false }}">
+                      <h2 id="almox-modal-title" style="margin:0;font-size:24px;font-weight:700;letter-spacing:-.01em;color:var(--teal-700)">{{ almox.modal.tituloMovEdit }}</h2>
+                      <span style="font-size:14px;color:var(--text-muted)">Edição ou estorno de movimentação</span>
                     </sc-if>
                     <sc-if value="{{ almox.modal.isItem }}" hint-placeholder-val="{{ false }}">
                       <h2 id="almox-modal-title" style="margin:0;font-size:24px;font-weight:700;letter-spacing:-.01em;color:var(--teal-700)">{{ almox.modal.tituloItem }}</h2>
@@ -2950,6 +2987,133 @@
                     <div style="display:flex;flex-wrap:wrap;justify-content:flex-end;gap:10px;border-top:1px solid var(--border-default);padding-top:14px">
                       <button type="button" onClick="{{ almox.modal.fechar }}" style="height:38px;padding:0 16px;border-radius:var(--radius-sm);border:1px solid var(--border-default);background:transparent;color:var(--text-strong);font-family:inherit;font-size:14px;font-weight:600;cursor:pointer">Cancelar</button>
                       <button type="button" onClick="{{ almox.modal.salvar }}" style="height:38px;padding:0 20px;border-radius:var(--radius-sm);border:none;background:var(--teal-700);color:var(--white);font-family:inherit;font-size:14px;font-weight:600;cursor:pointer">Registrar</button>
+                    </div>
+                  </div>
+                </sc-if>
+
+                <sc-if value="{{ almox.modal.isMovEdit }}" hint-placeholder-val="{{ false }}">
+                  <div style="display:flex;flex-direction:column;gap:16px">
+                    <div style="background:var(--gray-50);border:1px solid var(--border-default);border-radius:12px;padding:14px 16px;display:flex;flex-direction:column;gap:8px">
+                      <div style="display:flex;justify-content:space-between;align-items:center">
+                        <span style="font-size:15px;font-weight:700;color:var(--teal-700)">#{{ almox.modal.memf.num }}</span>
+                        <div style="display:flex;align-items:center;gap:6px">
+                          <span style="display:inline-block;padding:4px 10px;border-radius:999px;font-size:12px;font-weight:600;background:{{ almox.modal.memf.tipoBg }};color:{{ almox.modal.memf.tipoFg }}">{{ almox.modal.memf.tipoTxt }}</span>
+                          <sc-if value="{{ almox.modal.memf.estornado }}" hint-placeholder-val="{{ false }}">
+                            <span style="display:inline-block;padding:4px 10px;border-radius:999px;font-size:12px;font-weight:600;background:var(--gray-100);color:var(--text-muted)">Estornada</span>
+                          </sc-if>
+                        </div>
+                      </div>
+                      <strong style="font-size:14px;color:var(--text-strong)">{{ almox.modal.memf.itemNome }}</strong>
+                      <div style="display:flex;justify-content:space-between;align-items:center;font-size:13px;color:var(--text-body)">
+                        <span>Quantidade: <strong>{{ almox.modal.memf.qtdTxt }}</strong></span>
+                        <strong style="font-size:14px;color:var(--text-strong)">Total: {{ almox.modal.memf.totalTxt }}</strong>
+                      </div>
+                    </div>
+
+                    <p style="margin:0;font-size:13px;color:var(--text-muted)">
+                      Para corrigir a quantidade, use Estornar.
+                    </p>
+
+                    <sc-if value="{{ almox.modal.memf.isEntrada }}" hint-placeholder-val="{{ false }}">
+                      <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:14px">
+                        <label for="almox-me-data-ent" style="display:flex;flex-direction:column;gap:6px;font-family:var(--font-sans)">
+                          <span style="font-size:14px;font-weight:600;color:var(--text-strong)">Data da movimentação *</span>
+                          <input id="almox-me-data-ent" type="date" value="{{ almox.modal.memf.data }}" onChange="{{ almox.modal.onMEMF.data }}" style="height:48px;padding:0 16px;background:var(--white);border-radius:var(--radius-sm);border:1.5px solid var(--border-default);font-family:inherit;font-size:15px;color:var(--text-strong);outline:none;box-sizing:border-box;width:100%">
+                        </label>
+                        <label for="almox-me-forn" style="display:flex;flex-direction:column;gap:6px;font-family:var(--font-sans)">
+                          <span style="font-size:14px;font-weight:600;color:var(--text-strong)">Fornecedor</span>
+                          <input id="almox-me-forn" type="text" value="{{ almox.modal.memf.fornecedor }}" onChange="{{ almox.modal.onMEMF.fornecedor }}" placeholder="Nome do fornecedor" style="height:48px;padding:0 16px;background:var(--white);border-radius:var(--radius-sm);border:1.5px solid var(--border-default);font-family:inherit;font-size:15px;color:var(--text-strong);outline:none;box-sizing:border-box;width:100%">
+                        </label>
+                        <div style="grid-column:1/-1">
+                          <label for="almox-me-nf" style="display:flex;flex-direction:column;gap:6px;font-family:var(--font-sans)">
+                            <span style="font-size:14px;font-weight:600;color:var(--text-strong)">Nº NF</span>
+                            <input id="almox-me-nf" type="text" value="{{ almox.modal.memf.nf }}" onChange="{{ almox.modal.onMEMF.nf }}" placeholder="Ex.: 45890" style="height:48px;padding:0 16px;background:var(--white);border-radius:var(--radius-sm);border:1.5px solid var(--border-default);font-family:inherit;font-size:15px;color:var(--text-strong);outline:none;box-sizing:border-box;width:100%">
+                          </label>
+                        </div>
+                      </div>
+                    </sc-if>
+
+                    <sc-if value="{{ almox.modal.memf.isSaida }}" hint-placeholder-val="{{ false }}">
+                      <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:14px">
+                        <label for="almox-me-data-sai" style="display:flex;flex-direction:column;gap:6px;font-family:var(--font-sans)">
+                          <span style="font-size:14px;font-weight:600;color:var(--text-strong)">Data da movimentação *</span>
+                          <input id="almox-me-data-sai" type="date" value="{{ almox.modal.memf.data }}" onChange="{{ almox.modal.onMEMF.data }}" style="height:48px;padding:0 16px;background:var(--white);border-radius:var(--radius-sm);border:1.5px solid var(--border-default);font-family:inherit;font-size:15px;color:var(--text-strong);outline:none;box-sizing:border-box;width:100%">
+                        </label>
+                        <label for="almox-me-tipo-dest" style="display:flex;flex-direction:column;gap:6px;font-family:var(--font-sans)">
+                          <span style="font-size:14px;font-weight:600;color:var(--text-strong)">Tipo de destino *</span>
+                          <select id="almox-me-tipo-dest" value="{{ almox.modal.memf.destinoTipo }}" onChange="{{ almox.modal.onMEMF.destinoTipo }}" style="height:48px;padding:0 16px;background:var(--white);border-radius:var(--radius-sm);border:1.5px solid var(--border-default);font-family:inherit;font-size:15px;color:var(--text-strong);outline:none;box-sizing:border-box;width:100%">
+                            <sc-for list="{{ almox.modal.memfDestinoTipoOpts }}" as="opt">
+                              <option value="{{ opt.v }}">{{ opt.t }}</option>
+                            </sc-for>
+                          </select>
+                        </label>
+                        <div style="grid-column:1/-1">
+                          <label for="almox-me-dest" style="display:flex;flex-direction:column;gap:6px;font-family:var(--font-sans)">
+                            <span style="font-size:14px;font-weight:600;color:var(--text-strong)">Destino *</span>
+                            <select id="almox-me-dest" value="{{ almox.modal.memf.destinoId }}" onChange="{{ almox.modal.onMEMF.destinoId }}" style="height:48px;padding:0 16px;background:var(--white);border-radius:var(--radius-sm);border:1.5px solid var(--border-default);font-family:inherit;font-size:15px;color:var(--text-strong);outline:none;box-sizing:border-box;width:100%">
+                              <option value="">Selecione o destino...</option>
+                              <sc-for list="{{ almox.modal.memfDestinoOpts }}" as="opt">
+                                <option value="{{ opt.v }}">{{ opt.t }}</option>
+                              </sc-for>
+                            </select>
+                          </label>
+                        </div>
+                        <sc-if value="{{ almox.modal.memf.isEpi }}" hint-placeholder-val="{{ false }}">
+                          <label for="almox-me-ca" style="display:flex;flex-direction:column;gap:6px;font-family:var(--font-sans)">
+                            <span style="font-size:14px;font-weight:600;color:var(--text-strong)">Certificado de Aprovação (CA)</span>
+                            <input id="almox-me-ca" type="text" value="{{ almox.modal.memf.ca }}" onChange="{{ almox.modal.onMEMF.ca }}" placeholder="Ex.: 38240" style="height:48px;padding:0 16px;background:var(--white);border-radius:var(--radius-sm);border:1.5px solid var(--border-default);font-family:inherit;font-size:15px;color:var(--text-strong);outline:none;box-sizing:border-box;width:100%">
+                          </label>
+                          <label for="almox-me-caval" style="display:flex;flex-direction:column;gap:6px;font-family:var(--font-sans)">
+                            <span style="font-size:14px;font-weight:600;color:var(--text-strong)">Validade do CA</span>
+                            <input id="almox-me-caval" type="date" value="{{ almox.modal.memf.caValidade }}" onChange="{{ almox.modal.onMEMF.caValidade }}" style="height:48px;padding:0 16px;background:var(--white);border-radius:var(--radius-sm);border:1.5px solid var(--border-default);font-family:inherit;font-size:15px;color:var(--text-strong);outline:none;box-sizing:border-box;width:100%">
+                          </label>
+                        </sc-if>
+                      </div>
+                    </sc-if>
+
+                    <sc-if value="{{ almox.modal.memf.isAjuste }}" hint-placeholder-val="{{ false }}">
+                      <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:14px">
+                        <label for="almox-me-data-aju" style="display:flex;flex-direction:column;gap:6px;font-family:var(--font-sans)">
+                          <span style="font-size:14px;font-weight:600;color:var(--text-strong)">Data da movimentação *</span>
+                          <input id="almox-me-data-aju" type="date" value="{{ almox.modal.memf.data }}" onChange="{{ almox.modal.onMEMF.data }}" style="height:48px;padding:0 16px;background:var(--white);border-radius:var(--radius-sm);border:1.5px solid var(--border-default);font-family:inherit;font-size:15px;color:var(--text-strong);outline:none;box-sizing:border-box;width:100%">
+                        </label>
+                        <div style="grid-column:1/-1">
+                          <label for="almox-me-motivo" style="display:flex;flex-direction:column;gap:6px;font-family:var(--font-sans)">
+                            <span style="font-size:14px;font-weight:600;color:var(--text-strong)">Motivo do ajuste *</span>
+                            <input id="almox-me-motivo" type="text" value="{{ almox.modal.memf.motivo }}" onChange="{{ almox.modal.onMEMF.motivo }}" placeholder="Ex.: Inventário periódico, avaria em operação, etc." style="height:48px;padding:0 16px;background:var(--white);border-radius:var(--radius-sm);border:1.5px solid var(--border-default);font-family:inherit;font-size:15px;color:var(--text-strong);outline:none;box-sizing:border-box;width:100%">
+                          </label>
+                        </div>
+                      </div>
+                    </sc-if>
+
+                    <sc-if value="{{ almox.modal.confirmEstornoAberto }}" hint-placeholder-val="{{ false }}">
+                      <div style="display:flex;flex-direction:column;gap:12px;padding:14px 16px;background:var(--amber-100);border:1px solid var(--amber-800);border-radius:12px;color:var(--amber-800)">
+                        <div style="font-size:14px;font-weight:600">
+                          Estornar #{{ almox.modal.memf.num }}? Será criada uma movimentação inversa. Esta ação não pode ser desfeita.
+                        </div>
+                        <div style="display:flex;justify-content:flex-end;gap:10px">
+                          <button type="button" onClick="{{ almox.modal.cancelarEstorno }}" style="height:36px;padding:0 14px;border-radius:var(--radius-sm);border:1px solid var(--amber-800);background:transparent;color:var(--amber-800);font-family:inherit;font-size:13px;font-weight:600;cursor:pointer">Cancelar</button>
+                          <button type="button" onClick="{{ almox.modal.confirmarEstorno }}" style="height:36px;padding:0 16px;border-radius:var(--radius-sm);border:none;background:var(--danger);color:var(--white);font-family:inherit;font-size:13px;font-weight:600;cursor:pointer">Confirmar estorno</button>
+                        </div>
+                      </div>
+                    </sc-if>
+
+                    <sc-if value="{{ almox.modal.temErro }}" hint-placeholder-val="{{ false }}">
+                      <div role="alert" style="padding:10px 14px;border-radius:8px;background:var(--gray-100);color:var(--danger);font-size:13px;font-weight:600;border:1px solid var(--danger)">
+                        {{ almox.modal.erro }}
+                      </div>
+                    </sc-if>
+
+                    <div style="display:flex;flex-wrap:wrap;justify-content:space-between;align-items:center;gap:10px;border-top:1px solid var(--border-default);padding-top:14px">
+                      <div>
+                        <sc-if value="{{ almox.modal.podeEstornar }}" hint-placeholder-val="{{ false }}">
+                          <button type="button" onClick="{{ almox.modal.pedirEstorno }}" style="height:38px;padding:0 16px;border-radius:var(--radius-sm);border:1px solid var(--danger);background:transparent;color:var(--danger);font-family:inherit;font-size:14px;font-weight:600;cursor:pointer">Estornar</button>
+                        </sc-if>
+                      </div>
+                      <div style="display:flex;gap:10px">
+                        <button type="button" onClick="{{ almox.modal.fechar }}" style="height:38px;padding:0 16px;border-radius:var(--radius-sm);border:1px solid var(--border-default);background:transparent;color:var(--text-strong);font-family:inherit;font-size:14px;font-weight:600;cursor:pointer">Cancelar</button>
+                        <button type="button" onClick="{{ almox.modal.salvarMovEdit }}" style="height:38px;padding:0 20px;border-radius:var(--radius-sm);border:none;background:var(--teal-700);color:var(--white);font-family:inherit;font-size:14px;font-weight:600;cursor:pointer">Salvar</button>
+                      </div>
                     </div>
                   </div>
                 </sc-if>
@@ -3703,7 +3867,7 @@ class Component extends DCLogic {
     precos: (typeof window !== 'undefined' && window.localStorage && window.localStorage.getItem('alerta_precos')) ? JSON.parse(window.localStorage.getItem('alerta_precos')) : DEFAULT_PRECOS,
     editPrecosOpen: false,
     epForm: { transpViagem: 600, transpKm: 6, fossa: 650, gordura: 590, desentupimento: 350, hidro: 600, oleo: 400 },
-    almoxTab: 'Estoque', almoxQ: '', almoxCat: '', almoxStatus: '', almoxMovTipo: '', almoxMovDest: '', almoxData: null, almoxModal: null, almoxMF: { ...ALMOX_MF_VAZIO }, almoxItemMF: null, almoxColabMF: null, almoxErro: '', almoxAviso: '', almoxColabSel: ''
+    almoxTab: 'Estoque', almoxQ: '', almoxCat: '', almoxStatus: '', almoxMovTipo: '', almoxMovDest: '', almoxData: null, almoxModal: null, almoxMF: { ...ALMOX_MF_VAZIO }, almoxMovEditMF: null, almoxConfirmEstorno: false, almoxItemMF: null, almoxColabMF: null, almoxErro: '', almoxAviso: '', almoxColabSel: ''
   };
   componentDidMount() {
     this._r = () => this.setState({ w: window.innerWidth });
@@ -3718,7 +3882,7 @@ class Component extends DCLogic {
         if (this.state.osModal) return this.osClose();
         if (this.state.osMenu) return this.setState({ osMenu: null });
         if (this.state.comMenu) return this.setState({ comMenu: null });
-        if (this.state.almoxModal) return this.setState({ almoxModal: null, almoxErro: '', almoxAviso: '' });
+        if (this.state.almoxModal) return this.setState({ almoxModal: null, almoxMovEditMF: null, almoxConfirmEstorno: false, almoxErro: '', almoxAviso: '' });
         this.setState({ osOpen: false, tentou: false, lgModal: null });
       }
     };
@@ -6573,7 +6737,7 @@ class Component extends DCLogic {
     if (rowSel) {
       const almData = this.almoxData();
       const almItensMap = (almData.itens || []).reduce((acc, it) => { acc[it.id] = it; return acc; }, {});
-      const matMovs = (almData.movs || []).filter(m => m.tipo === 'saida' && m.destinoTipo === 'os' && Number(m.destinoId) === Number(rowSel.n));
+      const matMovs = (almData.movs || []).filter(m => m.tipo === 'saida' && m.destinoTipo === 'os' && Number(m.destinoId) === Number(rowSel.n) && !m.estornadoPor);
       let matSoma = 0;
       const matList = matMovs.map(m => {
         const it = almItensMap[m.itemId] || {};
@@ -6780,7 +6944,7 @@ class Component extends DCLogic {
     const colabAtual = colabs.find(c => c.nome === colabSel) || colabs[0] || null;
 
     const fichaEpiMovs = movs
-      .filter(m => m.tipo === 'saida' && m.destinoTipo === 'colab' && m.destinoId === colabSel)
+      .filter(m => m.tipo === 'saida' && m.destinoTipo === 'colab' && m.destinoId === colabSel && !m.estornadoPor)
       .sort((a, b) => (b.data || '').localeCompare(a.data || ''));
 
     return {
@@ -6843,7 +7007,10 @@ class Component extends DCLogic {
         const it = itensMap[m.itemId];
         const tipoTxt = m.tipo === 'entrada' ? 'Entrada' : (m.tipo === 'saida' ? 'Saída' : 'Ajuste');
         let destinoTxt = '—';
-        if (m.tipo === 'entrada') {
+        if (m.estornoDe) {
+          const orig = movs.find(o => o.id === m.estornoDe);
+          destinoTxt = `Estorno de ${orig ? orig.num : m.estornoDe}`;
+        } else if (m.tipo === 'entrada') {
           destinoTxt = `${m.fornecedor || 'Fornecedor'}${m.nf ? ` · NF ${m.nf}` : ''}`;
         } else if (m.tipo === 'saida') {
           if (m.destinoTipo === 'os') destinoTxt = `OS #${m.destinoId}`;
@@ -6875,7 +7042,9 @@ class Component extends DCLogic {
         const m = fichaEpiMovs[i];
         const it = itensMap[m.itemId] || {};
         const proximaTrocaData = (m.data && it.vidaUtilDias) ? addD(m.data, it.vidaUtilDias) : '';
-        const caVencido = !!(it.caValidade && it.caValidade < HOJE);
+        const caVal = (m.caValidade !== undefined && m.caValidade !== '') ? m.caValidade : (it.caValidade || '');
+        const caNum = (m.ca !== undefined && m.ca !== '') ? m.ca : (it.ca || '—');
+        const caVencido = !!(caVal && caVal < HOJE);
         const trocaAtrasada = !!(proximaTrocaData && proximaTrocaData < HOJE);
         const situacaoTxt = caVencido ? 'CA vencido' : (trocaAtrasada ? 'Troca atrasada' : 'Em dia');
         linhas.push([
@@ -6883,8 +7052,8 @@ class Component extends DCLogic {
           m.data ? ddmmyy(m.data) : '',
           esc(it.nome || m.itemId || ''),
           intBr(m.qtd),
-          esc(it.ca || '—'),
-          it.caValidade ? ddmmyy(it.caValidade) : '—',
+          esc(caNum),
+          caVal ? ddmmyy(caVal) : '—',
           proximaTrocaData ? ddmmyy(proximaTrocaData) : '—',
           esc(situacaoTxt)
         ].join(';'));
@@ -7056,7 +7225,9 @@ class Component extends DCLogic {
         fornecedor: '',
         nf: '',
         motivo: '',
-        responsavel: 'Escritório'
+        responsavel: 'Escritório',
+        ca: item.categoria === 'EPI' ? (item.ca || '') : '',
+        caValidade: item.categoria === 'EPI' ? (item.caValidade || '') : ''
       };
 
     } else if (tipo === 'ajuste') {
@@ -7115,6 +7286,227 @@ class Component extends DCLogic {
     } else if (tipo === 'ajuste') {
       this.toast(`Ajuste ${num} registrado`);
     }
+  };
+
+  abrirMovEdit = (m) => {
+    const { itens } = this.almoxListas();
+    const it = itens.find(i => i.id === m.itemId);
+    const itemNome = it ? `${it.codigo} · ${it.nome}` : (m.itemId || '—');
+    const isEpi = it ? it.categoria === 'EPI' : false;
+
+    let sinal = '';
+    if (m.tipo === 'saida') sinal = '- ';
+    else if (m.tipo === 'entrada') sinal = '+ ';
+    else if (m.tipo === 'ajuste') sinal = m.qtd >= 0 ? '+ ' : '- ';
+
+    const qtdNum = Math.abs(Number(m.qtd) || 0);
+    const qtdTxt = `${sinal}${qtdNum} ${it ? it.unidade : 'un'}`;
+    const totalTxt = brl(qtdNum * (Number(m.custoUnit) || 0));
+
+    this.setState({
+      almoxModal: 'movEdit',
+      almoxMovEditMF: {
+        id: m.id,
+        num: m.num,
+        tipo: m.tipo,
+        itemNome,
+        qtdTxt,
+        totalTxt,
+        data: m.data || HOJE,
+        fornecedor: m.fornecedor || '',
+        nf: m.nf || '',
+        destinoTipo: m.destinoTipo || (isEpi ? 'colab' : 'os'),
+        destinoId: m.destinoId != null ? String(m.destinoId) : '',
+        motivo: m.motivo || '',
+        estornado: !!m.estornadoPor,
+        ehEstorno: !!m.estornoDe,
+        isEpi,
+        ca: m.ca !== undefined ? m.ca : (it ? (it.ca || '') : ''),
+        caValidade: m.caValidade !== undefined ? m.caValidade : (it ? (it.caValidade || '') : '')
+      },
+      almoxConfirmEstorno: false,
+      almoxErro: '',
+      almoxAviso: ''
+    });
+  };
+
+  almoxSalvarMovEdit = () => {
+    const st = this.state;
+    const memf = st.almoxMovEditMF;
+    if (!memf) return;
+    const d = this.almoxData();
+    const movs = d.movs || [];
+
+    if (!memf.data) {
+      this.setState({ almoxErro: 'Informe a data.' });
+      return;
+    }
+    if (memf.tipo === 'saida') {
+      if (memf.isEpi && memf.destinoTipo !== 'colab') {
+        this.setState({ almoxErro: 'EPI só pode ser entregue a um colaborador.' });
+        return;
+      }
+      if (!memf.destinoId && memf.destinoId !== 0) {
+        this.setState({ almoxErro: 'Selecione o destino.' });
+        return;
+      }
+    }
+    if (memf.tipo === 'ajuste') {
+      if (!memf.motivo || !memf.motivo.trim()) {
+        this.setState({ almoxErro: 'Informe o motivo.' });
+        return;
+      }
+    }
+
+    const novosMovs = movs.map(m => {
+      if (m.id === memf.id) {
+        return {
+          ...m,
+          data: memf.data,
+          ...(m.tipo === 'entrada' ? {
+            fornecedor: (memf.fornecedor || '').trim(),
+            nf: (memf.nf || '').trim()
+          } : {}),
+          ...(m.tipo === 'saida' ? {
+            destinoTipo: memf.destinoTipo,
+            destinoId: memf.destinoTipo === 'os' ? Number(memf.destinoId) : memf.destinoId,
+            ...(memf.isEpi ? {
+              ca: (memf.ca || '').trim(),
+              caValidade: memf.caValidade || ''
+            } : {})
+          } : {}),
+          ...(m.tipo === 'ajuste' ? {
+            motivo: (memf.motivo || '').trim()
+          } : {})
+        };
+      }
+      return m;
+    });
+
+    this.setState({
+      almoxData: {
+        ...d,
+        movs: novosMovs
+      },
+      almoxModal: null,
+      almoxMovEditMF: null,
+      almoxConfirmEstorno: false,
+      almoxErro: '',
+      almoxAviso: ''
+    });
+
+    this.toast(`Movimentação ${memf.num} atualizada`);
+  };
+
+  almoxEstornar = () => {
+    const st = this.state;
+    const memf = st.almoxMovEditMF;
+    if (!memf) return;
+    const d = this.almoxData();
+    const { itens, movs, saldoMap } = this.almoxListas();
+    const orig = movs.find(m => m.id === memf.id);
+    if (!orig) {
+      this.setState({ almoxErro: 'Movimentação original não encontrada.' });
+      return;
+    }
+    if (orig.estornadoPor || orig.estornoDe) {
+      this.setState({ almoxErro: 'Esta movimentação não pode ser estornada.' });
+      return;
+    }
+
+    const item = itens.find(it => it.id === orig.itemId);
+    if (!item) {
+      this.setState({ almoxErro: 'Item não encontrado.' });
+      return;
+    }
+    const saldoAtual = saldoMap[item.id] || 0;
+
+    let novoTipo = '';
+    let novoQtd = 0;
+    let novoCustoUnit = Number(orig.custoUnit) || 0;
+    let novoNum = '';
+    let novosItens = [...itens];
+
+    if (orig.tipo === 'entrada') {
+      novoTipo = 'saida';
+      novoQtd = Number(orig.qtd) || 0;
+      if (saldoAtual < novoQtd) {
+        this.setState({
+          almoxErro: `Não é possível estornar: saldo atual ${saldoAtual} ${item.unidade} é menor que a entrada`
+        });
+        return;
+      }
+      novoNum = almoxProxNum(movs, '#S-');
+
+    } else if (orig.tipo === 'saida') {
+      novoTipo = 'entrada';
+      novoQtd = Number(orig.qtd) || 0;
+      novoCustoUnit = Number(orig.custoUnit) || 0;
+      novoNum = almoxProxNum(movs, '#E-');
+
+      const saldoAnt = saldoAtual;
+      const cmAnt = Number(item.custoMedio) || 0;
+      const novoCustoMedio = saldoAnt <= 0 ? novoCustoUnit : ((saldoAnt * cmAnt) + (novoQtd * novoCustoUnit)) / (saldoAnt + novoQtd);
+
+      novosItens = itens.map(it => {
+        if (it.id === item.id) {
+          return {
+            ...it,
+            custoMedio: Math.round(novoCustoMedio * 100) / 100
+          };
+        }
+        return it;
+      });
+
+    } else if (orig.tipo === 'ajuste') {
+      novoTipo = 'ajuste';
+      novoQtd = -(Number(orig.qtd) || 0);
+      novoNum = almoxProxNum(movs, '#A-');
+    }
+
+    const novoMov = {
+      id: 'M' + (movs.length + 1) + '-' + Date.now(),
+      num: novoNum,
+      tipo: novoTipo,
+      data: HOJE,
+      itemId: item.id,
+      qtd: novoQtd,
+      custoUnit: novoCustoUnit,
+      destinoTipo: orig.destinoTipo || null,
+      destinoId: orig.destinoId || '',
+      fornecedor: orig.fornecedor || '',
+      nf: orig.nf || '',
+      motivo: `Estorno de ${orig.num}`,
+      responsavel: 'Escritório',
+      estornoDe: orig.id,
+      ca: orig.ca || '',
+      caValidade: orig.caValidade || ''
+    };
+
+    const novosMovs = movs.map(m => {
+      if (m.id === orig.id) {
+        return {
+          ...m,
+          estornadoPor: novoNum
+        };
+      }
+      return m;
+    });
+
+    this.setState({
+      almoxData: {
+        ...d,
+        itens: novosItens,
+        movs: [novoMov, ...novosMovs]
+      },
+      almoxModal: null,
+      almoxMovEditMF: null,
+      almoxConfirmEstorno: false,
+      almoxErro: '',
+      almoxAviso: ''
+    });
+
+    this.toast(`Estorno ${novoNum} registrado`);
   };
 
   almoxSalvarItem = () => {
@@ -7448,7 +7840,10 @@ class Component extends DCLogic {
       const totalTxt = brl(qtdNum * (Number(m.custoUnit) || 0));
 
       let destinoTxt = '—';
-      if (m.tipo === 'entrada') {
+      if (m.estornoDe) {
+        const orig = movs.find(o => o.id === m.estornoDe);
+        destinoTxt = `Estorno de ${orig ? orig.num : m.estornoDe}`;
+      } else if (m.tipo === 'entrada') {
         destinoTxt = `${m.fornecedor || 'Fornecedor'}${m.nf ? ` · NF ${m.nf}` : ''}`;
       } else if (m.tipo === 'saida') {
         if (m.destinoTipo === 'os') destinoTxt = `OS #${m.destinoId}`;
@@ -7458,6 +7853,20 @@ class Component extends DCLogic {
       } else if (m.tipo === 'ajuste') {
         destinoTxt = `Ajuste: ${m.motivo || 'Inventário'}`;
       }
+
+      const estornada = !!m.estornadoPor;
+      let estornoTxt = '';
+      if (m.estornoDe) {
+        const orig = movs.find(o => o.id === m.estornoDe);
+        estornoTxt = `Estorno de ${orig ? orig.num : m.estornoDe}`;
+      } else if (m.estornadoPor) {
+        estornoTxt = `Estornada por ${m.estornadoPor}`;
+      }
+
+      const editar = e => {
+        if (e && e.stopPropagation) e.stopPropagation();
+        this.abrirMovEdit(m);
+      };
 
       return {
         id: m.id,
@@ -7471,7 +7880,12 @@ class Component extends DCLogic {
         custoTxt,
         totalTxt,
         destinoTxt,
-        responsavel: m.responsavel || 'Escritório'
+        responsavel: m.responsavel || 'Escritório',
+        estornada,
+        estornoTxt,
+        editarLabel: `Editar ${m.num}`,
+        editar,
+        onKey: e => { if (e && e.key === 'Enter') editar(e); }
       };
     });
 
@@ -7550,7 +7964,9 @@ class Component extends DCLogic {
     const ficha = fichaEpiMovs.map(m => {
       const it = itensMap[m.itemId] || {};
       const proximaTrocaData = (m.data && it.vidaUtilDias) ? addD(m.data, it.vidaUtilDias) : '';
-      const caVencido = !!(it.caValidade && it.caValidade < HOJE);
+      const caVal = (m.caValidade !== undefined && m.caValidade !== '') ? m.caValidade : (it.caValidade || '');
+      const caNum = (m.ca !== undefined && m.ca !== '') ? m.ca : (it.ca || '—');
+      const caVencido = !!(caVal && caVal < HOJE);
       const trocaAtrasada = !!(proximaTrocaData && proximaTrocaData < HOJE);
       let rowBg = 'transparent';
       if (caVencido) rowBg = 'var(--gray-100)';
@@ -7560,20 +7976,28 @@ class Component extends DCLogic {
       const sitBg = caVencido ? 'var(--danger)' : (trocaAtrasada ? 'var(--amber-100)' : 'var(--lime-100)');
       const sitFg = caVencido ? 'var(--white)' : (trocaAtrasada ? 'var(--amber-800)' : 'var(--teal-800)');
 
+      const editar = e => {
+        if (e && e.stopPropagation) e.stopPropagation();
+        this.abrirMovEdit(m);
+      };
+
       return {
         id: m.id,
         dataTxt: ddmm(m.data),
         itemNome: it.nome || m.itemId,
         qtdTxt: `${m.qtd} ${it.unidade || 'un'}`,
-        ca: it.ca || '—',
-        caValidadeTxt: it.caValidade ? ddmmyy(it.caValidade) : '—',
+        ca: caNum,
+        caValidadeTxt: caVal ? ddmmyy(caVal) : '—',
         proximaTrocaTxt: proximaTrocaData ? ddmmyy(proximaTrocaData) : '—',
         caVencido,
         trocaAtrasada,
         rowBg,
         situacaoTxt,
         sitBg,
-        sitFg
+        sitFg,
+        editarLabel: `Editar ${m.num || 'entrega'}`,
+        editar,
+        onKey: e => { if (e && e.key === 'Enter') editar(e); }
       };
     });
 
@@ -7793,18 +8217,89 @@ class Component extends DCLogic {
       ativo: e => { const v = (e && e.target) ? e.target.checked : (e === true); this.setState(s => ({ almoxColabMF: { ...s.almoxColabMF, ativo: v }, almoxErro: '' })); }
     };
 
+    const isMovEdit = almoxModal === 'movEdit';
+    const memf = st.almoxMovEditMF || {};
+    const memfTipo = memf.tipo || 'entrada';
+    const memfIsEntrada = memfTipo === 'entrada';
+    const memfIsSaida = memfTipo === 'saida';
+    const memfIsAjuste = memfTipo === 'ajuste';
+    let memfTipoBg = 'var(--lime-100)';
+    let memfTipoFg = 'var(--teal-800)';
+    if (memfTipo === 'saida') {
+      memfTipoBg = 'var(--teal-700)';
+      memfTipoFg = 'var(--white)';
+    } else if (memfTipo === 'ajuste') {
+      memfTipoBg = 'var(--amber-100)';
+      memfTipoFg = 'var(--amber-800)';
+    }
+    const memfTipoTxt = memfTipo === 'entrada' ? 'Entrada' : (memfTipo === 'saida' ? 'Saída' : 'Ajuste');
+
+    const memfObj = {
+      ...memf,
+      isEntrada: memfIsEntrada,
+      isSaida: memfIsSaida,
+      isAjuste: memfIsAjuste,
+      tipoBg: memfTipoBg,
+      tipoFg: memfTipoFg,
+      tipoTxt: memfTipoTxt
+    };
+
+    const memfDestinoTipoOpts = memf.isEpi
+      ? [{ v: 'colab', t: 'Colaborador' }]
+      : destinoTipoOpts;
+
+    let memfDestinoOpts = [];
+    const memfDestTipo = memf.destinoTipo || (memf.isEpi ? 'colab' : 'os');
+    if (memfDestTipo === 'os') {
+      const de = addD(HOJE, -120);
+      const ate = addD(HOJE, 60);
+      memfDestinoOpts = this.osRows()
+        .filter(r => r.data >= de && r.data <= ate)
+        .map(r => ({ v: String(r.n), t: `#${r.n} · ${r.cliente} · ${ddmm(r.data)}` }));
+      if (memf.destinoId && !memfDestinoOpts.some(o => o.v === String(memf.destinoId))) {
+        memfDestinoOpts.unshift({ v: String(memf.destinoId), t: `OS #${memf.destinoId}` });
+      }
+    } else if (memfDestTipo === 'caminhao') {
+      memfDestinoOpts = CAMS.map(c => ({ v: c.placa, t: `${c.placa} · ${c.modelo}` }));
+      if (memf.destinoId && !memfDestinoOpts.some(o => o.v === String(memf.destinoId))) {
+        memfDestinoOpts.unshift({ v: String(memf.destinoId), t: String(memf.destinoId) });
+      }
+    } else if (memfDestTipo === 'colab') {
+      memfDestinoOpts = colabs.filter(c => c.ativo).map(c => ({ v: c.nome, t: c.nome }));
+      if (memf.destinoId && !memfDestinoOpts.some(o => o.v === String(memf.destinoId))) {
+        memfDestinoOpts.unshift({ v: String(memf.destinoId), t: String(memf.destinoId) });
+      }
+    }
+
+    const onMEMF = {
+      data: e => { const v = (e && e.target) ? e.target.value : e; this.setState(s => ({ almoxMovEditMF: { ...s.almoxMovEditMF, data: v }, almoxErro: '' })); },
+      fornecedor: e => { const v = (e && e.target) ? e.target.value : e; this.setState(s => ({ almoxMovEditMF: { ...s.almoxMovEditMF, fornecedor: v }, almoxErro: '' })); },
+      nf: e => { const v = (e && e.target) ? e.target.value : e; this.setState(s => ({ almoxMovEditMF: { ...s.almoxMovEditMF, nf: v }, almoxErro: '' })); },
+      destinoTipo: e => {
+        const v = (e && e.target) ? e.target.value : e;
+        if (this.state.almoxMovEditMF && this.state.almoxMovEditMF.isEpi && v !== 'colab') return;
+        this.setState(s => ({ almoxMovEditMF: { ...s.almoxMovEditMF, destinoTipo: v, destinoId: '' }, almoxErro: '' }));
+      },
+      destinoId: e => { const v = (e && e.target) ? e.target.value : e; this.setState(s => ({ almoxMovEditMF: { ...s.almoxMovEditMF, destinoId: v }, almoxErro: '' })); },
+      motivo: e => { const v = (e && e.target) ? e.target.value : e; this.setState(s => ({ almoxMovEditMF: { ...s.almoxMovEditMF, motivo: v }, almoxErro: '' })); },
+      ca: e => { const v = (e && e.target) ? e.target.value : e; this.setState(s => ({ almoxMovEditMF: { ...s.almoxMovEditMF, ca: v }, almoxErro: '' })); },
+      caValidade: e => { const v = (e && e.target) ? e.target.value : e; this.setState(s => ({ almoxMovEditMF: { ...s.almoxMovEditMF, caValidade: v }, almoxErro: '' })); }
+    };
+
     const tituloMov = 'Nova movimentação';
     const tituloItem = imf && imf.id ? 'Editar item' : 'Novo item';
     const tituloColab = cmf && cmf.id ? 'Editar colaborador' : 'Novo colaborador';
+    const tituloMovEdit = memf && memf.num ? `Movimentação ${memf.num}` : 'Editar movimentação';
 
     const modal = {
       aberto: !!almoxModal,
       isMov: almoxModal === 'mov',
+      isMovEdit,
       isItem: almoxModal === 'item',
       isColab: almoxModal === 'colab',
-      fechar: () => this.setState({ almoxModal: null, almoxErro: '', almoxAviso: '' }),
+      fechar: () => this.setState({ almoxModal: null, almoxMovEditMF: null, almoxConfirmEstorno: false, almoxErro: '', almoxAviso: '' }),
 
-      // Movimentação
+      // Nova Movimentação
       mf,
       tipo,
       isEntrada,
@@ -7826,6 +8321,18 @@ class Component extends DCLogic {
       aviso: st.almoxAviso || '',
       temAviso: !!st.almoxAviso,
       salvar: this.almoxSalvarMov,
+
+      // Edição de Movimentação
+      memf: memfObj,
+      memfDestinoTipoOpts,
+      memfDestinoOpts,
+      onMEMF,
+      confirmEstornoAberto: !!st.almoxConfirmEstorno,
+      podeEstornar: !!(st.almoxMovEditMF && !st.almoxMovEditMF.estornado && !st.almoxMovEditMF.ehEstorno && !st.almoxConfirmEstorno),
+      pedirEstorno: () => this.setState({ almoxConfirmEstorno: true }),
+      cancelarEstorno: () => this.setState({ almoxConfirmEstorno: false }),
+      confirmarEstorno: this.almoxEstornar,
+      salvarMovEdit: this.almoxSalvarMovEdit,
 
       // Item
       imf,
@@ -7853,6 +8360,7 @@ class Component extends DCLogic {
 
       // Títulos
       tituloMov,
+      tituloMovEdit,
       tituloItem,
       tituloColab
     };
@@ -7886,7 +8394,18 @@ class Component extends DCLogic {
         colabInfo,
         ficha,
         semFicha: ficha.length === 0,
-        imprimir
+        imprimir,
+        registrarEntrega: () => this.setState({
+          almoxModal: 'mov',
+          almoxMF: {
+            ...ALMOX_MF_VAZIO,
+            tipo: 'saida',
+            destinoTipo: 'colab',
+            destinoId: colabSel
+          },
+          almoxErro: '',
+          almoxAviso: ''
+        })
       },
       novaMov,
       novoItem,
