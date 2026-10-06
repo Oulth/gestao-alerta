@@ -2595,7 +2595,177 @@
             </div>
           </sc-if>
 
-          <!-- ALMOX:ABAS-EPI-COLAB -->
+          <sc-if value="{{ almox.isEpis }}" hint-placeholder-val="{{ false }}">
+            <div style="display:flex;flex-direction:column;gap:16px">
+              <div style="background:var(--white);border:1px solid var(--border-default);border-radius:16px;padding:16px;display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:12px;box-shadow:var(--shadow-sm)">
+                <div style="display:flex;align-items:center;gap:10px;flex:1;min-width:240px">
+                  <label for="almox-colab-sel" style="font-size:13px;font-weight:600;color:var(--text-strong);white-space:nowrap">Colaborador:</label>
+                  <select id="almox-colab-sel" value="{{ almox.epi.colabSel }}" onChange="{{ almox.epi.onColab }}" aria-label="Selecionar colaborador" style="height:44px;min-width:220px;padding:0 12px;border:1.5px solid var(--border-default);border-radius:12px;font-size:13px;font-family:inherit;background:var(--white);color:var(--text-strong);cursor:pointer">
+                    <sc-for list="{{ almox.epi.colabOpts }}" as="opt" hint-placeholder-count="5">
+                      <option value="{{ opt }}">{{ opt }}</option>
+                    </sc-for>
+                  </select>
+                </div>
+                <div>
+                  <x-import component-from-global-scope="DesentupidoraAlertaDesignSystem_e6b749.Button" variant="ghost" size="sm" onClick="{{ almox.epi.imprimir }}" hint-size="140px,36px">
+                    <img src="https://unpkg.com/lucide-static@0.460.0/icons/printer.svg" alt="" style="width:14px;height:14px;margin-right:6px;opacity:.8">
+                    Imprimir ficha
+                  </x-import>
+                </div>
+              </div>
+
+              <div id="almox-ficha-epi" style="display:flex;flex-direction:column;gap:16px">
+                <div style="background:var(--white);border:1px solid var(--border-default);border-radius:16px;padding:16px 20px;display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:12px;box-shadow:var(--shadow-sm)">
+                  <div style="display:flex;flex-direction:column;gap:4px">
+                    <div style="display:flex;flex-wrap:wrap;align-items:center;gap:10px">
+                      <strong style="font-size:16px;color:var(--text-strong)">{{ almox.epi.colabInfo.nome }}</strong>
+                      <span style="font-size:12px;font-weight:600;color:var(--teal-700);background:var(--lime-100);border-radius:999px;padding:2px 8px">{{ almox.epi.colabInfo.funcao }}</span>
+                    </div>
+                    <div style="display:flex;flex-wrap:wrap;align-items:center;gap:8px;font-size:13px;color:var(--text-muted)">
+                      <span>{{ almox.epi.colabInfo.tamanhosTxt }}</span>
+                      <span>·</span>
+                      <span>{{ almox.epi.colabInfo.caminhaoTxt }}</span>
+                    </div>
+                  </div>
+                </div>
+
+                <div style="display:flex;flex-direction:column;gap:12px">
+                  <div style="display:flex;align-items:center;justify-content:space-between">
+                    <h2 style="margin:0;font-size:16px;font-weight:700;color:var(--text-strong)">Ficha de EPI — NR-6</h2>
+                  </div>
+
+                  <sc-if value="{{ almox.desktop }}" hint-placeholder-val="{{ false }}">
+                    <div style="overflow-x:auto;background:var(--white);border:1px solid var(--border-default);border-radius:16px;box-shadow:var(--shadow-sm)">
+                      <table style="width:100%;border-collapse:collapse;font-size:13px">
+                        <thead>
+                          <tr style="background:var(--gray-50);border-bottom:1px solid var(--border-default);text-align:left;color:var(--text-muted)">
+                            <th scope="col" style="padding:14px 16px;font-weight:600">Data</th>
+                            <th scope="col" style="padding:14px 16px;font-weight:600">EPI</th>
+                            <th scope="col" style="padding:14px 16px;text-align:right;font-weight:600">Qtd</th>
+                            <th scope="col" style="padding:14px 16px;font-weight:600">CA</th>
+                            <th scope="col" style="padding:14px 16px;font-weight:600">Validade do CA</th>
+                            <th scope="col" style="padding:14px 16px;font-weight:600">Próxima troca</th>
+                            <th scope="col" style="padding:14px 16px;font-weight:600">Situação</th>
+                          </tr>
+                        </thead>
+                        <tbody>
+                          <sc-for list="{{ almox.epi.ficha }}" as="f" hint-placeholder-count="4">
+                            <tr style="border-top:1px solid var(--gray-100);background:{{ f.rowBg }}" style-hover="background:var(--gray-50)">
+                              <td style="padding:14px 16px;color:var(--text-body);white-space:nowrap">{{ f.dataTxt }}</td>
+                              <td style="padding:14px 16px;font-weight:600;color:var(--text-strong)">{{ f.itemNome }}</td>
+                              <td style="padding:14px 16px;text-align:right;font-weight:600;color:var(--text-strong);white-space:nowrap">{{ f.qtdTxt }}</td>
+                              <td style="padding:14px 16px;color:var(--text-body)">{{ f.ca }}</td>
+                              <td style="padding:14px 16px;color:var(--text-muted);white-space:nowrap">{{ f.caValidadeTxt }}</td>
+                              <td style="padding:14px 16px;color:var(--text-body);white-space:nowrap">{{ f.proximaTrocaTxt }}</td>
+                              <td style="padding:14px 16px">
+                                <span style="display:inline-block;padding:4px 10px;border-radius:999px;font-size:12px;font-weight:600;background:{{ f.sitBg }};color:{{ f.sitFg }}">{{ f.situacaoTxt }}</span>
+                              </td>
+                            </tr>
+                          </sc-for>
+                        </tbody>
+                      </table>
+                    </div>
+                  </sc-if>
+
+                  <sc-if value="{{ almox.mobile }}" hint-placeholder-val="{{ false }}">
+                    <div style="display:flex;flex-direction:column;gap:12px">
+                      <sc-for list="{{ almox.epi.ficha }}" as="f" hint-placeholder-count="3">
+                        <div style="background:var(--white);border:1px solid var(--border-default);border-radius:16px;padding:16px;display:flex;flex-direction:column;gap:10px;box-shadow:var(--shadow-sm);background-color:{{ f.rowBg }}">
+                          <div style="display:flex;justify-content:space-between;align-items:center">
+                            <span style="font-size:13px;font-weight:700;color:var(--teal-700)">{{ f.dataTxt }}</span>
+                            <span style="display:inline-block;padding:4px 10px;border-radius:999px;font-size:12px;font-weight:600;background:{{ f.sitBg }};color:{{ f.sitFg }}">{{ f.situacaoTxt }}</span>
+                          </div>
+                          <strong style="font-size:14px;color:var(--text-strong)">{{ f.itemNome }}</strong>
+                          <div style="display:flex;justify-content:space-between;align-items:center;font-size:13px;color:var(--text-body)">
+                            <span>Qtd: <strong>{{ f.qtdTxt }}</strong></span>
+                            <span>CA: <strong>{{ f.ca }}</strong> ({{ f.caValidadeTxt }})</span>
+                          </div>
+                          <div style="border-top:1px solid var(--gray-100);padding-top:8px;font-size:12px;color:var(--text-muted)">
+                            <span>Próxima troca prevista: <strong>{{ f.proximaTrocaTxt }}</strong></span>
+                          </div>
+                        </div>
+                      </sc-for>
+                    </div>
+                  </sc-if>
+
+                  <sc-if value="{{ almox.epi.semFicha }}" hint-placeholder-val="{{ false }}">
+                    <div style="background:var(--white);border:1px solid var(--border-default);border-radius:16px;padding:48px 20px;text-align:center;display:flex;flex-direction:column;align-items:center;gap:12px;box-shadow:var(--shadow-sm)">
+                      <img src="https://unpkg.com/lucide-static@0.460.0/icons/shield-alert.svg" alt="" style="width:36px;height:36px;color:var(--text-muted)">
+                      <strong style="font-size:16px;color:var(--text-strong)">Nenhum EPI entregue a este colaborador</strong>
+                      <p style="margin:0;font-size:13px;color:var(--text-muted)">Use a aba Movimentações para registrar uma saída de EPI para este colaborador.</p>
+                    </div>
+                  </sc-if>
+                </div>
+              </div>
+            </div>
+          </sc-if>
+
+          <sc-if value="{{ almox.isColabs }}" hint-placeholder-val="{{ false }}">
+            <div style="display:flex;flex-direction:column;gap:16px">
+              <div style="display:flex;justify-content:flex-end;align-items:center">
+                <x-import component-from-global-scope="DesentupidoraAlertaDesignSystem_e6b749.Button" variant="primary" size="sm" onClick="{{ almox.novoColab }}" hint-size="160px,36px">
+                  + Novo colaborador
+                </x-import>
+              </div>
+
+              <sc-if value="{{ almox.desktop }}" hint-placeholder-val="{{ false }}">
+                <div style="overflow-x:auto;background:var(--white);border:1px solid var(--border-default);border-radius:16px;box-shadow:var(--shadow-sm)">
+                  <table style="width:100%;border-collapse:collapse;font-size:13px">
+                    <thead>
+                      <tr style="background:var(--gray-50);border-bottom:1px solid var(--border-default);text-align:left;color:var(--text-muted)">
+                        <th scope="col" style="padding:14px 16px;font-weight:600">Nome</th>
+                        <th scope="col" style="padding:14px 16px;font-weight:600">Função</th>
+                        <th scope="col" style="padding:14px 16px;font-weight:600">Bota</th>
+                        <th scope="col" style="padding:14px 16px;font-weight:600">Luva</th>
+                        <th scope="col" style="padding:14px 16px;font-weight:600">Uniforme</th>
+                        <th scope="col" style="padding:14px 16px;font-weight:600">Caminhão habitual</th>
+                        <th scope="col" style="padding:14px 16px;font-weight:600">Situação</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      <sc-for list="{{ almox.colabs }}" as="c" hint-placeholder-count="5">
+                        <tr tabIndex="0" onClick="{{ c.editar }}" onKeyDown="{{ c.onKey }}" style="cursor:pointer;border-top:1px solid var(--gray-100)" style-hover="background:var(--gray-50)">
+                          <td style="padding:14px 16px;font-weight:600;color:var(--text-strong)">{{ c.nome }}</td>
+                          <td style="padding:14px 16px;color:var(--text-body)">{{ c.funcao }}</td>
+                          <td style="padding:14px 16px;color:var(--text-body)">{{ c.botaTxt }}</td>
+                          <td style="padding:14px 16px;color:var(--text-body)">{{ c.luvaTxt }}</td>
+                          <td style="padding:14px 16px;color:var(--text-body)">{{ c.uniformeTxt }}</td>
+                          <td style="padding:14px 16px;color:var(--text-muted)">{{ c.caminhaoTxt }}</td>
+                          <td style="padding:14px 16px">
+                            <span style="display:inline-block;padding:4px 10px;border-radius:999px;font-size:12px;font-weight:600;background:{{ c.ativoBg }};color:{{ c.ativoFg }}">{{ c.ativoTxt }}</span>
+                          </td>
+                        </tr>
+                      </sc-for>
+                    </tbody>
+                  </table>
+                </div>
+              </sc-if>
+
+              <sc-if value="{{ almox.mobile }}" hint-placeholder-val="{{ false }}">
+                <div style="display:flex;flex-direction:column;gap:12px">
+                  <sc-for list="{{ almox.colabs }}" as="c" hint-placeholder-count="3">
+                    <div tabIndex="0" onClick="{{ c.editar }}" onKeyDown="{{ c.onKey }}" style="background:var(--white);border:1px solid var(--border-default);border-radius:16px;padding:16px;display:flex;flex-direction:column;gap:10px;box-shadow:var(--shadow-sm);cursor:pointer">
+                      <div style="display:flex;justify-content:space-between;align-items:center">
+                        <strong style="font-size:15px;color:var(--text-strong)">{{ c.nome }}</strong>
+                        <span style="display:inline-block;padding:4px 10px;border-radius:999px;font-size:12px;font-weight:600;background:{{ c.ativoBg }};color:{{ c.ativoFg }}">{{ c.ativoTxt }}</span>
+                      </div>
+                      <div style="font-size:13px;color:var(--teal-700);font-weight:600">{{ c.funcao }}</div>
+                      <div style="display:flex;flex-wrap:wrap;gap:8px;font-size:12px;color:var(--text-body)">
+                        <span>{{ c.botaTxt }}</span>
+                        <span>·</span>
+                        <span>{{ c.luvaTxt }}</span>
+                        <span>·</span>
+                        <span>{{ c.uniformeTxt }}</span>
+                      </div>
+                      <div style="border-top:1px solid var(--gray-100);padding-top:8px;font-size:12px;color:var(--text-muted)">
+                        <span>Caminhão habitual: <strong>{{ c.caminhaoTxt }}</strong></span>
+                      </div>
+                    </div>
+                  </sc-for>
+                </div>
+              </sc-if>
+            </div>
+          </sc-if>
 
           <!-- ALMOX:MODAIS -->
         </div>
@@ -6183,16 +6353,199 @@ class Component extends DCLogic {
     return this._almoxSeed;
   }
 
-  almoxExportar = () => {
-    this.toast('Exportação em breve');
-  };
-
-  almoxVals(desktop) {
+  almoxListas() {
     const st = this.state;
     const data = this.almoxData();
     const itens = data.itens || [];
     const movs = data.movs || [];
     const colabs = data.colabs || [];
+
+    const saldoMap = {};
+    itens.forEach(it => {
+      saldoMap[it.id] = almoxSaldo(it.id, movs);
+    });
+
+    const fQ = (st.almoxQ || '').toLowerCase().trim();
+    const fCat = st.almoxCat || '';
+    const fStatus = st.almoxStatus || '';
+
+    const itensFiltrados = itens.filter(it => {
+      const s = saldoMap[it.id] || 0;
+      const stStatus = almoxStatus(it, s);
+      if (fQ) {
+        const c = (it.codigo || '').toLowerCase();
+        const n = (it.nome || '').toLowerCase();
+        const f = (it.fornecedor || '').toLowerCase();
+        if (!c.includes(fQ) && !n.includes(fQ) && !f.includes(fQ)) return false;
+      }
+      if (fCat && it.categoria !== fCat) return false;
+      if (fStatus && stStatus !== fStatus) return false;
+      return true;
+    });
+
+    const fMovTipo = st.almoxMovTipo || '';
+    const fMovDest = st.almoxMovDest || '';
+
+    const movsFiltrados = [...movs].filter(m => {
+      if (fMovTipo && m.tipo !== fMovTipo) return false;
+      if (fMovDest && m.destinoTipo !== fMovDest) return false;
+      return true;
+    }).sort((a, b) => (b.data || '').localeCompare(a.data || ''));
+
+    const itensMap = itens.reduce((acc, it) => { acc[it.id] = it; return acc; }, {});
+
+    const colabSel = st.almoxColabSel || (colabs[0] ? colabs[0].nome : '');
+    const colabAtual = colabs.find(c => c.nome === colabSel) || colabs[0] || null;
+
+    const fichaEpiMovs = movs
+      .filter(m => m.tipo === 'saida' && m.destinoTipo === 'colab' && m.destinoId === colabSel)
+      .sort((a, b) => (b.data || '').localeCompare(a.data || ''));
+
+    return {
+      itens,
+      movs,
+      colabs,
+      saldoMap,
+      itensMap,
+      itensFiltrados,
+      movsFiltrados,
+      colabSel,
+      colabAtual,
+      fichaEpiMovs
+    };
+  }
+
+  almoxExportar = () => {
+    const tab = this.state.almoxTab || 'Estoque';
+    const slugMap = {
+      'Estoque': 'estoque',
+      'Movimentações': 'movimentacoes',
+      'EPIs': 'epis',
+      'Colaboradores': 'colaboradores'
+    };
+    const abaSlug = slugMap[tab] || (tab || 'estoque').toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '').replace(/[^a-z0-9]+/g, '-');
+
+    const { itens, movs, colabs, saldoMap, itensMap, itensFiltrados, movsFiltrados, colabSel, fichaEpiMovs } = this.almoxListas();
+
+    const esc = v => `"${String(v == null ? '' : v).replace(/"/g, '""')}"`;
+    const numBr = v => String(Number(v || 0).toFixed(2)).replace('.', ',');
+    const intBr = v => String(v == null ? '' : v).replace('.', ',');
+
+    const linhas = [];
+
+    if (tab === 'Estoque') {
+      const header = ['Código', 'Item', 'Categoria', 'Saldo', 'Unidade', 'Mínimo', 'Custo médio', 'Valor', 'Fornecedor', 'Status'];
+      linhas.push(header.join(';'));
+      for (let i = 0; i < itensFiltrados.length; i++) {
+        const it = itensFiltrados[i];
+        const s = saldoMap[it.id] || 0;
+        const stStatus = almoxStatus(it, s);
+        linhas.push([
+          esc(it.codigo),
+          esc(it.nome),
+          esc(it.categoria),
+          intBr(s),
+          esc(it.unidade),
+          intBr(it.minimo != null ? it.minimo : ''),
+          numBr(it.custoMedio),
+          numBr(s * (it.custoMedio || 0)),
+          esc(it.fornecedor || ''),
+          esc(stStatus)
+        ].join(';'));
+      }
+    } else if (tab === 'Movimentações') {
+      const header = ['Nº', 'Data', 'Tipo', 'Item', 'Qtd', 'Custo unit.', 'Total', 'Destino/origem', 'Responsável'];
+      linhas.push(header.join(';'));
+      for (let i = 0; i < movsFiltrados.length; i++) {
+        const m = movsFiltrados[i];
+        const it = itensMap[m.itemId];
+        const tipoTxt = m.tipo === 'entrada' ? 'Entrada' : (m.tipo === 'saida' ? 'Saída' : 'Ajuste');
+        let destinoTxt = '—';
+        if (m.tipo === 'entrada') {
+          destinoTxt = `${m.fornecedor || 'Fornecedor'}${m.nf ? ` · NF ${m.nf}` : ''}`;
+        } else if (m.tipo === 'saida') {
+          if (m.destinoTipo === 'os') destinoTxt = `OS #${m.destinoId}`;
+          else if (m.destinoTipo === 'caminhao') destinoTxt = `${m.destinoId}`;
+          else if (m.destinoTipo === 'colab') destinoTxt = `${m.destinoId}`;
+          else destinoTxt = `${m.destinoId || '—'}`;
+        } else if (m.tipo === 'ajuste') {
+          destinoTxt = `Ajuste: ${m.motivo || 'Inventário'}`;
+        }
+        const qtdNum = Math.abs(Number(m.qtd) || 0);
+        const custoNum = Number(m.custoUnit) || 0;
+        const totalNum = qtdNum * custoNum;
+        linhas.push([
+          esc(m.num),
+          m.data ? ddmmyy(m.data) : '',
+          esc(tipoTxt),
+          esc(it ? it.nome : (m.itemId || '')),
+          intBr(qtdNum),
+          numBr(custoNum),
+          numBr(totalNum),
+          esc(destinoTxt),
+          esc(m.responsavel || 'Escritório')
+        ].join(';'));
+      }
+    } else if (tab === 'EPIs') {
+      const header = ['Colaborador', 'Data', 'EPI', 'Qtd', 'CA', 'Validade CA', 'Próxima troca', 'Situação'];
+      linhas.push(header.join(';'));
+      for (let i = 0; i < fichaEpiMovs.length; i++) {
+        const m = fichaEpiMovs[i];
+        const it = itensMap[m.itemId] || {};
+        const proximaTrocaData = (m.data && it.vidaUtilDias) ? addD(m.data, it.vidaUtilDias) : '';
+        const caVencido = !!(it.caValidade && it.caValidade < HOJE);
+        const trocaAtrasada = !!(proximaTrocaData && proximaTrocaData < HOJE);
+        const situacaoTxt = caVencido ? 'CA vencido' : (trocaAtrasada ? 'Troca atrasada' : 'Em dia');
+        linhas.push([
+          esc(colabSel || '—'),
+          m.data ? ddmmyy(m.data) : '',
+          esc(it.nome || m.itemId || ''),
+          intBr(m.qtd),
+          esc(it.ca || '—'),
+          it.caValidade ? ddmmyy(it.caValidade) : '—',
+          proximaTrocaData ? ddmmyy(proximaTrocaData) : '—',
+          esc(situacaoTxt)
+        ].join(';'));
+      }
+    } else if (tab === 'Colaboradores') {
+      const header = ['Nome', 'Função', 'Bota', 'Luva', 'Uniforme', 'Caminhão', 'Situação'];
+      linhas.push(header.join(';'));
+      for (let i = 0; i < colabs.length; i++) {
+        const c = colabs[i];
+        linhas.push([
+          esc(c.nome),
+          esc(c.funcao),
+          esc(c.bota || '—'),
+          esc(c.luva || '—'),
+          esc(c.uniforme || '—'),
+          esc(c.caminhao || '—'),
+          esc(c.ativo ? 'Ativo' : 'Inativo')
+        ].join(';'));
+      }
+    }
+
+    const blob = new Blob(['\uFEFF' + linhas.join('\r\n')], { type: 'text/csv;charset=utf-8;' });
+    const a = document.createElement('a');
+    a.href = URL.createObjectURL(blob);
+    a.download = `almoxarifado-${abaSlug}-${HOJE}.csv`;
+    a.click();
+    this.toast('Planilha exportada');
+  };
+
+  almoxVals(desktop) {
+    const st = this.state;
+    const {
+      itens,
+      movs,
+      colabs,
+      saldoMap,
+      itensMap,
+      itensFiltrados,
+      movsFiltrados,
+      colabSel,
+      colabAtual,
+      fichaEpiMovs
+    } = this.almoxListas();
 
     const tab = st.almoxTab || 'Estoque';
     const isEstoque = tab === 'Estoque';
@@ -6203,11 +6556,6 @@ class Component extends DCLogic {
       const v = (t && t.target) ? t.target.value : (typeof t === 'string' ? t : (t && t.tab ? t.tab : t));
       this.setState({ almoxTab: v });
     };
-
-    const saldoMap = {};
-    itens.forEach(it => {
-      saldoMap[it.id] = almoxSaldo(it.id, movs);
-    });
 
     let abaixoCount = 0;
     let valorEstoqueTot = 0;
@@ -6236,7 +6584,7 @@ class Component extends DCLogic {
       abaixo: abaixoCount,
       abaixoTxt: `${abaixoCount}`,
       valorEstoqueTxt: brl(valorEstoqueTot),
-      saidasMesTxt: brl(saidasMesTot),
+      saidasMesTot: brl(saidasMesTot),
       caVencendo: caVencendoCount,
       caVencendoTxt: `${caVencendoCount}`,
       temCaVencido
@@ -6260,24 +6608,6 @@ class Component extends DCLogic {
         };
       });
     const temRepor = repor.length > 0;
-
-    const fQ = (st.almoxQ || '').toLowerCase().trim();
-    const fCat = st.almoxCat || '';
-    const fStatus = st.almoxStatus || '';
-
-    const itensFiltrados = itens.filter(it => {
-      const s = saldoMap[it.id] || 0;
-      const stStatus = almoxStatus(it, s);
-      if (fQ) {
-        const c = (it.codigo || '').toLowerCase();
-        const n = (it.nome || '').toLowerCase();
-        const f = (it.fornecedor || '').toLowerCase();
-        if (!c.includes(fQ) && !n.includes(fQ) && !f.includes(fQ)) return false;
-      }
-      if (fCat && it.categoria !== fCat) return false;
-      if (fStatus && stStatus !== fStatus) return false;
-      return true;
-    });
 
     const itensList = itensFiltrados.map(it => {
       const s = saldoMap[it.id] || 0;
@@ -6322,17 +6652,6 @@ class Component extends DCLogic {
       ],
       limpar: () => this.setState({ almoxQ: '', almoxCat: '', almoxStatus: '' })
     };
-
-    const fMovTipo = st.almoxMovTipo || '';
-    const fMovDest = st.almoxMovDest || '';
-
-    const movsFiltrados = [...movs].filter(m => {
-      if (fMovTipo && m.tipo !== fMovTipo) return false;
-      if (fMovDest && m.destinoTipo !== fMovDest) return false;
-      return true;
-    }).sort((a, b) => (b.data || '').localeCompare(a.data || ''));
-
-    const itensMap = itens.reduce((acc, it) => { acc[it.id] = it; return acc; }, {});
 
     const movsList = movsFiltrados.map(m => {
       const it = itensMap[m.itemId];
@@ -6405,21 +6724,32 @@ class Component extends DCLogic {
       limpar: () => this.setState({ almoxMovTipo: '', almoxMovDest: '' })
     };
 
-    const colabsList = colabs.map(c => ({
-      id: c.id,
-      nome: c.nome,
-      funcao: c.funcao,
-      botaTxt: c.bota ? `Bota ${c.bota}` : '—',
-      luvaTxt: c.luva ? `Luva ${c.luva}` : '—',
-      uniformeTxt: c.uniforme ? `Uniforme ${c.uniforme}` : '—',
-      caminhaoTxt: c.caminhao || 'Nenhum',
-      ativoTxt: c.ativo ? 'Ativo' : 'Inativo',
-      editar: () => this.setState({
+    const colabsList = colabs.map(c => {
+      const editar = () => this.setState({
         almoxModal: 'colab',
         almoxColabMF: { ...c },
         almoxErro: ''
-      })
-    }));
+      });
+      return {
+        id: c.id,
+        nome: c.nome,
+        funcao: c.funcao,
+        bota: c.bota,
+        botaTxt: c.bota ? `Bota ${c.bota}` : '—',
+        luva: c.luva,
+        luvaTxt: c.luva ? `Luva ${c.luva}` : '—',
+        uniforme: c.uniforme,
+        uniformeTxt: c.uniforme ? `Uniforme ${c.uniforme}` : '—',
+        caminhao: c.caminhao,
+        caminhaoTxt: c.caminhao || 'Nenhum',
+        ativo: c.ativo,
+        ativoTxt: c.ativo ? 'Ativo' : 'Inativo',
+        ativoBg: c.ativo ? 'var(--lime-100)' : 'var(--gray-100)',
+        ativoFg: c.ativo ? 'var(--teal-800)' : 'var(--text-muted)',
+        editar,
+        onKey: e => { if (e && e.key === 'Enter') editar(); }
+      };
+    });
 
     const novoColab = () => this.setState({
       almoxModal: 'colab',
@@ -6427,14 +6757,20 @@ class Component extends DCLogic {
       almoxErro: ''
     });
 
-    const colabSel = st.almoxColabSel || (colabs[0] ? colabs[0].nome : '');
     const onColab = e => this.setState({ almoxColabSel: (e && e.target) ? e.target.value : (e || '') });
     const colabOpts = colabs.map(c => c.nome);
-    const colabAtual = colabs.find(c => c.nome === colabSel) || colabs[0] || null;
 
-    const fichaEpiMovs = movs
-      .filter(m => m.tipo === 'saida' && m.destinoTipo === 'colab' && m.destinoId === colabSel)
-      .sort((a, b) => (b.data || '').localeCompare(a.data || ''));
+    const colabInfo = colabAtual ? {
+      nome: colabAtual.nome || '—',
+      funcao: colabAtual.funcao || '—',
+      tamanhosTxt: `Bota ${colabAtual.bota || '—'} · Luva ${colabAtual.luva || '—'} · Uniforme ${colabAtual.uniforme || '—'}`,
+      caminhaoTxt: colabAtual.caminhao ? `Caminhão habitual: ${colabAtual.caminhao}` : 'Sem caminhão habitual'
+    } : {
+      nome: '—',
+      funcao: '—',
+      tamanhosTxt: '—',
+      caminhaoTxt: '—'
+    };
 
     const ficha = fichaEpiMovs.map(m => {
       const it = itensMap[m.itemId] || {};
@@ -6442,8 +6778,12 @@ class Component extends DCLogic {
       const caVencido = !!(it.caValidade && it.caValidade < HOJE);
       const trocaAtrasada = !!(proximaTrocaData && proximaTrocaData < HOJE);
       let rowBg = 'transparent';
-      if (caVencido) rowBg = 'rgba(239, 68, 68, 0.08)';
+      if (caVencido) rowBg = 'var(--gray-100)';
       else if (trocaAtrasada) rowBg = 'var(--amber-100)';
+
+      const situacaoTxt = caVencido ? 'CA vencido' : (trocaAtrasada ? 'Troca atrasada' : 'Em dia');
+      const sitBg = caVencido ? 'var(--danger)' : (trocaAtrasada ? 'var(--amber-100)' : 'var(--lime-100)');
+      const sitFg = caVencido ? 'var(--white)' : (trocaAtrasada ? 'var(--amber-800)' : 'var(--teal-800)');
 
       return {
         id: m.id,
@@ -6455,9 +6795,26 @@ class Component extends DCLogic {
         proximaTrocaTxt: proximaTrocaData ? ddmmyy(proximaTrocaData) : '—',
         caVencido,
         trocaAtrasada,
-        rowBg
+        rowBg,
+        situacaoTxt,
+        sitBg,
+        sitFg
       };
     });
+
+    const imprimir = () => {
+      if (typeof window === 'undefined') return;
+      const style = document.createElement('style');
+      style.textContent = '@media print { body * { visibility:hidden } #almox-ficha-epi, #almox-ficha-epi * { visibility:visible } #almox-ficha-epi { position:absolute; left:0; top:0; width:100% } }';
+      document.head.appendChild(style);
+      const remover = () => {
+        if (style.parentNode) style.parentNode.removeChild(style);
+        window.removeEventListener('afterprint', remover);
+      };
+      window.addEventListener('afterprint', remover);
+      window.print();
+      setTimeout(remover, 1000);
+    };
 
     const novaMov = () => this.setState({
       almoxModal: 'mov',
@@ -6506,9 +6863,10 @@ class Component extends DCLogic {
         colabAtual,
         onColab,
         colabOpts,
+        colabInfo,
         ficha,
         semFicha: ficha.length === 0,
-        imprimir: () => { if (typeof window !== 'undefined') window.print(); }
+        imprimir
       },
       novaMov,
       novoItem,
