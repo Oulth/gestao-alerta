@@ -2442,44 +2442,40 @@
 
               <sc-if value="{{ almox.desktop }}" hint-placeholder-val="{{ false }}">
                 <div style="overflow-x:auto;background:var(--white);border:1px solid var(--border-default);border-radius:16px;box-shadow:var(--shadow-sm)">
-                  <table style="width:100%;border-collapse:collapse;font-size:13px">
-                    <thead>
-                      <tr style="background:var(--gray-50);border-bottom:1px solid var(--border-default);text-align:left;color:var(--text-muted)">
-                        <th scope="col" style="padding:14px 16px;font-weight:600">Código</th>
-                        <th scope="col" style="padding:14px 16px;font-weight:600">Item</th>
-                        <th scope="col" style="padding:14px 16px;font-weight:600">Categoria</th>
-                        <th scope="col" style="padding:14px 16px;text-align:right;font-weight:600">Saldo</th>
-                        <th scope="col" style="padding:14px 16px;text-align:right;font-weight:600">Mínimo</th>
-                        <th scope="col" style="padding:14px 16px;text-align:right;font-weight:600">Custo médio</th>
-                        <th scope="col" style="padding:14px 16px;text-align:right;font-weight:600">Valor</th>
-                        <th scope="col" style="padding:14px 16px;font-weight:600">Fornecedor</th>
-                        <th scope="col" style="padding:14px 16px;font-weight:600">Status</th>
-                        <th scope="col" style="padding:14px 16px;text-align:right"><span style="position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0)">Ações</span></th>
-                      </tr>
-                    </thead>
-                    <tbody>
-                      <sc-for list="{{ almox.itens }}" as="i" hint-placeholder-count="5">
-                        <tr tabIndex="0" onClick="{{ i.abrir }}" onKeyDown="{{ i.onKey }}" style="cursor:pointer;border-top:1px solid var(--gray-100)" style-hover="background:var(--gray-50)">
-                          <td style="padding:14px 16px;font-weight:700;color:var(--teal-700)">{{ i.codigo }}</td>
-                          <td style="padding:14px 16px;font-weight:600;color:var(--text-strong)">{{ i.nome }}</td>
-                          <td style="padding:14px 16px;color:var(--text-body)">{{ i.categoria }}</td>
-                          <td style="padding:14px 16px;text-align:right;font-weight:600;color:var(--text-strong);white-space:nowrap">{{ i.saldoTxt }}</td>
-                          <td style="padding:14px 16px;text-align:right;color:var(--text-muted);white-space:nowrap">{{ i.minimoTxt }}</td>
-                          <td style="padding:14px 16px;text-align:right;color:var(--text-body);white-space:nowrap">{{ i.custoTxt }}</td>
-                          <td style="padding:14px 16px;text-align:right;font-weight:600;color:var(--text-strong);white-space:nowrap">{{ i.valorTxt }}</td>
-                          <td style="padding:14px 16px;color:var(--text-muted)">{{ i.fornecedor }}</td>
-                          <td style="padding:14px 16px">
-                            <span style="display:inline-block;padding:4px 10px;border-radius:999px;font-size:12px;font-weight:600;background:{{ i.stBg }};color:{{ i.stFg }}">{{ i.status }}</span>
-                          </td>
-                          <td style="padding:14px 16px;text-align:right">
-                            <button type="button" aria-label="{{ i.editarLabel }}" onClick="{{ i.abrir }}" style="width:36px;height:36px;border-radius:10px;background:transparent;border:1px solid var(--border-default);cursor:pointer;display:inline-flex;align-items:center;justify-content:center;padding:0">
-                              <img src="https://unpkg.com/lucide-static@0.460.0/icons/pencil.svg" alt="" style="width:16px;height:16px;color:var(--text-strong)">
-                            </button>
-                          </td>
-                        </tr>
-                      </sc-for>
-                    </tbody>
-                  </table>
+                  <div role="table" aria-label="Itens em estoque" style="display:flex;flex-direction:column;min-width:980px;font-size:13px">
+                    <div role="row" style="display:grid;grid-template-columns:104px minmax(180px,2fr) 130px 90px 90px 110px 110px minmax(130px,1.2fr) 100px 56px;align-items:center;background:var(--gray-50);border-bottom:1px solid var(--border-default);color:var(--text-muted)">
+                      <div role="columnheader" style="padding:14px 16px;font-weight:600">Código</div>
+                      <div role="columnheader" style="padding:14px 16px;font-weight:600">Item</div>
+                      <div role="columnheader" style="padding:14px 16px;font-weight:600">Categoria</div>
+                      <div role="columnheader" style="padding:14px 16px;text-align:right;font-weight:600">Saldo</div>
+                      <div role="columnheader" style="padding:14px 16px;text-align:right;font-weight:600">Mínimo</div>
+                      <div role="columnheader" style="padding:14px 16px;text-align:right;font-weight:600">Custo médio</div>
+                      <div role="columnheader" style="padding:14px 16px;text-align:right;font-weight:600">Valor</div>
+                      <div role="columnheader" style="padding:14px 16px;font-weight:600">Fornecedor</div>
+                      <div role="columnheader" style="padding:14px 16px;font-weight:600">Status</div>
+                      <div role="columnheader" style="padding:14px 16px;text-align:right"><span style="position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0)">Ações</span></div>
+                    </div>
+                    <sc-for list="{{ almox.itens }}" as="i" hint-placeholder-count="5">
+                      <div role="row" tabIndex="0" onClick="{{ i.abrir }}" onKeyDown="{{ i.onKey }}" style="display:grid;grid-template-columns:104px minmax(180px,2fr) 130px 90px 90px 110px 110px minmax(130px,1.2fr) 100px 56px;align-items:center;cursor:pointer;border-top:1px solid var(--gray-100)" style-hover="background:var(--gray-50)">
+                        <div role="cell" style="padding:14px 16px;font-weight:700;color:var(--teal-700);min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">{{ i.codigo }}</div>
+                        <div role="cell" style="padding:14px 16px;font-weight:600;color:var(--text-strong);min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">{{ i.nome }}</div>
+                        <div role="cell" style="padding:14px 16px;color:var(--text-body);min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">{{ i.categoria }}</div>
+                        <div role="cell" style="padding:14px 16px;text-align:right;font-weight:600;color:var(--text-strong);white-space:nowrap;min-width:0">{{ i.saldoTxt }}</div>
+                        <div role="cell" style="padding:14px 16px;text-align:right;color:var(--text-muted);white-space:nowrap;min-width:0">{{ i.minimoTxt }}</div>
+                        <div role="cell" style="padding:14px 16px;text-align:right;color:var(--text-body);white-space:nowrap;min-width:0">{{ i.custoTxt }}</div>
+                        <div role="cell" style="padding:14px 16px;text-align:right;font-weight:600;color:var(--text-strong);white-space:nowrap;min-width:0">{{ i.valorTxt }}</div>
+                        <div role="cell" style="padding:14px 16px;color:var(--text-muted);min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">{{ i.fornecedor }}</div>
+                        <div role="cell" style="padding:14px 16px;min-width:0">
+                          <span style="display:inline-block;padding:4px 10px;border-radius:999px;font-size:12px;font-weight:600;background:{{ i.stBg }};color:{{ i.stFg }}">{{ i.status }}</span>
+                        </div>
+                        <div role="cell" style="padding:14px 16px;text-align:right;min-width:0">
+                          <button type="button" aria-label="{{ i.editarLabel }}" onClick="{{ i.abrir }}" style="width:36px;height:36px;border-radius:10px;background:transparent;border:1px solid var(--border-default);cursor:pointer;display:inline-flex;align-items:center;justify-content:center;padding:0">
+                            <img src="https://unpkg.com/lucide-static@0.460.0/icons/pencil.svg" alt="" style="width:16px;height:16px;color:var(--text-strong)">
+                          </button>
+                        </div>
+                      </div>
+                    </sc-for>
+                  </div>
                 </div>
               </sc-if>
 
@@ -2536,49 +2532,45 @@
 
               <sc-if value="{{ almox.desktop }}" hint-placeholder-val="{{ false }}">
                 <div style="overflow-x:auto;background:var(--white);border:1px solid var(--border-default);border-radius:16px;box-shadow:var(--shadow-sm)">
-                  <table style="width:100%;border-collapse:collapse;font-size:13px">
-                    <thead>
-                      <tr style="background:var(--gray-50);border-bottom:1px solid var(--border-default);text-align:left;color:var(--text-muted)">
-                        <th scope="col" style="padding:14px 16px;font-weight:600">Nº</th>
-                        <th scope="col" style="padding:14px 16px;font-weight:600">Data</th>
-                        <th scope="col" style="padding:14px 16px;font-weight:600">Tipo</th>
-                        <th scope="col" style="padding:14px 16px;font-weight:600">Item</th>
-                        <th scope="col" style="padding:14px 16px;text-align:right;font-weight:600">Qtd</th>
-                        <th scope="col" style="padding:14px 16px;text-align:right;font-weight:600">Custo unit.</th>
-                        <th scope="col" style="padding:14px 16px;text-align:right;font-weight:600">Total</th>
-                        <th scope="col" style="padding:14px 16px;font-weight:600">Destino/origem</th>
-                        <th scope="col" style="padding:14px 16px;font-weight:600">Responsável</th>
-                        <th scope="col" style="padding:14px 16px;text-align:right"><span style="position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0)">Ações</span></th>
-                      </tr>
-                    </thead>
-                    <tbody>
-                      <sc-for list="{{ almox.movs }}" as="m" hint-placeholder-count="5">
-                        <tr tabIndex="0" onClick="{{ m.editar }}" onKeyDown="{{ m.onKey }}" style="cursor:pointer;border-top:1px solid var(--gray-100)" style-hover="background:var(--gray-50)">
-                          <td style="padding:14px 16px;font-weight:700;color:var(--teal-700)">#{{ m.num }}</td>
-                          <td style="padding:14px 16px;color:var(--text-body);white-space:nowrap">{{ m.dataTxt }}</td>
-                          <td style="padding:14px 16px">
-                            <div style="display:flex;align-items:center;gap:6px">
-                              <span style="display:inline-block;padding:4px 10px;border-radius:999px;font-size:12px;font-weight:600;background:{{ m.tipoBg }};color:{{ m.tipoFg }}">{{ m.tipoTxt }}</span>
-                              <sc-if value="{{ m.estornada }}" hint-placeholder-val="{{ false }}">
-                                <span title="{{ m.estornoTxt }}" style="display:inline-block;padding:4px 10px;border-radius:999px;font-size:12px;font-weight:600;background:var(--gray-100);color:var(--text-muted)">Estornada</span>
-                              </sc-if>
-                            </div>
-                          </td>
-                          <td style="padding:14px 16px;font-weight:600;color:var(--text-strong)">{{ m.itemNome }}</td>
-                          <td style="padding:14px 16px;text-align:right;font-weight:600;color:var(--text-strong);white-space:nowrap">{{ m.qtdTxt }}</td>
-                          <td style="padding:14px 16px;text-align:right;color:var(--text-body);white-space:nowrap">{{ m.custoTxt }}</td>
-                          <td style="padding:14px 16px;text-align:right;font-weight:600;color:var(--text-strong);white-space:nowrap">{{ m.totalTxt }}</td>
-                          <td style="padding:14px 16px;color:var(--text-body)">{{ m.destinoTxt }}</td>
-                          <td style="padding:14px 16px;color:var(--text-muted)">{{ m.responsavel }}</td>
-                          <td style="padding:14px 16px;text-align:right">
-                            <button type="button" aria-label="{{ m.editarLabel }}" onClick="{{ m.editar }}" style="width:36px;height:36px;border-radius:10px;background:transparent;border:1px solid var(--border-default);cursor:pointer;display:inline-flex;align-items:center;justify-content:center;padding:0">
-                              <img src="https://unpkg.com/lucide-static@0.460.0/icons/pencil.svg" alt="" style="width:16px;height:16px;color:var(--text-strong)">
-                            </button>
-                          </td>
-                        </tr>
-                      </sc-for>
-                    </tbody>
-                  </table>
+                  <div role="table" aria-label="Movimentações do estoque" style="display:flex;flex-direction:column;min-width:1060px;font-size:13px">
+                    <div role="row" style="display:grid;grid-template-columns:70px 100px 140px minmax(160px,1.8fr) 80px 100px 100px minmax(140px,1.4fr) minmax(120px,1fr) 56px;align-items:center;background:var(--gray-50);border-bottom:1px solid var(--border-default);color:var(--text-muted)">
+                      <div role="columnheader" style="padding:14px 16px;font-weight:600">Nº</div>
+                      <div role="columnheader" style="padding:14px 16px;font-weight:600">Data</div>
+                      <div role="columnheader" style="padding:14px 16px;font-weight:600">Tipo</div>
+                      <div role="columnheader" style="padding:14px 16px;font-weight:600">Item</div>
+                      <div role="columnheader" style="padding:14px 16px;text-align:right;font-weight:600">Qtd</div>
+                      <div role="columnheader" style="padding:14px 16px;text-align:right;font-weight:600">Custo unit.</div>
+                      <div role="columnheader" style="padding:14px 16px;text-align:right;font-weight:600">Total</div>
+                      <div role="columnheader" style="padding:14px 16px;font-weight:600">Destino/origem</div>
+                      <div role="columnheader" style="padding:14px 16px;font-weight:600">Responsável</div>
+                      <div role="columnheader" style="padding:14px 16px;text-align:right"><span style="position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0)">Ações</span></div>
+                    </div>
+                    <sc-for list="{{ almox.movs }}" as="m" hint-placeholder-count="5">
+                      <div role="row" tabIndex="0" onClick="{{ m.editar }}" onKeyDown="{{ m.onKey }}" style="display:grid;grid-template-columns:70px 100px 140px minmax(160px,1.8fr) 80px 100px 100px minmax(140px,1.4fr) minmax(120px,1fr) 56px;align-items:center;cursor:pointer;border-top:1px solid var(--gray-100)" style-hover="background:var(--gray-50)">
+                        <div role="cell" style="padding:14px 16px;font-weight:700;color:var(--teal-700);min-width:0;white-space:nowrap">{{ m.num }}</div>
+                        <div role="cell" style="padding:14px 16px;color:var(--text-body);white-space:nowrap;min-width:0">{{ m.dataTxt }}</div>
+                        <div role="cell" style="padding:14px 16px;min-width:0">
+                          <div style="display:flex;align-items:center;gap:6px">
+                            <span style="display:inline-block;padding:4px 10px;border-radius:999px;font-size:12px;font-weight:600;background:{{ m.tipoBg }};color:{{ m.tipoFg }}">{{ m.tipoTxt }}</span>
+                            <sc-if value="{{ m.estornada }}" hint-placeholder-val="{{ false }}">
+                              <span title="{{ m.estornoTxt }}" style="display:inline-block;padding:4px 10px;border-radius:999px;font-size:12px;font-weight:600;background:var(--gray-100);color:var(--text-muted)">Estornada</span>
+                            </sc-if>
+                          </div>
+                        </div>
+                        <div role="cell" style="padding:14px 16px;font-weight:600;color:var(--text-strong);min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">{{ m.itemNome }}</div>
+                        <div role="cell" style="padding:14px 16px;text-align:right;font-weight:600;color:var(--text-strong);white-space:nowrap;min-width:0">{{ m.qtdTxt }}</div>
+                        <div role="cell" style="padding:14px 16px;text-align:right;color:var(--text-body);white-space:nowrap;min-width:0">{{ m.custoTxt }}</div>
+                        <div role="cell" style="padding:14px 16px;text-align:right;font-weight:600;color:var(--text-strong);white-space:nowrap;min-width:0">{{ m.totalTxt }}</div>
+                        <div role="cell" style="padding:14px 16px;color:var(--text-body);min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">{{ m.destinoTxt }}</div>
+                        <div role="cell" style="padding:14px 16px;color:var(--text-muted);min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">{{ m.responsavel }}</div>
+                        <div role="cell" style="padding:14px 16px;text-align:right;min-width:0">
+                          <button type="button" aria-label="{{ m.editarLabel }}" onClick="{{ m.editar }}" style="width:36px;height:36px;border-radius:10px;background:transparent;border:1px solid var(--border-default);cursor:pointer;display:inline-flex;align-items:center;justify-content:center;padding:0">
+                            <img src="https://unpkg.com/lucide-static@0.460.0/icons/pencil.svg" alt="" style="width:16px;height:16px;color:var(--text-strong)">
+                          </button>
+                        </div>
+                      </div>
+                    </sc-for>
+                  </div>
                 </div>
               </sc-if>
 
@@ -2587,7 +2579,7 @@
                   <sc-for list="{{ almox.movs }}" as="m" hint-placeholder-count="3">
                     <div tabIndex="0" onClick="{{ m.editar }}" onKeyDown="{{ m.onKey }}" style="background:var(--white);border:1px solid var(--border-default);border-radius:16px;padding:16px;display:flex;flex-direction:column;gap:10px;box-shadow:var(--shadow-sm);cursor:pointer">
                       <div style="display:flex;justify-content:space-between;align-items:center">
-                        <span style="font-size:13px;font-weight:700;color:var(--teal-700)">#{{ m.num }} · {{ m.dataTxt }}</span>
+                        <span style="font-size:13px;font-weight:700;color:var(--teal-700)">{{ m.num }} · {{ m.dataTxt }}</span>
                         <div style="display:flex;align-items:center;gap:8px">
                           <sc-if value="{{ m.estornada }}" hint-placeholder-val="{{ false }}">
                             <span title="{{ m.estornoTxt }}" style="display:inline-block;padding:4px 10px;border-radius:999px;font-size:12px;font-weight:600;background:var(--gray-100);color:var(--text-muted)">Estornada</span>
@@ -2669,40 +2661,36 @@
 
                   <sc-if value="{{ almox.desktop }}" hint-placeholder-val="{{ false }}">
                     <div style="overflow-x:auto;background:var(--white);border:1px solid var(--border-default);border-radius:16px;box-shadow:var(--shadow-sm)">
-                      <table style="width:100%;border-collapse:collapse;font-size:13px">
-                        <thead>
-                          <tr style="background:var(--gray-50);border-bottom:1px solid var(--border-default);text-align:left;color:var(--text-muted)">
-                            <th scope="col" style="padding:14px 16px;font-weight:600">Data</th>
-                            <th scope="col" style="padding:14px 16px;font-weight:600">EPI</th>
-                            <th scope="col" style="padding:14px 16px;text-align:right;font-weight:600">Qtd</th>
-                            <th scope="col" style="padding:14px 16px;font-weight:600">CA</th>
-                            <th scope="col" style="padding:14px 16px;font-weight:600">Validade do CA</th>
-                            <th scope="col" style="padding:14px 16px;font-weight:600">Próxima troca</th>
-                            <th scope="col" style="padding:14px 16px;font-weight:600">Situação</th>
-                            <th scope="col" style="padding:14px 16px;text-align:right"><span style="position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0)">Ações</span></th>
-                          </tr>
-                        </thead>
-                        <tbody>
-                          <sc-for list="{{ almox.epi.ficha }}" as="f" hint-placeholder-count="4">
-                            <tr tabIndex="0" onClick="{{ f.editar }}" onKeyDown="{{ f.onKey }}" style="cursor:pointer;border-top:1px solid var(--gray-100);background:{{ f.rowBg }}" style-hover="background:var(--gray-50)">
-                              <td style="padding:14px 16px;color:var(--text-body);white-space:nowrap">{{ f.dataTxt }}</td>
-                              <td style="padding:14px 16px;font-weight:600;color:var(--text-strong)">{{ f.itemNome }}</td>
-                              <td style="padding:14px 16px;text-align:right;font-weight:600;color:var(--text-strong);white-space:nowrap">{{ f.qtdTxt }}</td>
-                              <td style="padding:14px 16px;color:var(--text-body)">{{ f.ca }}</td>
-                              <td style="padding:14px 16px;color:var(--text-muted);white-space:nowrap">{{ f.caValidadeTxt }}</td>
-                              <td style="padding:14px 16px;color:var(--text-body);white-space:nowrap">{{ f.proximaTrocaTxt }}</td>
-                              <td style="padding:14px 16px">
-                                <span style="display:inline-block;padding:4px 10px;border-radius:999px;font-size:12px;font-weight:600;background:{{ f.sitBg }};color:{{ f.sitFg }}">{{ f.situacaoTxt }}</span>
-                              </td>
-                              <td style="padding:14px 16px;text-align:right">
-                                <button type="button" aria-label="{{ f.editarLabel }}" onClick="{{ f.editar }}" style="width:36px;height:36px;border-radius:10px;background:transparent;border:1px solid var(--border-default);cursor:pointer;display:inline-flex;align-items:center;justify-content:center;padding:0">
-                                  <img src="https://unpkg.com/lucide-static@0.460.0/icons/pencil.svg" alt="" style="width:16px;height:16px;color:var(--text-strong)">
-                                </button>
-                              </td>
-                            </tr>
-                          </sc-for>
-                        </tbody>
-                      </table>
+                      <div role="table" aria-label="Ficha de EPIs" style="display:flex;flex-direction:column;min-width:900px;font-size:13px">
+                        <div role="row" style="display:grid;grid-template-columns:100px minmax(180px,2fr) 80px 100px 130px 130px 110px 56px;align-items:center;background:var(--gray-50);border-bottom:1px solid var(--border-default);color:var(--text-muted)">
+                          <div role="columnheader" style="padding:14px 16px;font-weight:600">Data</div>
+                          <div role="columnheader" style="padding:14px 16px;font-weight:600">EPI</div>
+                          <div role="columnheader" style="padding:14px 16px;text-align:right;font-weight:600">Qtd</div>
+                          <div role="columnheader" style="padding:14px 16px;font-weight:600">CA</div>
+                          <div role="columnheader" style="padding:14px 16px;font-weight:600">Validade do CA</div>
+                          <div role="columnheader" style="padding:14px 16px;font-weight:600">Próxima troca</div>
+                          <div role="columnheader" style="padding:14px 16px;font-weight:600">Situação</div>
+                          <div role="columnheader" style="padding:14px 16px;text-align:right"><span style="position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0)">Ações</span></div>
+                        </div>
+                        <sc-for list="{{ almox.epi.ficha }}" as="f" hint-placeholder-count="4">
+                          <div role="row" tabIndex="0" onClick="{{ f.editar }}" onKeyDown="{{ f.onKey }}" style="display:grid;grid-template-columns:100px minmax(180px,2fr) 80px 100px 130px 130px 110px 56px;align-items:center;cursor:pointer;border-top:1px solid var(--gray-100);background:{{ f.rowBg }}" style-hover="background:var(--gray-50)">
+                            <div role="cell" style="padding:14px 16px;color:var(--text-body);white-space:nowrap;min-width:0">{{ f.dataTxt }}</div>
+                            <div role="cell" style="padding:14px 16px;font-weight:600;color:var(--text-strong);min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">{{ f.itemNome }}</div>
+                            <div role="cell" style="padding:14px 16px;text-align:right;font-weight:600;color:var(--text-strong);white-space:nowrap;min-width:0">{{ f.qtdTxt }}</div>
+                            <div role="cell" style="padding:14px 16px;color:var(--text-body);min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">{{ f.ca }}</div>
+                            <div role="cell" style="padding:14px 16px;color:var(--text-muted);white-space:nowrap;min-width:0">{{ f.caValidadeTxt }}</div>
+                            <div role="cell" style="padding:14px 16px;color:var(--text-body);white-space:nowrap;min-width:0">{{ f.proximaTrocaTxt }}</div>
+                            <div role="cell" style="padding:14px 16px;min-width:0">
+                              <span style="display:inline-block;padding:4px 10px;border-radius:999px;font-size:12px;font-weight:600;white-space:nowrap;background:{{ f.sitBg }};color:{{ f.sitFg }}">{{ f.situacaoTxt }}</span>
+                            </div>
+                            <div role="cell" style="padding:14px 16px;text-align:right;min-width:0">
+                              <button type="button" aria-label="{{ f.editarLabel }}" onClick="{{ f.editar }}" style="width:36px;height:36px;border-radius:10px;background:transparent;border:1px solid var(--border-default);cursor:pointer;display:inline-flex;align-items:center;justify-content:center;padding:0">
+                                <img src="https://unpkg.com/lucide-static@0.460.0/icons/pencil.svg" alt="" style="width:16px;height:16px;color:var(--text-strong)">
+                              </button>
+                            </div>
+                          </div>
+                        </sc-for>
+                      </div>
                     </div>
                   </sc-if>
 
@@ -2713,7 +2701,7 @@
                           <div style="display:flex;justify-content:space-between;align-items:center">
                             <span style="font-size:13px;font-weight:700;color:var(--teal-700)">{{ f.dataTxt }}</span>
                             <div style="display:flex;align-items:center;gap:8px">
-                              <span style="display:inline-block;padding:4px 10px;border-radius:999px;font-size:12px;font-weight:600;background:{{ f.sitBg }};color:{{ f.sitFg }}">{{ f.situacaoTxt }}</span>
+                              <span style="display:inline-block;padding:4px 10px;border-radius:999px;font-size:12px;font-weight:600;white-space:nowrap;background:{{ f.sitBg }};color:{{ f.sitFg }}">{{ f.situacaoTxt }}</span>
                               <button type="button" aria-label="{{ f.editarLabel }}" onClick="{{ f.editar }}" style="width:36px;height:36px;border-radius:10px;background:transparent;border:1px solid var(--border-default);cursor:pointer;display:inline-flex;align-items:center;justify-content:center;padding:0">
                                 <img src="https://unpkg.com/lucide-static@0.460.0/icons/pencil.svg" alt="" style="width:16px;height:16px;color:var(--text-strong)">
                               </button>
@@ -2754,40 +2742,36 @@
 
               <sc-if value="{{ almox.desktop }}" hint-placeholder-val="{{ false }}">
                 <div style="overflow-x:auto;background:var(--white);border:1px solid var(--border-default);border-radius:16px;box-shadow:var(--shadow-sm)">
-                  <table style="width:100%;border-collapse:collapse;font-size:13px">
-                    <thead>
-                      <tr style="background:var(--gray-50);border-bottom:1px solid var(--border-default);text-align:left;color:var(--text-muted)">
-                        <th scope="col" style="padding:14px 16px;font-weight:600">Nome</th>
-                        <th scope="col" style="padding:14px 16px;font-weight:600">Função</th>
-                        <th scope="col" style="padding:14px 16px;font-weight:600">Bota</th>
-                        <th scope="col" style="padding:14px 16px;font-weight:600">Luva</th>
-                        <th scope="col" style="padding:14px 16px;font-weight:600">Uniforme</th>
-                        <th scope="col" style="padding:14px 16px;font-weight:600">Caminhão habitual</th>
-                        <th scope="col" style="padding:14px 16px;font-weight:600">Situação</th>
-                        <th scope="col" style="padding:14px 16px;text-align:right"><span style="position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0)">Ações</span></th>
-                      </tr>
-                    </thead>
-                    <tbody>
-                      <sc-for list="{{ almox.colabs }}" as="c" hint-placeholder-count="5">
-                        <tr tabIndex="0" onClick="{{ c.editar }}" onKeyDown="{{ c.onKey }}" style="cursor:pointer;border-top:1px solid var(--gray-100)" style-hover="background:var(--gray-50)">
-                          <td style="padding:14px 16px;font-weight:600;color:var(--text-strong)">{{ c.nome }}</td>
-                          <td style="padding:14px 16px;color:var(--text-body)">{{ c.funcao }}</td>
-                          <td style="padding:14px 16px;color:var(--text-body)">{{ c.botaTxt }}</td>
-                          <td style="padding:14px 16px;color:var(--text-body)">{{ c.luvaTxt }}</td>
-                          <td style="padding:14px 16px;color:var(--text-body)">{{ c.uniformeTxt }}</td>
-                          <td style="padding:14px 16px;color:var(--text-muted)">{{ c.caminhaoTxt }}</td>
-                          <td style="padding:14px 16px">
-                            <span style="display:inline-block;padding:4px 10px;border-radius:999px;font-size:12px;font-weight:600;background:{{ c.ativoBg }};color:{{ c.ativoFg }}">{{ c.ativoTxt }}</span>
-                          </td>
-                          <td style="padding:14px 16px;text-align:right">
-                            <button type="button" aria-label="{{ c.editarLabel }}" onClick="{{ c.editar }}" style="width:36px;height:36px;border-radius:10px;background:transparent;border:1px solid var(--border-default);cursor:pointer;display:inline-flex;align-items:center;justify-content:center;padding:0">
-                              <img src="https://unpkg.com/lucide-static@0.460.0/icons/pencil.svg" alt="" style="width:16px;height:16px;color:var(--text-strong)">
-                            </button>
-                          </td>
-                        </tr>
-                      </sc-for>
-                    </tbody>
-                  </table>
+                  <div role="table" aria-label="Colaboradores" style="display:flex;flex-direction:column;min-width:900px;font-size:13px">
+                    <div role="row" style="display:grid;grid-template-columns:minmax(160px,1.8fr) minmax(130px,1.2fr) 80px 80px 90px minmax(130px,1.2fr) 100px 56px;align-items:center;background:var(--gray-50);border-bottom:1px solid var(--border-default);color:var(--text-muted)">
+                      <div role="columnheader" style="padding:14px 16px;font-weight:600">Nome</div>
+                      <div role="columnheader" style="padding:14px 16px;font-weight:600">Função</div>
+                      <div role="columnheader" style="padding:14px 16px;font-weight:600">Bota</div>
+                      <div role="columnheader" style="padding:14px 16px;font-weight:600">Luva</div>
+                      <div role="columnheader" style="padding:14px 16px;font-weight:600">Uniforme</div>
+                      <div role="columnheader" style="padding:14px 16px;font-weight:600">Caminhão habitual</div>
+                      <div role="columnheader" style="padding:14px 16px;font-weight:600">Situação</div>
+                      <div role="columnheader" style="padding:14px 16px;text-align:right"><span style="position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0)">Ações</span></div>
+                    </div>
+                    <sc-for list="{{ almox.colabs }}" as="c" hint-placeholder-count="5">
+                      <div role="row" tabIndex="0" onClick="{{ c.editar }}" onKeyDown="{{ c.onKey }}" style="display:grid;grid-template-columns:minmax(160px,1.8fr) minmax(130px,1.2fr) 80px 80px 90px minmax(130px,1.2fr) 100px 56px;align-items:center;cursor:pointer;border-top:1px solid var(--gray-100)" style-hover="background:var(--gray-50)">
+                        <div role="cell" style="padding:14px 16px;font-weight:600;color:var(--text-strong);min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">{{ c.nome }}</div>
+                        <div role="cell" style="padding:14px 16px;color:var(--text-body);min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">{{ c.funcao }}</div>
+                        <div role="cell" style="padding:14px 16px;color:var(--text-body);min-width:0;white-space:nowrap">{{ c.botaTxt }}</div>
+                        <div role="cell" style="padding:14px 16px;color:var(--text-body);min-width:0;white-space:nowrap">{{ c.luvaTxt }}</div>
+                        <div role="cell" style="padding:14px 16px;color:var(--text-body);min-width:0;white-space:nowrap">{{ c.uniformeTxt }}</div>
+                        <div role="cell" style="padding:14px 16px;color:var(--text-muted);min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">{{ c.caminhaoTxt }}</div>
+                        <div role="cell" style="padding:14px 16px;min-width:0">
+                          <span style="display:inline-block;padding:4px 10px;border-radius:999px;font-size:12px;font-weight:600;background:{{ c.ativoBg }};color:{{ c.ativoFg }}">{{ c.ativoTxt }}</span>
+                        </div>
+                        <div role="cell" style="padding:14px 16px;text-align:right;min-width:0">
+                          <button type="button" aria-label="{{ c.editarLabel }}" onClick="{{ c.editar }}" style="width:36px;height:36px;border-radius:10px;background:transparent;border:1px solid var(--border-default);cursor:pointer;display:inline-flex;align-items:center;justify-content:center;padding:0">
+                            <img src="https://unpkg.com/lucide-static@0.460.0/icons/pencil.svg" alt="" style="width:16px;height:16px;color:var(--text-strong)">
+                          </button>
+                        </div>
+                      </div>
+                    </sc-for>
+                  </div>
                 </div>
               </sc-if>
 
